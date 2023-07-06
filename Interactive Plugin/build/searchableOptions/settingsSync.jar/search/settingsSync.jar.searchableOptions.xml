@@ -1,0 +1,13 @@
+<options>
+  <configurable id="preferences.keymap" configurable_name="Keymap">
+    <option name="" path="ActionManager" hit="" />
+    <option name="download" path="ActionManager" hit="Download Settings" />
+    <option name="settings" path="ActionManager" hit="Download Settings" />
+    <option name="push" path="ActionManager" hit="Push Settings" />
+    <option name="settings" path="ActionManager" hit="Push Settings" />
+    <option name="settings" path="ActionManager" hit="Settings Sync" />
+    <option name="sync" path="ActionManager" hit="Settings Sync" />
+    <option name="settings" path="ActionManager" hit="Sync Settings" />
+    <option name="sync" path="ActionManager" hit="Sync Settings" />
+  </configurable>
+</options>

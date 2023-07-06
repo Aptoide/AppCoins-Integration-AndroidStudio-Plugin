@@ -1,1 +1,2 @@
-my-encrypted-file.txt filter=git-crypt diff=git-crypt
+"Interactive Plugin/src/main/java/utils/MetricsClient.java" filter=git-crypt 
+diff=git-crypt

@@ -1,0 +1,30 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.5.10'
+    id 'org.jetbrains.intellij' version '1.8.0'
+    id 'java'
+}
+
+group 'org.example'
+
+repositories {
+    mavenCentral()
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.apache.httpcomponents:httpclient:4.5.14"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+}
+
+// See https://github.com/JetBrains/gradle-intellij-plugin/
+intellij {
+    version = "2022.1.1"
+    plugins = ['com.intellij.java']
+    updateSinceUntilBuild = false
+}
+
+runIde{
+    ideDir=file('/opt/android-studio-2021.2.1/android-studio')
+}

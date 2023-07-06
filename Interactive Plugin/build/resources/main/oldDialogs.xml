@@ -1,0 +1,260 @@
+<?xml version="1.0"?>
+<company>
+    <page id="0">
+        <title>Catappult integration plugin</title>
+        <step>0</step>
+        <body>This plugin will guide you, step by step, in the process of integrating Catappult billing's SDK.
+            In most steps you will be given a chance to implement the necessary changes automatically or manually.
+            You should always try to implement automatically and make, if necessary,
+            some adjustments afterwards, but if the automatic changes do not work properly, you will
+            always have the option to undo the automatic changes and implement manually.</body>
+        <button1>Start Implementation</button1>
+    </page>
+    <page id="1">
+        <title>Start the implementation</title>
+        <step>1</step>
+        <body>To start the implementation, you must go to the build.gradle file inside your project src</body>
+        <button1>Go to build.gradle</button1>
+    </page>
+    <page id="2">
+        <title>Changes to build.gradle</title>
+        <step>1</step>
+        <body>You must add new dependencies to this file</body>
+        <button1>Implement changes automatically</button1>
+        <button2>Implement changes manually</button2>
+        <button3>Go back</button3>
+    </page>
+    <page id="3">
+        <title>Changes to build.gradle</title>
+        <step>1</step>
+        <body>You must add the following code to this file:</body>
+        <body>You must also add the following code to this file:</body>
+        <button1>Implement changes automatically</button1>
+        <button2>Implement changes manually</button2>
+        <button3>Go back</button3>
+    </page>
+    <page id="4">
+        <title>Confirmation</title>
+        <step>1</step>
+        <body>Do you confirm the changes made?</body>
+        <button1>No, I want to implement manually</button1>
+        <button2>Yes</button2>
+    </page>
+    <page id="5">
+        <title>Permissions</title>
+        <step>2</step>
+        <body>To continue the implementation, you must go to the Android Manifest file. Don't forget to sync the build.gradle changes before continuing</body>
+        <button1>Go to Android Manifest</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="6">
+        <title>Changes to Android Manifest</title>
+        <step>2</step>
+        <body>You must add new permissions and queries to your app</body>
+        <button1>Implement changes automatically</button1>
+        <button2>Implement changes manually</button2>
+        <button3>Go back</button3>
+    </page>
+    <page id="7">
+        <title>Changes to Android Manifest</title>
+        <step>2</step>
+        <body>You must add the following permissions to this file:</body>
+        <body>You must also add the following code to this file:</body>
+        <button1>Continue</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="8">
+        <title>Confirmation</title>
+        <step>2</step>
+        <body>Do you confirm the changes made?</body>
+        <button1>No, I want to implement manually</button1>
+        <button2>Yes</button2>
+    </page>
+    <page id="9">
+        <title>Starting the service connection</title>
+        <step>3</step>
+        <body>To continue the implementation, you must implement
+            the AppCoinsBillingStateListener and PurchasesUpdatedListener.
+            This can be done in the main activity.</body>
+        <button1>Go to main activity</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="10">
+        <title>Starting the service connection</title>
+        <step>3</step>
+        <body>To continue the implementation, you must add the following listeners
+            that should run when you start the app.</body>
+        <button1>Implement changes manually</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="11">
+        <title>Starting the service connection</title>
+        <step>3</step>
+        <body>To continue the implementation, you must add the AppCoinsBillingStateListener
+            and PurchasesUpdatedListener interfaces.
+            The automatic changes will use these listeners in the onCreate method</body>
+        <button1>Partially implement changes automatically</button1>
+        <button2>Implement changes manually</button2>
+        <button3>Go back</button3>
+    </page>
+    <page id="12">
+        <title>Starting the service connection</title>
+        <step>3</step>
+        <body>You must add the AppCoinsBillingStateListener interface, implementing two methods:
+            onBillingSetupFinished(responseCode) and onBillingServiceDisconnected()
+            Here's a template for the implementation:</body>
+        <body>You must also add the PurchasesUpdatedListener interface, implementing the method:
+            onPurchasesUpdated(responseCode,listPurchases)
+            Here's a template for the implementation:</body>
+        <body>To build and start Appcoins IAB, you should use the following code (which usually is added
+            to the onCreate method of your main activity). base64EncodedPublicKey refers to your Catappult Public Key.
+        </body>
+        <button1>Continue</button1>
+        <button2>Go back</button2>
+    </page>
+    <!--> Page bellow seems to be unused<-->
+    <page id="13">
+        <title>Public key</title>
+        <step>3</step>
+        <body>You must get your Catappult public key to continue the implementation</body>
+        <button1>Implement changes automatically</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="14">
+        <title>Confirmation</title>
+        <step>3</step>
+        <body>Do you confirm the changes made?</body>
+        <button1>No, I want to implement manually</button1>
+        <button2>Yes</button2>
+    </page>
+    <!--> Page bellow seems to be unused<-->
+    <page id="15">
+        <title>Making a purchase</title>
+        <step>4</step>
+        <body>To continue the implementation, you must use
+            the launchBillingFlow method on every purchase</body>
+        <button1>Continue implementation</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="16">
+        <title>Making a purchase</title>
+        <step>4</step>
+        <body>To continue the implementation, you must add the following code
+            that should run when you make a purchase in the app.</body>
+        <button1>Implement changes manually</button1>
+        <button2>Go back</button2>
+    </page>
+    <!--> Page bellow seems to be unused<-->
+    <page id="17">
+        <title>Making a purchase</title>
+        <step>4</step>
+        <body>To continue the implementation, you must add the following code
+            that should run when you make a purchase in the app.</body>
+        <button1>Add code to detected purchases</button1>
+        <button2>Implement changes manually</button2>
+        <button3>Go back</button3>
+    </page>
+    <!--> Page bellow seems to be unused<-->
+    <page id="18">
+        <title>Confirmation</title>
+        <step>4</step>
+        <body>Do you confirm the changes made?</body>
+        <button1>No, I want to implement manually</button1>
+        <button2>Yes</button2>
+        <button3>Go back</button3>
+    </page>
+    <page id="19">
+        <title>Making a purchase</title>
+        <step>4</step>
+        <body>You must add the the following code to the "buy" button function:</body>
+        <button1>Continue</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="20">
+        <title>Making a purchase</title>
+        <step>5</step>
+        <body>To finish making a purchase, you must pass
+            the result of the activity that contained the purchase flow to the AppcoinsBillingClient.
+            This is done in the onActivityResult method.</body>
+        <button1>Continue</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="21">
+        <title>Making a purchase</title>
+        <step>5</step>
+        <body>You must override the onActivityResult method (usually of your\n" +
+            "main activity) and add the following code to it:</body>
+        <button1>Continue</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="22">
+        <title>Consume a purchase</title>
+        <step>6</step>
+        <body>To consume a purchase you must use the method consumeAsync from the AppcoinsBillingClient.
+            This method should be run in another thread, which will not be done by the automatic changes.
+            To receive the response of consuming a purchase you need to create
+            the ConsumeResponseListener, overriding its only method: onConsumeResponse(responseCode,purchaseToken).
+            Automatic changes will add both the method and the listener to the main activity.</body>
+        <button1>Implement changes automatically</button1>
+        <button2>Implement changes manually</button2>
+        <button3>Go back</button3>
+    </page>
+    <page id="23">
+        <title>Consume a purchase</title>
+        <step>6</step>
+        <body>To consume a purchase you must use the method consumeAsync from the AppcoinsBillingClient.
+            To receive the response of consuming a purchase you need to create
+            the ConsumeResponseListener, overriding its only method: onConsumeResponse(responseCode,purchaseToken).</body>
+        <button1>Implement changes manually</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="24">
+        <title>Consume a purchase</title>
+        <step>6</step>
+        <body>Here's an example of the implementation of the ConsumeResponseListener listener:</body>
+        <body>To consume purchases which should, at least, be done in the PurchasesUpdatedListener,
+            you can run the following method, which has to be done in a different thread:</body>
+        <button1>Continue</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="25">
+        <title>Confirmation</title>
+        <step>6</step>
+        <body>Do you confirm the changes made?</body>
+        <button1>No, I want to implement manually</button1>
+        <button2>Yes</button2>
+    </page>
+    <page id="26">
+        <title>Query Purchases</title>
+        <step>7</step>
+        <body>To query purchases and obtain more details about them you must implement
+            the skuDetailsResponseListener and call the querySkuDetailsAsync method. The automatic changes will add these
+            methods to the main activity. If you implement manually, notice that the AppCoinsBillingStateListener uses
+            callSkuDetails(), which is the method that calls querySkuDetailsAsync.</body>
+        <button1>Implement changes automatically</button1>
+        <button2>Implement changes manually</button2>
+        <button3>Go back</button3>
+    </page>
+    <page id="27">
+        <title>Query Purchases</title>
+        <step>7</step>
+        <body>Here's an example of the implementation of the skuDetailsResponseListener:</body>
+        <body>A possible implementation of the callSkuDetails method, which calls
+            querySkuDetailsAsync, is the following:</body>
+        <button1>Continue</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="28">
+        <title>Confirmation</title>
+        <step>7</step>
+        <body>Do you confirm the changes made?</body>
+        <button1>No, I want to implement manually</button1>
+        <button2>Yes</button2>
+    </page>
+    <page id="29">
+        <title>Congratulations!</title>
+        <step>7</step>
+        <body>You have completed the tutorial</body>
+        <button1>Go back</button1>
+    </page>
+</company>

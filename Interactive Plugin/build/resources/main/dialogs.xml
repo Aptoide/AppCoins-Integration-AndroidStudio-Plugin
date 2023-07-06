@@ -1,0 +1,476 @@
+<?xml version="1.0"?>
+<company>
+    <page id="0">
+        <title>Catappult Integration Plug-in</title>
+        <step>0</step>
+        <body>This step-by-step guide will guide you through the process of integrating Catappult's billing SDK. You can choose to apply most changes automatically or manually. We strongly recommend doing it automatically and then, if necessary, making adjustments.</body>
+        <button1>Start Implementation</button1>
+    </page>
+    <page id="1">
+        <title>Start the Implementation</title>
+        <step>1</step>
+        <body>To start the implementation, go to the build.gradle file inside your project src.</body>
+        <button1>Go to build.gradle file</button1>
+    </page>
+    <page id="2">
+        <title>Changes on build.gradle file</title>
+        <step>1</step>
+        <body>Add new dependencies to this file.</body>
+        <body>After you located the build.gradle file, add the following code:</body>
+        <body>Our native android SDK uses one main library:</body>
+        <body>Android-appcoins-billing </body>
+        <body>(Check link for latest version)</body>
+        <button1>Implement changes automatically</button1>
+        <button2>Implement changes manually</button2>
+        <button3>Go back</button3>
+    </page>
+    <page id="3">
+        <title>Changes to build.gradle file</title>
+        <step>1</step>
+        <body>Add the following code to this file:</body>
+        <body>In addition, add the following dependency to this file:</body>
+        <button1>Implement changes automatically</button1>
+        <button2>Implement changes manually</button2>
+        <button3>Go back</button3>
+    </page>
+    <page id="4">
+        <title>Confirmation</title>
+        <step>1</step>
+        <body>Do you confirm the changes?</body>
+        <button1>No, I want to implement them manually</button1>
+        <button2>Yes</button2>
+    </page>
+    <page id="5">
+        <title>Permissions</title>
+        <step>2</step>
+        <body>To continue the implementation, please go to the Android Manifest file. Don't forget to sync the changes in the build.gradle file before continuing.</body>
+        <button1>Go to Android Manifest</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="6">
+        <title>Changes to Android Manifest file</title>
+        <step>2</step>
+        <body>Add new permissions and queries to your app.</body>
+        <body>2. Permissions</body>
+        <body>Your app requires permissions to perform with The Appcoins IAB. The permission is declared in the
+            AndroidManifest.xml file of your app. Since Google Play IAB already declares a permission with name
+            com.android.vending.BILLING, rename it to com.appcoins.BILLING.</body>
+        <body>Google Play IAB</body>
+        <body>AppCoins IAB</body>
+        <body>3. Queries</body>
+        <body>To work with android 11 and above the app also needs to permit queries to The Appcoins wallet.
+            The queries are declared in the AndroidManifest.xml</body>
+        <button1>Implement changes automatically</button1>
+        <button2>Implement changes manually</button2>
+        <button3>Go back</button3>
+    </page>
+    <page id="7">
+        <title>Changes to Android Manifest file</title>
+        <step>2</step>
+        <body>Add the following permissions to this file:</body>
+        <body>In addition, add the following code to this file:</body>
+        <button1>Continue</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="8">
+        <title>Confirmation</title>
+        <step>2</step>
+        <body>Do you confirm the changes?</body>
+        <button1>No, I want to implement them manually</button1>
+        <button2>Yes</button2>
+    </page>
+    <page id="9">
+        <title>Starting the service connection</title>
+        <step>3</step>
+        <body>Add the following listeners that should run when you start the app.</body>
+        <body>AppCoinsBillingStateListener</body>
+        <body>Add the AppCoinsBillingStateListener and PurchasesUpdatedListener interfaces.
+            The automatic changes will use these listeners in the onCreate method.</body>
+        <body>Add the AppCoinsBillingStateListener interface, implementing two methods:
+            onBillingSetupFinished(responseCode) and onBillingServiceDisconnected()
+            Here's a template for the implementation:</body>
+        <body>PurchaseUpdateListener</body>
+        <body>Callback for purchase updates and can be triggered, for example, when the user purchases something in app.
+            This interface has one method:</body>
+        <body>Add the PurchasesUpdatedListener interface, implementing the method:
+            onPurchasesUpdated(responseCode,listPurchases)
+            Here's a template for the implementation:</body>
+        <body>To build and start Appcoins IAB, you should use the following code (which usually is added
+            to the onCreate method of your main activity). base64EncodedPublicKey refers to your Catappult Public Key.
+        </body>
+        <button1>Go to main activity</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="10">
+        <title>Starting the Service Connection</title>
+        <step>3</step>
+        <body>Add the following listeners that should run when you start the app.</body>
+        <button1>Implement changes manually</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="11">
+        <title>Starting the Service Connection</title>
+        <step>3</step>
+        <body>Add the AppCoinsBillingStateListener and PurchasesUpdatedListener interfaces. The automatic changes will use these listeners in the onCreate method.</body>
+        <button1>Partially implement changes automatically</button1>
+        <button2>Implement changes manually</button2>
+        <button3>Go back</button3>
+    </page>
+    <page id="12">
+        <title>Starting the Service Connection</title>
+        <step>3</step>
+        <body>Add the AppCoinsBillingStateListener interface, implementing two methods:
+            onBillingSetupFinished(responseCode) and onBillingServiceDisconnected()
+            Here's a template for the implementation:</body>
+        <body>Add the PurchasesUpdatedListener interface, implementing the method:
+            onPurchasesUpdated(responseCode,listPurchases)
+            Here's a template for the implementation:</body>
+        <body>To build and start Appcoins IAB, you should use the following code (which usually is added
+            to the onCreate method of your main activity). base64EncodedPublicKey refers to your Catappult Public Key.
+        </body>
+        <button1>Continue</button1>
+        <button2>Go back</button2>
+    </page>
+    <!--> Page bellow seems to be unused<-->
+    <page id="13">
+        <title>Public key</title>
+        <step>3</step>
+        <body>Get your Catappult public key to continue the implementation</body>
+        <body>Insert Public Key</body>
+        <button1>Implement changes automatically</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="14">
+        <title>Confirmation</title>
+        <step>3</step>
+        <body>Do you confirm the changes?</body>
+        <button1>No, I want to implement them manually</button1>
+        <button2>Yes</button2>
+    </page>
+    <!--> Page bellow seems to be unused<-->
+    <page id="15">
+        <title>Making a Purchase</title>
+        <step>4</step>
+        <body>Use the launchBillingFlow method on every purchase</body>
+        <button1>Continue implementation</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="16">
+        <title>Making a Purchase</title>
+        <step>4</step>
+        <body>Add the following code that should run when you make a purchase in the app.</body>
+        <body>Making a Purchase</body>
+        <body>Add the following code to the "buy" button function:</body>
+        <body>To finish making a purchase, you must pass the result of the activity that contained the purchase flow to
+            the AppcoinsBillingClient. This is done in the onActivityResult method.</body>
+        <body>Afterwards in the onActivityResult you need to pass the result of the activity that contained the purchase
+            flow to the AppcoinsBillingClient so that the result of the purchase can be processed and verified with your
+            Catappult public key. The following code snippet shows how you can implement it:</body>
+        <button1>Implement changes manually</button1>
+        <button2>Go back</button2>
+    </page>
+    <!--> Page bellow seems to be unused<-->
+    <page id="17">
+        <title>Making a Purchase</title>
+        <step>4</step>
+        <body>Add the following code that should run when you make a purchase in the app.</body>
+        <button1>Add code to detected purchases</button1>
+        <button2>Implement changes manually</button2>
+        <button3>Go back</button3>
+    </page>
+    <!--> Page bellow seems to be unused<-->
+    <page id="18">
+        <title>Confirmation</title>
+        <step>4</step>
+        <body>Do you confirm the changes?</body>
+        <button1>No, I want to implement them manually</button1>
+        <button2>Yes</button2>
+        <button3>Go back</button3>
+    </page>
+    <page id="19">
+        <title>Making a Purchase</title>
+        <step>4</step>
+        <body>Add the following code to the "buy" button function:</body>
+        <button1>Continue</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="20">
+        <title>Making a Purchase</title>
+        <step>5</step>
+        <body>To finish making a purchase, you must pass the result of the activity that contained the purchase flow to the AppcoinsBillingClient. This is done in the onActivityResult method.</body>
+        <button1>Continue</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="21">
+        <title>Making a Purchase</title>
+        <step>5</step>
+        <body>You must override the onActivityResult method (usually of your main activity) and add the following code to it:</body>
+        <button1>Continue</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="22">
+        <title>Consuming a Purchase</title>
+        <step>6</step>
+        <body>To consume a purchase, you must use the method consumeAsync from the AppcoinsBillingClient. This method should be run in another thread, which will not be done by the automatic changes.
+            To receive the response of consuming a purchase you need to create the ConsumeResponseListener, overriding its only method: onConsumeResponse(responseCode,purchaseToken).
+            Automatic changes will add both the method and the listener to the main activity.</body>
+        <body>To receive the response of consuming a purchase you need to create the following listener:</body>
+        <body>Here's an example of the implementation of the ConsumeResponseListener listener:</body>
+        <button1>Implement changes automatically</button1>
+        <button2>Implement changes manually</button2>
+        <button3>Go back</button3>
+    </page>
+    <page id="23">
+        <title>Consuming a Purchase</title>
+        <step>6</step>
+        <body>To consume a purchase you must use the method consumeAsync from the AppcoinsBillingClient. To receive the response of consuming a purchase you need to create the ConsumeResponseListener, overriding its only method: onConsumeResponse(responseCode,purchaseToken).</body>
+        <button1>Implement changes manually</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="24">
+        <title>Consuming a Purchase</title>
+        <step>6</step>
+        <body>Here's an example of the implementation of the ConsumeResponseListener listener:</body>
+        <body>To consume purchases which should, at least, be done in the PurchasesUpdatedListener, you can run the following method, which has to be done in a different thread:</body>
+        <button1>Continue</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="25">
+        <title>Confirmation</title>
+        <step>6</step>
+        <body>Do you confirm the changes?</body>
+        <button1>No, I want to implement them manually</button1>
+        <button2>Yes</button2>
+    </page>
+    <page id="26">
+        <title>Querying Purchases</title>
+        <step>7</step>
+        <body>To query purchases and obtain more details about them you must implement the skuDetailsResponseListener and call the querySkuDetailsAsync method. The automatic changes will add these methods to the main activity. If you implement the changes manually, please notice that the AppCoinsBillingStateListener uses callSkuDetails(), which is the method that calls querySkuDetailsAsync.</body>
+        <body>SkuDetailsResponseListener</body>
+        <body>Here's an example of the implementation of the skuDetailsResponseListener:</body>
+        <body>A possible implementation of the callSkuDetails method, which calls querySkuDetailsAsync, is the following:</body>
+        <button1>Implement changes automatically</button1>
+        <button2>Implement changes manually</button2>
+        <button3>Go back</button3>
+    </page>
+    <page id="27">
+        <title>Querying Purchases</title>
+        <step>7</step>
+        <body>Here's an example of the implementation of the skuDetailsResponseListener:</body>
+        <body>A possible implementation of the callSkuDetails method, which calls querySkuDetailsAsync, is the following:</body>
+        <button1>Continue</button1>
+        <button2>Go back</button2>
+    </page>
+    <page id="28">
+        <title>Confirmation</title>
+        <step>7</step>
+        <body>Do you confirm the changes?</body>
+        <button1>No, I want to implement them manually</button1>
+        <button2>Yes</button2>
+    </page>
+    <page id="29">
+        <title>Success!</title>
+        <step>7</step>
+        <body>Implementation is complete!</body>
+        <body>The first upload must be done manually on the Catappult website. After that, all future uploads can be automated through our upload plugins. All the links can be found in the documentation bellow.</body>
+        <body>Check Documentation</body>
+        <button1>Go back</button1>
+    </page>
+    <page id="30">
+        <title>Generate your OSP URL</title>
+        <step>1</step>
+        <body>The first step in implementing One-Step Payment consists of generating your OSP URL.</body>
+        <body>The service to be called by the OSP URL is</body>
+        <body>https://apichain.catappult.io/transaction/inapp</body>
+        <body>but there are some query parameters that you will need to fill in, as you can see in the table below:</body>
+        <body>In the end, it should look like this:</body>
+        <body>Note that the signature parameter is built by signing using an HMAC function with the use of the SHA256 algorithm. The required secret key for this process should be available only at the server level and should be shared between the developer and provider.</body>
+        <body>To know more about Secret Key Management, click here.</body>
+        <body>For this reason, we strongly recommend you generate your OSP URL on the server level, (for example: on a web service endpoint). Your application must then request your server for the generated OSP URL before creating the Intent.</body>
+        <body>Below there are examples of the functionality that you will need to implement on your server to generate your signed OSP URL in different programming languages:</body>
+    </page>
+    <page id="31">
+        <title>Create an Intent to process the payment!</title>
+        <step>2</step>
+        <body>Now that you have generated your OSP URL, it's time to create an Intent with it and request for it to be processed by the application’s current Activity.</body>
+        <body>If the AppCoins Wallet is installed on the device, you can request it to process the created Intent. Otherwise, the Intent will be processed by the device’s default Web Browser. Your implementation for this part should look something like this:</body>
+        <body>NOTE: If your application targets SDK 30 or above then you need to add the intent to AndroidManifest as such:</body>
+        <body>This is the moment at which the AppCoins Wallet takes care of the payment process. The end-user will either use their existing credits or top up their wallet with one of the methods available and then complete the payment.</body>
+    </page>
+    <page id="32">
+        <title>Create a web service endpoint to be used as the callback URL</title>
+        <step>3</step>
+        <body>Once the transaction is completed on the AppCoins Wallet, a POST request will be made to the web service endpoint you specified on the query string parameter callback_url of your OSP URL. On the body of this POST request, a JSON object will be sent with a field named transaction.</body>
+        <body>The transaction field is also a JSON object and should be parsed so that you can get the information about the transaction that has just been completed.</body>
+        <body>To verify data integrity, on your web service, you can make a GET request to our transaction's API</body>
+        <body>https://api.catappult.io/broker/8.20220927/transactions/</body>
+        <body>where you pass the transaction UID (example:</body>
+        <body>https://api.catappult.io/broker/8.20220927/transactions/2DtyvTOSShc1xT9C</body>
+        <body>).</body>
+        <body>The returned data must be equal to the transaction data the callback URL received on its body. Finally, once you do all the validations on your server, you will need to notify your application and give the item to the end-user.</body>
+    </page>
+    <table id="0">
+        <row>
+            <cell>Name</cell>
+            <cell>Type</cell>
+            <cell>Description</cell>
+            <cell>Mandatory</cell>
+            <cell>Example</cell>
+        </row>
+        <row>
+            <cell>product</cell>
+            <cell>String</cell>
+            <cell>The name of the product (aka SKU) being bought. It can only have lowercase letters, numbers, underscores (_) and periods (.)</cell>
+            <cell>Y</cell>
+            <cell>sword.001</cell>
+        </row>
+        <row>
+            <cell>domain</cell>
+            <cell>String</cell>
+            <cell>The application id, also known as app package name.</cell>
+            <cell>Y</cell>
+            <cell>com.appcoins.trivialdrivesample</cell>
+        </row>
+        <row>
+            <cell>callback_url</cell>
+            <cell>String</cell>
+            <cell>The URL encoded version of the URL to be called after the transaction is completed.</cell>
+            <cell>Y</cell>
+            <cell>https%3A%2F%2Fwww.mygamestudio.com%2FcompletePurchase%3FuserId%3D1234 which is the URL encoded version of https://www.mygamestudio.com/completePurchase?userId=1234</cell>
+        </row>
+        <row>
+            <cell>order_reference</cell>
+            <cell>String</cell>
+            <cell>Unique identifier of the transaction created by the developer (cannot be used for different purchases).</cell>
+            <cell>Y</cell>
+            <cell>XYZ98880032</cell>
+        </row>
+        <row>
+            <cell>signature</cell>
+            <cell>String</cell>
+            <cell>The Hexadecimal string of the signed URL in order to be validated. The signature must be lowercase.</cell>
+            <cell>Y</cell>
+            <cell>49bc6dac9780acfe5419eb16e862cf096994c15f807313b04f5a6ccd7717e78e</cell>
+        </row>
+        <row>
+            <cell>value</cell>
+            <cell>Numeric</cell>
+            <cell>The value of the chosen product.</cell>
+            <cell>Y</cell>
+            <cell></cell>
+        </row>
+        <row>
+            <cell>currency</cell>
+            <cell>String</cell>
+            <cell>The currency in which the value is sent. It follows ISO 4217.</cell>
+            <cell>Y</cell>
+            <cell></cell>
+        </row>
+    </table>
+    <table id="1">
+        <row>
+            <cell>Name</cell>
+            <cell>Type</cell>
+            <cell>Description</cell>
+            <cell>Example</cell>
+        </row>
+        <row>
+            <cell>uid</cell>
+            <cell>String</cell>
+            <cell>Unique ID for transaction resource</cell>
+            <cell>B27YBHAHN2G3J6RE</cell>
+        </row>
+        <row>
+            <cell>domain</cell>
+            <cell>String</cell>
+            <cell>Package name</cell>
+            <cell>com.appcoins.trivialdrivesample</cell>
+        </row>
+        <row>
+            <cell>product</cell>
+            <cell>String</cell>
+            <cell>Product name (aka SKU)</cell>
+            <cell>sword.001</cell>
+        </row>
+        <row>
+            <cell>reference</cell>
+            <cell>String</cell>
+            <cell>Unique identifier of the transaction created by the developer</cell>
+            <cell>XYZ98880032</cell>
+        </row>
+        <row>
+            <cell>status</cell>
+            <cell>String</cell>
+            <cell>Transaction status</cell>
+            <cell>COMPLETED or CANCELED or FAILED</cell>
+        </row>
+        <row>
+            <cell>added</cell>
+            <cell>String</cell>
+            <cell>Transaction added timestamp</cell>
+            <cell>2020-04-18T06:15:18+00:00</cell>
+        </row>
+        <row>
+            <cell>modified</cell>
+            <cell>String</cell>
+            <cell>Transaction modified timestamp</cell>
+            <cell>2020-04-18T07:17:19+00:00</cell>
+        </row>
+        <row>
+            <cell>type</cell>
+            <cell>String</cell>
+            <cell>Type of transaction</cell>
+            <cell>INAPP_UNMANAGED</cell>
+        </row>
+        <row>
+            <cell>price.appc</cell>
+            <cell>String</cell>
+            <cell>Transaction price in AppCoins</cell>
+            <cell>115</cell>
+        </row>
+        <row>
+            <cell>price.currency</cell>
+            <cell>String</cell>
+            <cell>Transaction price currency (used by the end-user to perform the purchase)</cell>
+            <cell>USD, APPC, EUR, etc</cell>
+        </row>
+        <row>
+            <cell>price.value</cell>
+            <cell>String</cell>
+            <cell>Transaction price value</cell>
+            <cell>11.5</cell>
+        </row>
+        <row>
+            <cell>price.usd</cell>
+            <cell>String</cell>
+            <cell>Transaction price in USD</cell>
+            <cell>4.99</cell>
+        </row>
+    </table>
+    <table id="2">
+        <row>
+            <cell>  One-Step Payment (OSP)</cell>
+            <cell>  Native Android SDK</cell>
+        </row>
+        <row>
+            <cell>  Similar to Alipay</cell>
+            <cell>  Similar to Google Play</cell>
+        </row>
+        <row>
+            <cell>  10 hours for the full integration</cell>
+            <cell>  14 hours for the full integration</cell>
+        </row>
+        <row>
+            <cell>  One week integration timeline</cell>
+            <cell>  Two weeks integration timeline</cell>
+        </row>
+        <row>
+            <cell>  Supports in-app purchases (and subscriptions coming soon)</cell>
+            <cell>  Supports in-app purchases and subscriptions</cell>
+        </row>
+        <row>
+            <cell>  Supports remote validation</cell>
+            <cell>  Supports remote and/or local validation</cell>
+        </row>
+    </table>
+</company>

@@ -1,0 +1,23 @@
+<idea-plugin>
+  <id>catappult.billing.integration</id>
+  <name>Catappult Billing Integration</name>
+  <version>1.1.3</version>
+  <vendor email="support@catappult.io" url="https://catappult.io">Catappult</vendor>
+  <idea-version since-build="212.5712" />
+  <change-notes><![CDATA[Removed IntellIJ deprecated functions]]></change-notes>
+  <description><![CDATA[Allows integrating the Catappult Billing Method into your application!
+        Read more about it <a href="https://docs.catappult.io/docs/apps-with-iap">here<a/>!
+
+        This plugin collects metrics of usage.]]></description>
+  <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
+         on how to target different products -->
+  <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.modules.java</depends>
+  <extensions defaultExtensionNs="com.intellij">
+    <toolWindow id="Catappult Billing Implementation" secondary="true" icon="/icons/pluginIcon.svg" anchor="right" factoryClass="window_factory.BillingToolWindowFactory" />
+    <notificationGroup id="Error Group" displayType="STICKY_BALLOON" key="notification.group.name" />
+  </extensions>
+  <actions>
+    <!-- Add your actions here -->
+  </actions>
+</idea-plugin>

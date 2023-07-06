@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40px" height="40px" viewBox="0 0 1000 1000">
+ <g id="layer101" fill="#6e6e6e" stroke="none">
+  <path d="M 50 775 L 50 600 L 225 600 L 400 600 L 400 775 L 400 950 L 225 950 L 50 950 L 50 775 Z"/>
+  <path d="M 50 225 L 50 50 L 225 50 L 400 50 L 400 225 L 400 400 L 225 400 L 50 400 L 50 225 Z"/>
+  <path d="M 600 225 L 600 50 L 775 50 L 950 50 L 950 225 L 950 400 L 775 400 L 600 400 L 600 225 Z"/>
+ </g>
+</svg>

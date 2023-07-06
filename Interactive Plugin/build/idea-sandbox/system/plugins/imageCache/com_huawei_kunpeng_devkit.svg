@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="13px" height="13px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>32/鲲鹏</title>
+    <defs>
+        <linearGradient x1="8.82747339%" y1="66.2585225%" x2="94.4435559%" y2="29.7327789%" id="linearGradient-1">
+            <stop stop-color="#D70D18" offset="0%"></stop>
+            <stop stop-color="#B3131A" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="32/鲲鹏" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <polygon id="Fill-1" fill="url(#linearGradient-1)" points="6.9174372 12.440903 5.66768665 15.9421195 6.57252031e-14 14.9799474 6.68378818 19.7594849 30.9781238 -2.0250468e-13"></polygon>
+        <polygon id="Fill-3" fill="#DAD9D9" points="7.68 20.6638002 22.4419606 31.3407036 16.1843464 21.1266804 29.12 2.86070356"></polygon>
+    </g>
+</svg>

@@ -1,0 +1,17 @@
+<svg width="16" height="16" data-name="Layer 1" version="1.1" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="a" x1="2.18" x2="30.041" y1="23.255" y2="8.782" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff8618" offset=".043"/>
+      <stop stop-color="#ff246e" offset=".382"/>
+      <stop stop-color="#af1df5" offset=".989"/>
+    </linearGradient>
+    <filter id="b" color-interpolation-filters="sRGB">
+      <feColorMatrix values="0.21 0.72 0.072 0 0 0.21 0.72 0.072 0 0 0.21 0.72 0.072 0 0 0 0 0 1 0 "/>
+    </filter>
+  </defs>
+  <title>ToolBox_trayIcon_colour_32-01</title>
+  <path d="m26 22.471-6.83 3.8311v-3.0446l6.83-3.831v3.0445z" fill="#fff"/>
+  <path d="m16 32.076 14-8.011v-16.008l-14 8.01v16.009" fill="#3f3f3f"/>
+  <path d="m18.925 24.641v2.4l6.101-3.491v-2.4l-6.101 3.491" fill="#fff"/>
+  <path d="m16 .076-14 7.981v16.008l14 8.011v-16.009l14-8.01-14-7.981" fill="url(#a)" filter="url(#b)"/>
+</svg>

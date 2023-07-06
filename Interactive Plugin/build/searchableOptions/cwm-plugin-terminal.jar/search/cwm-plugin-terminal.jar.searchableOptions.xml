@@ -1,0 +1,9 @@
+<options>
+  <configurable id="preferences.keymap" configurable_name="Keymap">
+    <option name="" path="ActionManager" hit="" />
+    <option name="share" path="ActionManager" hit="Share Terminal" />
+    <option name="terminal" path="ActionManager" hit="Share Terminal" />
+    <option name="sharing" path="ActionManager" hit="Stop Sharing" />
+    <option name="stop" path="ActionManager" hit="Stop Sharing" />
+  </configurable>
+</options>

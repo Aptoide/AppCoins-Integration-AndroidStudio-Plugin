@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>插件icon_40px</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <circle id="path-1" cx="19" cy="19" r="18"></circle>
+    </defs>
+    <g id="页面-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="画板" transform="translate(-358.000000, -213.000000)">
+            <rect id="矩形" fill="#D8D8D8" opacity="0" x="358" y="213" width="40" height="40"></rect>
+            <g id="编组备份" transform="translate(359.000000, 214.000000)">
+                <g id="椭圆形备份">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="蒙版" fill="#DFE1E6" xlink:href="#path-1"></use>
+                    <circle fill="#E4C1C2" mask="url(#mask-2)" cx="18.67" cy="35.72" r="17.67"></circle>
+                    <polygon id="矩形" fill="#C7000B" mask="url(#mask-2)" points="5.96 12.47 18.05 19.5532073 18.05 33.24 5.96 26.42"></polygon>
+                    <path d="M18.05,5.34 L29.7188158,12.077 L18.35938,18.75091 L6.67181583,11.91 L18.05,5.34 Z" id="形状结合" fill="#F66F6A" mask="url(#mask-2)"></path>
+                    <polygon id="矩形" fill="#FFFFFF" mask="url(#mask-2)" points="8.13 18.05 14.33 21.77 14.33 23.01 8.13 19.29"></polygon>
+                    <polygon id="路径-2" fill="#A3020B" mask="url(#mask-2)" points="19.0894015 19.29 30.1398601 12.47 30.1398601 26.42 18.98 33.24"></polygon>
+                    <path d="M37.3456111,7.59881028 C37.5670486,7.46874076 37.8520012,7.54280909 37.9820708,7.76424652 C38.1044891,7.97265822 38.0461972,8.23733256 37.8541704,8.37618937 L37.8166345,8.40070614 L18.5955117,19.6909479 C18.4648596,19.7676913 18.3060575,19.77548 18.169678,19.7142744 L18.1251179,19.6913171 L0.362798829,9.29542287 C0.141157514,9.16570109 0.0666420085,8.88086502 0.19636379,8.6592237 C0.318454878,8.45062011 0.577948241,8.3723425 0.792838215,8.47200507 L0.832562955,8.49278866 L18.35938,18.75091 L37.3456111,7.59881028 Z" id="路径-3" fill="#FFFFFF" fill-rule="nonzero" mask="url(#mask-2)"></path>
+                    <polygon id="直线" fill="#FFFFFF" fill-rule="nonzero" mask="url(#mask-2)" points="18.98 18.67 18.98 39.13 18.05 39.13 18.05 18.67"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
