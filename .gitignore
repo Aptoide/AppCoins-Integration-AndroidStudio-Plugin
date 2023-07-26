@@ -1,0 +1,5 @@
+# Gradle files
+Interactive\ Plugin/.gradle/
+Interactive\ Plugin/build/
+
+.idea/

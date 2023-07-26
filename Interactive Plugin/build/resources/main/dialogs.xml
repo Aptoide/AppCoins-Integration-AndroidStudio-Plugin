@@ -288,6 +288,9 @@
         <body>To know more about Secret Key Management, click here.</body>
         <body>For this reason, we strongly recommend you generate your OSP URL on the server level, (for example: on a web service endpoint). Your application must then request your server for the generated OSP URL before creating the Intent.</body>
         <body>Below there are examples of the functionality that you will need to implement on your server to generate your signed OSP URL in different programming languages:</body>
+        <body>The Catappult website provides a tool to generate a sample URL:</body>
+        <body>https://catappult.io/easy-integrations</body>
+        <body>You can validate the production URL on the Developers Console in your Catappult account!</body>
     </page>
     <page id="31">
         <title>Create an Intent to process the payment!</title>
@@ -445,32 +448,6 @@
             <cell>String</cell>
             <cell>Transaction price in USD</cell>
             <cell>4.99</cell>
-        </row>
-    </table>
-    <table id="2">
-        <row>
-            <cell>  One-Step Payment (OSP)</cell>
-            <cell>  Native Android SDK</cell>
-        </row>
-        <row>
-            <cell>  Similar to Alipay</cell>
-            <cell>  Similar to Google Play</cell>
-        </row>
-        <row>
-            <cell>  10 hours for the full integration</cell>
-            <cell>  14 hours for the full integration</cell>
-        </row>
-        <row>
-            <cell>  One week integration timeline</cell>
-            <cell>  Two weeks integration timeline</cell>
-        </row>
-        <row>
-            <cell>  Supports in-app purchases (and subscriptions coming soon)</cell>
-            <cell>  Supports in-app purchases and subscriptions</cell>
-        </row>
-        <row>
-            <cell>  Supports remote validation</cell>
-            <cell>  Supports remote and/or local validation</cell>
         </row>
     </table>
 </company>
