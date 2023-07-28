@@ -150,7 +150,7 @@ public class SDKDialogs {
         Card startingTheServiceConnection2 = new Card();
         startingTheServiceConnection2.setLayout(new BorderLayout(0,20));
 
-        ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(9);
+        ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(10);
         String title = dialogElements.get(0);
         String body =  dialogElements.get(2);
 
@@ -160,12 +160,12 @@ public class SDKDialogs {
         Panel panel = new Panel(DialogColors.white);
 
         JLabel textCard2 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67 size=5><b>" + dialogElements.get(6) + "</b></font>" +
-                "<br><br><font color=#220F67>"+ dialogElements.get(7) +"</font></html>");
+                "<font color=#220F67 size=5><b>" + dialogElements.get(3) + "</b></font>" +
+                "<br><br><font color=#220F67>"+ dialogElements.get(4) +"</font></html>");
         textCard2.setHorizontalAlignment(JLabel.LEFT);
 
         JLabel textCard3 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67>"+ dialogElements.get(8) +"</font></html>");
+                "<font color=#220F67>"+ dialogElements.get(5) +"</font></html>");
         textCard3.setHorizontalAlignment(JLabel.LEFT);
 
         String data[][] ={
@@ -211,6 +211,9 @@ public class SDKDialogs {
         JLabel textCard3 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
                 "<font color=#220F67>"+ dialogElements.get(4) +"</font></html>");
 
+        JLabel textCard4 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
+                "<font color=#220F67>"+ dialogElements.get(5) +"</font></html>");
+
         String data[][] ={
                 {"Name","Definition"},
                 {"onSkuDetailsResponse(responseCode, skuDetailsList)","This method receives the result of a query of SKU" +
@@ -222,6 +225,7 @@ public class SDKDialogs {
         panel.addRigidArea(new Dimension(0, 20));
         panel.add(table.getTable());
         panel.addRigidArea(new Dimension(0, 20));
+        panel.add(textCard3);
 
         CodeWindow skuDetailsResponseListener = new CodeWindow(CardLayoutDialog.projLanguage, snippets.skuDetailsResponseListener(),
                 DialogColors.darkBlue, ActionsSDK.implementedQuerySku);
@@ -229,7 +233,7 @@ public class SDKDialogs {
         panel.add(skuDetailsResponseListener.getPanel());
 
         panel.addRigidArea(new Dimension(0, 30));
-        panel.add(textCard3);
+        panel.add(textCard4);
         panel.addRigidArea(new Dimension(0, 10));
 
         CodeWindow callSkuDetails = new CodeWindow(CardLayoutDialog.projLanguage, snippets.callSkuDetails(),
@@ -261,7 +265,7 @@ public class SDKDialogs {
         CodeWindow startPurchase = new CodeWindow(CardLayoutDialog.projLanguage, snippets.startPurchase(),
                 DialogColors.darkBlue, ActionsSDK.implementedMakingPurchase);
 
-        if (CardLayoutDialog.files.containsKey(5) && CardLayoutDialog.files.containsKey(7)){
+        if (CardLayoutDialog.files.containsKey(5) && CardLayoutDialog.files.containsKey(7)){;
             startPurchase.addButtonAction(new ImplementMakingAPurchaseChanges(
                     CardLayoutDialog.project,CardLayoutDialog.files,CardLayoutDialog.toolWindow));
         }

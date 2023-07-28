@@ -3,7 +3,7 @@ package snipets;
 public class JavaSnippets implements Snippets {
     @Override
     public String buildGradleCodeAllprojects() {
-        return "allprojects {\n" +
+        return "\nallprojects {\n" +
                 "    repositories {\n" +
                 "        google()\n" +
                 "        mavenCentral()\n" +
@@ -36,45 +36,69 @@ public class JavaSnippets implements Snippets {
 
     @Override
     public String appCoinsBillingStateListener() {
-        return "AppCoinsBillingStateListener appCoinsBillingStateListener = new AppCoinsBillingStateListener() {\n" +
-                "    @Override public void onBillingSetupFinished(int responseCode) {\n" +
-                "      if (responseCode != ResponseCode.OK.getValue()) {\n" +
-                "        complain(\"Problem setting up in-app billing: \" + responseCode);\n" +
-                "        return;\n" +
-                "      }\n" +
-                "      callSkuDetails();\n" +
-                "      updateUi();\n" +
+        return  "\n   AppCoinsBillingStateListener appCoinsBillingStateListener = new AppCoinsBillingStateListener() {\n" +
+                "       @Override public void onBillingSetupFinished(int responseCode) {\n" +
+                "       if (responseCode != ResponseCode.OK.getValue()) {\n" +
+                "           Log.d(TAG, \"Problem setting up in-app billing: \" + responseCode);\n" +
+                "           return;\n" +
+                "       }\n" +
+                "       \n" +
+                "       // Check for pending and/or owned purchases\n" +
+                "       checkPurchases();\n" +
+                "       // Query in-app sku details\n" +
+                "       queryInapps();\n" +
+                "       // Query subscriptions sku details\n" +
+                "       querySubs();\n" +
+                "       Log.d(TAG, \"Setup successful. Querying inventory.\");\n" +
+                "   }\n" +
                 "\n" +
-                "      Log.d(TAG, \"Setup successful. Querying inventory.\");\n" +
-                "    }\n" +
+                "   @Override public void onBillingServiceDisconnected() {\n" +
+                "           Log.d(\"Message: \", \"Disconnected\");\n" +
+                "       }\n" +
+                "   };" +
                 "\n" +
-                "    @Override public void onBillingServiceDisconnected() {\n" +
-                "      Log.d(\"Message: \", \"Disconnected\");\n" +
-                "    }\n" +
-                "  };";
+                "   private void checkPurchases() {\n" +
+                "       PurchasesResult purchasesResult = cab.queryPurchases(SkuType.inapp.toString());\n" +
+                "       List<Purchase> purchases = purchasesResult.getPurchases();\n" +
+                "  \n" +
+                "       // queryPurchases of subscriptions will always return active and to consume subscription\n" +
+                "       PurchasesResult subsResult = cab.queryPurchases(SkuType.subs.toString());\n" +
+                "       List<Purchase> subs = subsResult.getPurchases();\n" +
+                "   }";
+    }
+
+    public String checkPurchases() {
+        return "private void checkPurchases() {\n" +
+                "    PurchasesResult purchasesResult = cab.queryPurchases(SkuType.inapp.toString());\n" +
+                "    List<Purchase> purchases = purchasesResult.getPurchases();\n" +
+                "  \n" +
+                "    // queryPurchases of subscriptions will always return active and to consume subscription\n" +
+                "    PurchaseResult subsResult = cab.queryPurchases(SkuType.subs.toString());\n" +
+                "    List<Purchase> subs = subsResult.getPurchases();\n" +
+                "}";
     }
 
     @Override
     public String onPurchasesUpdated() {
-        return "PurchasesUpdatedListener purchaseFinishedListener = (responseCode, purchases) -> {\n" +
-                "      if (responseCode == ResponseCode.OK.getValue()) {\n" +
-                "        for (Purchase purchase : purchases) {\n" +
-                "          // These are examples of parameters you can use for purchase validation\n\t" +
-                "          token = purchase.getToken();\n\t\t" +
-                "          String purchasePayload = purchase.developerPayload;\n\t\t" +
-                "          String signature = purchase.signature;\n\t\t" +
-                "          String json = purchase.originalJson;\n\t\t" +
-                "          consumePurchases();\n\t\t"+
-                "        }\n" +
-                "      } else {\n" +
-                "        new AlertDialog.Builder(this).setMessage(\n" +
-                "            String.format(Locale.ENGLISH, \"response code: %d -> %s\", responseCode,\n" +
-                "                ResponseCode.values()[responseCode].name()))\n" +
-                "            .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())\n" +
-                "            .create()\n" +
-                "            .show();\n" +
-                "      }\n" +
-                "    };";
+        return "\n\tPurchasesUpdatedListener purchasesUpdatedListener = (responseCode, purchases) -> {\n" +
+                "       if (responseCode == ResponseCode.OK.getValue()) {\n" +
+                "           for (Purchase purchase : purchases) {\n" +
+                "               String token = purchase.getToken();\n" +
+                "           \n" +
+                "               // After validating and attributing consumePurchase may be called \n" +
+                "               // to allow the user to purchase the item again and change the purchase's state.\n" +
+                "               // Also consume subscriptions to make them active, there will be no issue in consuming more than once\n" +
+                "               cab.consumeAsync(token, consumeResponseListener);\n" +
+                "           }\n" +
+                "       } else {\n" +
+                "           new AlertDialog.Builder(this).setMessage(\n" +
+                "               String.format(Locale.ENGLISH, \"response code: %d -> %s\", responseCode,\n" +
+                "                   ResponseCode.values()[responseCode].name()))\n" +
+                "               .setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())\n" +
+                "               .create()\n" +
+                "               .show();\n" +
+                "       }\n" +
+                "   };";
     }
 
     @Override
@@ -84,49 +108,56 @@ public class JavaSnippets implements Snippets {
 
     @Override
     public String onCreate() {
-        return "cab = CatappultBillingAppCoinsFactory.BuildAppcoinsBilling(\n" +
+        return "private AppcoinsBillingClient cab;\n" +
+                "  PurchasesUpdatedListener purchaseUpdatedListener = (responseCode, purchases) -> {\n" +
+                "  // Defined in step 4\n" +
+                "  };\n" +
+                "  protected void onCreate(Bundle savedInstanceState) {\n" +
+                "    String base64EncodedPublicKey = MY_KEY // Key obtained in Catappult's console\n" +
+                "    cab = CatapultBillingAppCoinsFactory.BuildAppcoinsBilling(\n" +
                 "      this,\n" +
                 "      base64EncodedPublicKey,\n" +
                 "      purchasesUpdatedListener\n" +
                 "    );\n" +
-                "    cab.startConnection(appCoinsBillingStateListener);";
+                "    cab.startConnection(appCoinsBillingStateListener);\n" +
+                "  }";
     }
 
     @Override
     public String startPurchase() {
-        return "private void startPurchase(String sku, String developerPayload) {\n" +
-                "    Log.d(TAG, \"Launching purchase flow.\");\n" +
-                "    // Your sku type, can also be SkuType.subs.toString()\n" +
-                "    String skuType = SkuType.inapp.toString();\n" +
-                "    BillingFlowParams billingFlowParams =\n" +
-                "        new BillingFlowParams(\n" +
-                "            Skus.YOUR_SKU_ID,\n" +
-                "            skuType,\n" +
-                "            \"orderId=\" +System.currentTimeMillis(),\n" +
-                "            developerPayload,\n" +
-                "            \"BDS\"\n" +
-                "        );\n" +
-                "    \n" +
-                "    //Make sure that the billing service is ready\n" +
-                "    if (!cab.isReady()) {\n" +
-                "      startConnection();\n" +
-                "    }\n" +
+        return "\n    private void startPurchase(String sku, String developerPayload) {\n" +
+                "       Log.d(TAG, \"Launching purchase flow.\");\n" +
+                "       // Your sku type, can also be SkuType.subs.toString()\n" +
+                "       String skuType = SkuType.inapp.toString();\n" +
+                "       BillingFlowParams billingFlowParams =\n" +
+                "           new BillingFlowParams(\n" +
+                "               Skus.YOUR_SKU_ID,\n" +
+                "               skuType,\n" +
+                "               \"orderId=\" +System.currentTimeMillis(),\n" +
+                "               developerPayload,\n" +
+                "               \"BDS\"\n" +
+                "           );\n" +
+                "       \n" +
+                "       //Make sure that the billing service is ready\n" +
+                "       if (!cab.isReady()) {\n" +
+                "       cab.startConnection(appCoinsBillingStateListener);\n" +
+                "       }\n" +
                 "\n" +
-                "    final Activity activity = this;\n" +
-                "    Thread thread = new Thread(() -> {\n" +
-                "      final int responseCode = cab.launchBillingFlow(activity, billingFlowParams);\n" +
-                "      runOnUiThread(() -> {\n" +
-                "        if (responseCode != ResponseCode.OK.getValue()) {\n" +
-                "          AlertDialog.Builder builder = new AlertDialog.Builder(this);\n" +
-                "          builder.setMessage(\"Error purchasing with response code : \" + responseCode);\n" +
-                "          builder.setNeutralButton(\"OK\", null);\n" +
-                "          Log.d(TAG, \"Error purchasing with response code : \" + responseCode);\n" +
-                "          builder.create().show();\n" +
-                "        }\n" +
-                "      });\n" +
-                "    });\n" +
-                "    thread.start();\n" +
-                "}\n";
+                "       final Activity activity = this;\n" +
+                "       Thread thread = new Thread(() -> {\n" +
+                "           final int responseCode = cab.launchBillingFlow(activity, billingFlowParams);\n" +
+                "           runOnUiThread(() -> {\n" +
+                "               if (responseCode != ResponseCode.OK.getValue()) {\n" +
+                "                   AlertDialog.Builder builder = new AlertDialog.Builder(this);\n" +
+                "                   builder.setMessage(\"Error purchasing with response code : \" + responseCode);\n" +
+                "                   builder.setNeutralButton(\"OK\", null);\n" +
+                "                   Log.d(TAG, \"Error purchasing with response code : \" + responseCode);\n" +
+                "                   builder.create().show();\n" +
+                "               }\n" +
+                "           });\n" +
+                "       });\n" +
+                "       thread.start();\n" +
+                "   }";
     }
 
     @Override
@@ -144,21 +175,19 @@ public class JavaSnippets implements Snippets {
 
     @Override
     public String consumePurchase1() {
-        return "\n\tConsumeResponseListener consumeResponseListener = new ConsumeResponseListener() {\n\t" +
-                "    @Override public void onConsumeResponse(int responseCode, String purchaseToken) {\n\t" +
-                "      Log.d(TAG, \"Consumption finished. Purchase: \" + purchaseToken + \", result: \" + responseCode);\n" +
-                "\n\t" +
-                "      if (responseCode == ResponseCode.OK.getValue()) {\n" +
-                "\n\t" +
-                "        Log.d(TAG, \"Consumption successful. Provisioning.\");\n" +
-                "\n\t" +
-                "                //Your SKU logic goes here\n\t" +
-                "      } else {\n\t" +
-                "        complain(\"Error while consuming token: \" + purchaseToken);\n\t\t" +
-                "      }\n\t" +
-                "      Log.d(TAG, \"End consumption flow.\");\n\t" +
-                "    }\n\t" +
-                "  };\n";
+        return "\n\tConsumeResponseListener consumeResponseListener = new ConsumeResponseListener() {\n" +
+                "       @Override public void onConsumeResponse(int responseCode, String purchaseToken) {\n" +
+                "           Log.d(TAG, \"Consumption finished. Purchase: \" + purchaseToken + \", result: \" + responseCode);\n" +
+                "\n" +
+                "               if (responseCode == ResponseCode.OK.getValue()) {\n" +
+                "                   Log.d(TAG, \"Consumption successful. Provisioning.\");\n" +
+                "                   //Your SKU logic goes here\n" +
+                "               } else {\n" +
+                "                   Log.d(TAG,\"Error while consuming token: \" + purchaseToken);\n" +
+                "               }\n" +
+                "            Log.d(TAG, \"End consumption flow.\");\n" +
+                "       }\n" +
+                "   };";
     }
 
     @Override
@@ -176,7 +205,7 @@ public class JavaSnippets implements Snippets {
 
     @Override
     public String skuDetailsResponseListener() {
-        return "\tSkuDetailsResponseListener skuDetailsResponseListener = (responseCode, skuDetailsList) -> {\n\t" +
+        return "\n\tSkuDetailsResponseListener skuDetailsResponseListener = (responseCode, skuDetailsList) -> {\n\t" +
                 "        Log.d(TAG, \"Received skus $responseCode $skuDetailsList\");\n\t" +
                 "        for (SkuDetails sku : skuDetailsList) {\n\t" +
                 "            Log.d(TAG, \"sku details: $sku\");\n\t" +
@@ -186,21 +215,25 @@ public class JavaSnippets implements Snippets {
 
     @Override
     public String callSkuDetails() {
-        return "\tprivate void queryInapps() {\n\t" +
-                "        AList<String> inapps = ArrayList<String>()\n\t" +
-                "        // Fill the inapps with the skus of items" +
-                "\n\t" +
-                "        SkuDetailsParams skuDetailsParams = SkuDetailsParams();\n\t" +
-                "        skuDetailsParams.setItemType(SkuType.inapp.toString());\n\t" +
-                "        skuDetailsParams.setMoreItemSkus(inapps);\n\t" +
-                "        cab.querySkuDetailsAsync(skuDetailsParams, skuDetailsResponseListener);" +
-                "\n\t" +
-                "\tprivate void querySubs() { \n\t" +
-                "        SkuDetailsParams skuDetailsParamsSubs = new SkuDetailsParams();\n\t" +
-                "        skuDetailsParamsSubs.itemType = SkuType.subs.toString();\n\t" +
-                "        skuDetailsParamsSubs.moreItemSkus(subs);\n\t" +
-                "        cab.querySkuDetailsAsync(skuDetailsParamsSubs, skuDetailsResponseListener);\n\t" +
-                "    }\n";
+        return "private void queryInapps() {\n" +
+                "    List<String> inapps = new ArrayList<String>();\n" +
+                "    // Fill the inapps with the skus of items\n" +
+                "\n" +
+                "    SkuDetailsParams skuDetailsParams = new SkuDetailsParams();\n" +
+                "    skuDetailsParams.setItemType(SkuType.inapp.toString());\n" +
+                "    skuDetailsParams.setMoreItemSkus(inapps);\n" +
+                "    cab.querySkuDetailsAsync(skuDetailsParams, skuDetailsResponseListener);\n" +
+                "}\n" +
+                "\n" +
+                "private void querySubs() {\n" +
+                "    List<String> subs = new ArrayList<String>();\n" +
+                "    // Fill the subs with the skus of subscriptions\n" +
+                "\n" +
+                "    SkuDetailsParams skuDetailsParams = new SkuDetailsParams();\n" +
+                "    skuDetailsParams.setItemType(SkuType.subs.toString());\n" +
+                "    skuDetailsParams.setMoreItemSkus(subs);\n" +
+                "    cab.querySkuDetailsAsync(skuDetailsParams, skuDetailsResponseListener);\n" +
+                "}";
     }
 
     public String ospIntent() {

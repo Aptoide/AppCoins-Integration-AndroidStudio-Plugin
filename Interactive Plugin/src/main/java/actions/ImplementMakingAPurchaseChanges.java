@@ -29,6 +29,7 @@ public class ImplementMakingAPurchaseChanges extends AbstractAction {
     public void actionPerformed(ActionEvent actionEvent) {
         VirtualFile referenceFile = files.get(5);
         VirtualFile declarationFile = files.get(7);
+
         if(referenceFile.getName()!=declarationFile.getName()){
             Document referenceDocument = FileDocumentManager.getInstance().getDocument(referenceFile);
             Document declarationDocument = FileDocumentManager.getInstance().getDocument(declarationFile);
@@ -224,10 +225,10 @@ public class ImplementMakingAPurchaseChanges extends AbstractAction {
                         int finalIndex= newContent.indexOf(";",index);
                         int commentIndex = newContent.indexOf("*/",index);
                         if(commentIndex==finalIndex+1){
-                            newContent.insert(commentIndex+2,"\n\t\t"+billingClass+".startPurchase(sku,developerPayload);\n");
+                            newContent.insert(commentIndex+2,"\n\t"+billingClass+".startPurchase(sku,developerPayload);\n");
                         }
                         else{
-                            newContent.insert(finalIndex+1,"*/\n\t\t"+billingClass+".startPurchase(sku,developerPayload);\n");
+                            newContent.insert(finalIndex+1,"*/\n\t"+billingClass+".startPurchase(sku,developerPayload);\n");
                             newContent.insert(firstIndex+1,"/*");
                         }
                     }
