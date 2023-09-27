@@ -310,6 +310,19 @@
         <body>).</body>
         <body>The returned data must be equal to the transaction data the callback URL received on its body. Finally, once you do all the validations on your server, you will need to notify your application and give the item to the end-user.</body>
     </page>
+    <page id="33">
+        <title>Server to Server Check</title>
+        <step>7</step>
+        <body>In order to validate the transaction with Catappult's API, you will need to send a request from your server to our API. As a response, you will receive information about the transaction and by receiving this response it means that the purchase is valid.</body>
+        <body>Receipt</body>
+        <body>After completing a purchase in your client app, you will receive a receipt that looks like this. This will be your source of information to call our API.</body>
+        <body>From this receipt you can retrieve the necessary information to use as parameters to call our API, using the following GET Request URL:</body>
+        <body>Validating subscriptions follows with exact same logic with only a small change on the URL endpoint.</body>
+        <body>The packageName and productId are inside the originalJson field. The purchaseToken can be obtained from either the originalJson field OR from the StorePurchaseJsonString (with the name orderId instead). Below there are some snippets in several languages of how one would perform this request:</body>
+        <body>Response</body>
+        <body>If you get a status code 200 OK form the request it means the purchase was successfully validated.</body>
+        <body>In the response, you have multiple fields providing a variety of information regarding the transaction. Here's a sample response with an explanation for each parameter.</body>
+    </page>
     <table id="0">
         <row>
             <cell>Name</cell>

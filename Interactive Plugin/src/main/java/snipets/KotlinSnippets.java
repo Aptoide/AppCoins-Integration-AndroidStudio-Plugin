@@ -321,4 +321,117 @@ public class KotlinSnippets implements Snippets {
                 "signature = hmac.new(secret_key, url.encode(\"utf-8\"), hashlib.sha256).hexdigest()\n" +
                 "signed_url = url + \"&signature=\" + signature";
     }
+    @Override
+    public String serverCheckReceipt() {
+        return  "{\n" +
+                "  \"Store\": \"storeName\",\n" +
+                "  \"TransactionID\": \"anIdWithNumbersAndLetters\",\n" +
+                "  \"Payload\": {\n" +
+                "    \"ItemType\": \"inapp\",\n" +
+                "    \"ProductId\": \"full_trajectory\",\n" +
+                "    \"GameOrderId\": \"anIdWithNumbersAndLetters\",\n" +
+                "    \"OrderQueryToken\": \"aLargeIdWithNumbersAndLetters\",\n" +
+                "    \"StorePurchaseJsonString\": {\n" +
+                "      \"developerPayload\": \"unity://unity3d.comcpOrderId=anIdWithNumbersAndLetters&payload=\",\n" +
+                "      \"itemType\": \"inapp\",\n" +
+                "      \"orderId\": \"catappult.inapp.purchase.anIdWithNumbersAndLetters\",\n" +
+                "      \"originalJson\": {\n" +
+                "        \"orderId \": \"anIdWithNumbersAndLetters\",\n" +
+                "        \"packageName\": \"your.package.name\",\n" +
+                "        \"productId \": \"yourSKU\",\n" +
+                "        \"purchaseTime\": 123456789,\n" +
+                "        \"purchaseToken\": \"catappult.inapp.purchase.anIdWithNumbersAndLetters\",\n" +
+                "        \"purchaseState\": 0,\n" +
+                "        \"developerPayload\":\"unity://unity3d.com?cpOrderId=anIdWithNumbersAndLetters&payload=\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+    }
+
+    @Override
+    public String serverCheckAPIRequest() {
+        return "GET https://api.catappult.io/product/8.20191001/google/inapp/v3/applications/**packageName**/purchases/products/**productId**/tokens/**token**";
+    }
+
+    public String serverCheckAPIRequestSubscriptions() {
+        return "GET https://api.catappult.io/product/8.20191001/google/inapp/v3/applications/**packageName**/purchases/subscriptions/**productId**/tokens/**token**";
+    }
+
+    @Override
+    public String serverCheckRequestPython() {
+        return "def validate_purchase(self, package_name: str, sku: str,\n" +
+                "                      purchase_token: str, access_token: str) -> bool:\n" +
+                " \n" +
+                "    api_purchase_url = \"https://api.catappult.io/product/8.20191001/google/inapp/v3/\" \\\n" +
+                "           \"applications/{packageName}/purchases/products/{productId}/tokens/\" \\\n" +
+                "           \"{purchaseToken}\"\n" +
+                " \n" +
+                "    response = requests.get(api_purchase_url\n" +
+                "                            .format(packageName=package_name, productId=sku,\n" +
+                "                                    purchaseToken=purchase_token))\n" +
+                " \n" +
+                "    if response.status_code == 200:\n" +
+                "        return True\n" +
+                "    else:\n" +
+                "        return False";
+    }
+
+    @Override
+    public String serverCheckRequestJava() {
+        return "private boolean validatePurchase(String packageName, String sku, \n" +
+                "                                 String purchaseToken, String accessToken\n" +
+                "                                ) throws Exception {\n" +
+                "    String apiPurchaseUrl = String.format(\"https://api.catappult.io/product/8.20191001/\" +                                 \"inapp/google/v3/applications/%s/purchases/products/%s/tokens/%s\", \n" +
+                "            packageName, sku, purchaseToken);\n" +
+                "    HttpGet request = new HttpGet(apiPurchaseUrl);\n" +
+                "\n" +
+                "    Request request = new Request.Builder()\n" +
+                "                .url(apiPurchaseUrl)\n" +
+                "                .build();\n" +
+                "    try (Response response = httpClient.newCall(request).execute()) {\n" +
+                "        return response.isSuccessful();\n" +
+                "    }\n" +
+                "}";
+    }
+
+    @Override
+    public String serverCheckRequestPHP() {
+        return "function validatePurchase($packageName, $sku, \n" +
+                "\t\t\t\t\t\t\t\t\t\t\t\t\t$purchaseToken, $accessToken) {\n" +
+                "    $curl = curl_init();\n" +
+                "    $apiPurchaseUrl = \n" +
+                "'https://api.catappult.io/product/8.20191001/inapp/google/v3/applications/' . $packageName . '/purchases/products/' . $sku . '/tokens/' . $purchaseToken\n" +
+                "\n" +
+                "    curl_setopt($ch, CURLOPT_URL, $apiPurchaseUrl);\n" +
+                "    curl_setopt($ch, CURLOPT_HEADER, true);\n" +
+                "    curl_setopt($ch, CURLOPT_NOBODY, true);\n" +
+                "    $response = curl_exec($ch);\n" +
+                "    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);\n" +
+                "    curl_close($ch);\n" +
+                "    if ($httpcode == 200) {\n" +
+                "        return true;\n" +
+                "    } else {\n" +
+                "        return false;\n" +
+                "    }\n" +
+                "}";
+    }
+
+    @Override
+    public String serverCheckResponse() {
+        return "{\"resource\":\n" +
+                "\t{\n" +
+                "    \"kind\": \"androidpublisher#productPurchase\",\n" +
+                "    \"purchaseTimeMillis\": long,\n" +
+                "    \"purchaseState\": integer,\n" +
+                "    \"consumptionState\": integer,\n" +
+                "    \"developerPayload\": string,\n" +
+                "    \"orderId\": string,\n" +
+                "    \"acknowledgementState\": integer,\n" +
+                "    \"purchaseToken\": string,\n" +
+                "    \"productId\": string,\n" +
+                "    \"regionCode\": string\n" +
+                "\t}\n" +
+                "}";
+    }
 }

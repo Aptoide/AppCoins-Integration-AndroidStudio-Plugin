@@ -31,8 +31,8 @@ import java.util.Map;
 import static dialogs.XmlDialogParser.getTableByIndex;
 
 public class CardLayoutDialog extends JPanel {
-    private final int PUBLICK_KEY_PAGE = 15;
-    private final int SDK_PAGES_LIMIT = 14;
+    private final int PUBLICK_KEY_PAGE = 16;
+    private final int SDK_PAGES_LIMIT = 15;
     private final int OSP_PAGES_LIMIT = 5;
     private String currFlow = "";
     private int currCard = 1;
@@ -77,8 +77,9 @@ public class CardLayoutDialog extends JPanel {
         cPanel.add(SDKDialogs.makingPurchase2(),"sdk11");
         cPanel.add(SDKDialogs.startingTheServiceConnection2(),"sdk12");
         cPanel.add(SDKDialogs.consumePurchase(),"sdk13");
-        cPanel.add(SDKDialogs.lastPage(),"sdk14");
-        cPanel.add(publicKey(),"sdk15");
+        cPanel.add(SDKDialogs.serverCheck(), "sdk14");
+        cPanel.add(SDKDialogs.lastPage(),"sdk15");
+        cPanel.add(publicKey(),"sdk16");
 
         cPanel.add(methodChoosingPage(), "osp1");
         cPanel.add(OSPDialogs.generateOSPUrl(), "osp2");
