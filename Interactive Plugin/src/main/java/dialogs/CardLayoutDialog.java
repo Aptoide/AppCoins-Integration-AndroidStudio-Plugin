@@ -28,9 +28,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
 
+import static dialogs.XmlDialogParser.getTableByIndex;
+
 public class CardLayoutDialog extends JPanel {
-    private final int PUBLICK_KEY_PAGE = 15;
-    private final int SDK_PAGES_LIMIT = 14;
+    private final int PUBLICK_KEY_PAGE = 16;
+    private final int SDK_PAGES_LIMIT = 15;
     private final int OSP_PAGES_LIMIT = 5;
     private String currFlow = "";
     private int currCard = 1;
@@ -70,13 +72,14 @@ public class CardLayoutDialog extends JPanel {
         cPanel.add(SDKDialogs.changesToAndroidManifest(),"sdk6");
         cPanel.add(SDKDialogs.changesToAndroidManifest2(),"sdk7");
         cPanel.add(startingTheServiceConnection(),"sdk8");
-        cPanel.add(SDKDialogs.startingTheServiceConnection2(),"sdk9");
-        cPanel.add(SDKDialogs.querySku(),"sdk10");
-        cPanel.add(SDKDialogs.makingPurchase(),"sdk11");
-        cPanel.add(SDKDialogs.makingPurchase2(),"sdk12");
+        cPanel.add(SDKDialogs.querySku(),"sdk9");
+        cPanel.add(SDKDialogs.makingPurchase(),"sdk10");
+        cPanel.add(SDKDialogs.makingPurchase2(),"sdk11");
+        cPanel.add(SDKDialogs.startingTheServiceConnection2(),"sdk12");
         cPanel.add(SDKDialogs.consumePurchase(),"sdk13");
-        cPanel.add(SDKDialogs.lastPage(),"sdk14");
-        cPanel.add(publicKey(),"sdk15");
+        cPanel.add(SDKDialogs.serverCheck(), "sdk14");
+        cPanel.add(SDKDialogs.lastPage(),"sdk15");
+        cPanel.add(publicKey(),"sdk16");
 
         cPanel.add(methodChoosingPage(), "osp1");
         cPanel.add(OSPDialogs.generateOSPUrl(), "osp2");
@@ -238,6 +241,11 @@ public class CardLayoutDialog extends JPanel {
         textCard2.setAlignmentX(Component.CENTER_ALIGNMENT);
         successPanel.add(textCard1);
         successPanel.add(textCard2);
+        successPanel.addRigidArea(new Dimension(0, 20));
+
+        String data[][] = getTableByIndex(2);
+        JTable table = new TableComparation(data).getTable();
+        successPanel.add(table);
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(1,2));
@@ -261,7 +269,7 @@ public class CardLayoutDialog extends JPanel {
 
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
-        JButton languageButton = new JButton("Best Choice");
+        JButton languageButton = new JButton("Recommended");
         languageButton.setForeground(DialogColors.white);
         languageButton.setBackground(DialogColors.pink);
         languageButton.setUI(new BestChoiceTab());
@@ -415,11 +423,17 @@ public class CardLayoutDialog extends JPanel {
 
         CodeWindow appCoinsBillingStateListener = new CodeWindow(CardLayoutDialog.projLanguage, snippets.appCoinsBillingStateListener(),
                 DialogColors.darkBlue, ActionsSDK.implementedStartingServiceConnection);
+        appCoinsBillingStateListener.setImplementAutomaticallyButtonText("Partially implement changes automatically");
 
         if(CardLayoutDialog.files.get(4)!=null){
             appCoinsBillingStateListener.addButtonActionListener(new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    VirtualFile file = CardLayoutDialog.files.get(4);
+                    FileEditorManager.getInstance(CardLayoutDialog.project).openTextEditor(
+                            new OpenFileDescriptor(CardLayoutDialog.project,file),
+                            true // request focus to editor
+                    );
                     cObjl.show(cPanel, "sdk" + (PUBLICK_KEY_PAGE));
                 }
             });

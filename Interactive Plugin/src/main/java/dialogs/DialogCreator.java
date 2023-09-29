@@ -607,7 +607,7 @@ public class DialogCreator {
         c.ipady = 10;
         c.gridwidth=2;
         c.weightx=0.33;
-        panel.add(new JButton(new ImplementStartingServiceConnectionChanges(project,files,toolWindow)),c);
+        panel.add(new JButton(new ImplementStartingServiceConnectionChanges(project,files)),c);
         c.gridx=2;
         c.gridy=6;
         c.weightx=0.34;

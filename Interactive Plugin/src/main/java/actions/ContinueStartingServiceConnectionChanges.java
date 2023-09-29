@@ -1,7 +1,5 @@
 package actions;
 
-import com.intellij.notification.NotificationGroupManager;
-import com.intellij.notification.NotificationType;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -10,6 +8,8 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
+import snipets.Snippets;
+import window_factory.BillingToolWindowFactory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -29,6 +29,7 @@ public class ContinueStartingServiceConnectionChanges extends AbstractAction {
     }
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
+        Snippets snippets = BillingToolWindowFactory.snippets;
         String keyString=key.getText();
         Document onCreateDocument = FileDocumentManager.getInstance().getDocument(files.get(4));
         String oldContent = onCreateDocument.getText();
@@ -50,7 +51,10 @@ public class ContinueStartingServiceConnectionChanges extends AbstractAction {
             firstIndex = newOnCreateContent.indexOf("@Override",lastIndex);
             lastIndex= newOnCreateContent.indexOf("{", firstIndex);
             String method = newOnCreateContent.substring(firstIndex,lastIndex);
-            if (method.contains(" public ") && method.contains(" void ") && method.contains(" onCreate")){
+            if ((method.contains(" public ") ||
+                    method.contains(" protected ") ||
+                    method.contains(" private ")) &&
+                    method.contains(" void ") && method.contains(" onCreate")){
                 break;
             }
         }
@@ -72,23 +76,13 @@ public class ContinueStartingServiceConnectionChanges extends AbstractAction {
             lastIndex++;
         }
         if (!oldContent.contains("AppCoinsBillingStateListener")){
-            listeners= listeners.concat("\n\tAppCoinsBillingStateListener appCoinsBillingStateListener = new AppCoinsBillingStateListener() {\n\t\t" +
-                    "@Override public void onBillingSetupFinished(int responseCode) {\n\t\t\t" +
-                    "if (responseCode != ResponseCode.OK.getValue()) {\n\t\t\t\t" +
-                    "complain(\"Problem setting up in-app billing: \" + responseCode);\n\t\t\t\t" +
-                    "return;\n\t\t\t" +
-                    "}\n\t\t\t" +
-                    "callSkuDetails();\n\t\t\t" +
-                    "updateUi();\n" +
-                    "\n\t\t\t" +
-                    "Log.d(TAG, \"Setup successful. Querying inventory.\");\n\t\t" +
-                    "}\n" +
-                    "\n\t\t" +
-                    "@Override public void onBillingServiceDisconnected() {\n\t\t\t" +
-                    "Log.d(\"Message: \", \"Disconnected\");\n\t\t" +
-                    "}\n\t" +
-                    "};\n");
-            toImport=toImport.concat("\nimport com.appcoins.sdk.billing.listeners.AppCoinsBillingStateListener;");
+            listeners= listeners.concat(snippets.appCoinsBillingStateListener());
+            toImport=toImport.concat(
+                    "\nimport com.appcoins.sdk.billing.listeners.AppCoinsBillingStateListener;\n" +
+                    "import com.appcoins.sdk.billing.Purchase;\n" +
+                    "import com.appcoins.sdk.billing.PurchasesResult;\n" +
+                    "import com.appcoins.sdk.billing.ResponseCode;\n" +
+                    "import com.appcoins.sdk.billing.types.SkuType;");
             if(!oldContent.contains("android.util.Log")){
                 toImport=toImport.concat("\nimport android.util.Log;");
             }
@@ -97,10 +91,19 @@ public class ContinueStartingServiceConnectionChanges extends AbstractAction {
         if(!oldContent.contains("String base64EncodedPublicKey")){
             variables = variables.concat("\n\tString base64EncodedPublicKey = \"" + keyString + "\";");
         }
-        if (!oldContent.contains("CatappultBillingAppCoinsFactory.BuildAppcoinsBilling")){
-            toOnCreate = toOnCreate.concat("\tcab = CatappultBillingAppCoinsFactory.BuildAppcoinsBilling(this, "+"base64EncodedPublicKey"+", purchasesUpdatedListener);\n"+
-                    "\tcab.startConnection(appCoinsBillingStateListener);\n\t");
-            toImport=toImport.concat("\nimport com.appcoins.sdk.billing.helpers.CatappultBillingAppCoinsFactory;");
+
+        if(!oldContent.contains("AppcoinsBillingClient cab")){
+            variables = variables.concat("\n\tAppcoinsBillingClient cab;");
+        }
+
+        if(!oldContent.contains("String TAG")){
+            variables = variables.concat("\n\tprivate static final String TAG = \"\";");
+        }
+
+        if (!oldContent.contains("CatapultBillingAppCoinsFactory.BuildAppcoinsBilling")){
+            toOnCreate = toOnCreate.concat("\tcab = CatapultBillingAppCoinsFactory.BuildAppcoinsBilling(this, "+"base64EncodedPublicKey"+", purchasesUpdatedListener);\n"+
+                    "\t\tcab.startConnection(appCoinsBillingStateListener);\n\t");
+            toImport=toImport.concat("\nimport com.appcoins.sdk.billing.helpers.CatapultBillingAppCoinsFactory;");
         }
         newOnCreateContent.insert(lastIndex,toOnCreate);
         if(!oldContent.contains("super.onCreate")){
@@ -116,12 +119,6 @@ public class ContinueStartingServiceConnectionChanges extends AbstractAction {
             int keyIndex = newOnCreateContent.indexOf("MIIBI");
             if(keyIndex!=-1){
                 newOnCreateContent.replace(keyIndex,newOnCreateContent.indexOf(String.valueOf(newOnCreateContent.charAt(keyIndex-1)),keyIndex),keyString);
-            }
-            else{
-                NotificationGroupManager.getInstance()
-                        .getNotificationGroup("Error Group")
-                        .createNotification("We couldn't find your key definition so it wasn't changed", NotificationType.INFORMATION)
-                        .notify((Project) this);
             }
         }
         newOnCreateContent.insert(importIndex,toImport);

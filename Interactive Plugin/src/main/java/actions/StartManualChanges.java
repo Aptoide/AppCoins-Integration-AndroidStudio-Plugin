@@ -1,11 +1,12 @@
 package actions;
 
-import dialogs.DialogCreator;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
+import dialogs.DialogCreator;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -26,7 +27,7 @@ public class StartManualChanges extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         toolWindow.getContentManager().removeAllContents(true);
-        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+        ContentFactory contentFactory = ApplicationManager.getApplication().getService(ContentFactory.class);
         Content content;
         switch (step){
             case 1:

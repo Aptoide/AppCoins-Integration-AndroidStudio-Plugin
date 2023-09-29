@@ -22,4 +22,11 @@ public interface Snippets {
    public String ospPHP();
    public String ospJavaScript();
    public String ospPython();
+   public String serverCheckReceipt();
+   public String serverCheckAPIRequest();
+   public String serverCheckAPIRequestSubscriptions();
+   public String serverCheckRequestPython();
+   public String serverCheckRequestJava();
+   public String serverCheckRequestPHP();
+   public String serverCheckResponse();
 }

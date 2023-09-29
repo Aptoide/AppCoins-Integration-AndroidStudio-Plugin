@@ -82,29 +82,26 @@
     <page id="9">
         <title>Starting the service connection</title>
         <step>3</step>
-        <body>Add the following listeners that should run when you start the app.</body>
+        <body>Once the permissions and dependencies are all added, you need to initialize an instance of AppcoinsBillingClient. This is the instance used to communicate with Catappult Billing Library. You should have only one active instance at any time. To initialize the billing client and start the connection, the PurchasesUpdatedListener is required for the client initialization and AppCoinsBillingStateListener is required to start the connection. This section explains how to create the 2 required instances and how to instantiate and connect the AppcoinsBillingClient.</body>
         <body>AppCoinsBillingStateListener</body>
         <body>Add the AppCoinsBillingStateListener and PurchasesUpdatedListener interfaces.
             The automatic changes will use these listeners in the onCreate method.</body>
         <body>Add the AppCoinsBillingStateListener interface, implementing two methods:
-            onBillingSetupFinished(responseCode) and onBillingServiceDisconnected()
+            onBillingSetupFinished(responseCode) and onBillingServiceDisconnected().
+            When the setup finishes successfully you should immediately check for pending and/or owned subscriptions. If there are pending purchases you should consume them.
             Here's a template for the implementation:</body>
-        <body>PurchaseUpdateListener</body>
-        <body>Callback for purchase updates and can be triggered, for example, when the user purchases something in app.
-            This interface has one method:</body>
-        <body>Add the PurchasesUpdatedListener interface, implementing the method:
-            onPurchasesUpdated(responseCode,listPurchases)
-            Here's a template for the implementation:</body>
-        <body>To build and start Appcoins IAB, you should use the following code (which usually is added
-            to the onCreate method of your main activity). base64EncodedPublicKey refers to your Catappult Public Key.
-        </body>
         <button1>Go to main activity</button1>
         <button2>Go back</button2>
     </page>
     <page id="10">
-        <title>Starting the Service Connection</title>
-        <step>3</step>
-        <body>Add the following listeners that should run when you start the app.</body>
+        <title>Consuming a Purchase</title>
+        <step>6</step>
+        <body>After the Appcoins Wallet processes the purchase, it will return to your app the resulting data in the intent. With the changes made to onActivityResult in the previous step, the SDK will be notified with the data and it will validate the purchase info with your public key.</body>
+        <body>PurchaseUpdateListener</body>
+        <body>After the SDK processes and validates the purchase, it will notify you through the PurchasesUpdatedListener of the purchase data. This listener is the one registered in step 1 and contains the callback for when a purchase is updated, and in this callback is where you can get the details of the purchase and attribute the item to the user.</body>
+        <body>Add the PurchasesUpdatedListener interface, implementing the method:
+            onPurchasesUpdated(responseCode,listPurchases)
+            Here's a template for the implementation:</body>
         <button1>Implement changes manually</button1>
         <button2>Go back</button2>
     </page>
@@ -131,7 +128,6 @@
         <button1>Continue</button1>
         <button2>Go back</button2>
     </page>
-    <!--> Page bellow seems to be unused<-->
     <page id="13">
         <title>Public key</title>
         <step>3</step>
@@ -247,6 +243,8 @@
         <step>7</step>
         <body>To query purchases and obtain more details about them you must implement the skuDetailsResponseListener and call the querySkuDetailsAsync method. The automatic changes will add these methods to the main activity. If you implement the changes manually, please notice that the AppCoinsBillingStateListener uses callSkuDetails(), which is the method that calls querySkuDetailsAsync.</body>
         <body>SkuDetailsResponseListener</body>
+        <body>After starting the connection, you can query Catappult for the products available to buy in order to display them to the user. This query includes not only the product's title but also the description, value, etc...
+            To query the products you can use the querySkuDetailsAsync which requires a SkuDetailsResponseListener to process Catappult's response.F</body>
         <body>Here's an example of the implementation of the skuDetailsResponseListener:</body>
         <body>A possible implementation of the callSkuDetails method, which calls querySkuDetailsAsync, is the following:</body>
         <button1>Implement changes automatically</button1>
@@ -311,6 +309,19 @@
         <body>https://api.catappult.io/broker/8.20220927/transactions/2DtyvTOSShc1xT9C</body>
         <body>).</body>
         <body>The returned data must be equal to the transaction data the callback URL received on its body. Finally, once you do all the validations on your server, you will need to notify your application and give the item to the end-user.</body>
+    </page>
+    <page id="33">
+        <title>Server to Server Check</title>
+        <step>7</step>
+        <body>In order to validate the transaction with Catappult's API, you will need to send a request from your server to our API. As a response, you will receive information about the transaction and by receiving this response it means that the purchase is valid.</body>
+        <body>Receipt</body>
+        <body>After completing a purchase in your client app, you will receive a receipt that looks like this. This will be your source of information to call our API.</body>
+        <body>From this receipt you can retrieve the necessary information to use as parameters to call our API, using the following GET Request URL:</body>
+        <body>Validating subscriptions follows with exact same logic with only a small change on the URL endpoint.</body>
+        <body>The packageName and productId are inside the originalJson field. The purchaseToken can be obtained from either the originalJson field OR from the StorePurchaseJsonString (with the name orderId instead). Below there are some snippets in several languages of how one would perform this request:</body>
+        <body>Response</body>
+        <body>If you get a status code 200 OK form the request it means the purchase was successfully validated.</body>
+        <body>In the response, you have multiple fields providing a variety of information regarding the transaction. Here's a sample response with an explanation for each parameter.</body>
     </page>
     <table id="0">
         <row>
@@ -448,6 +459,32 @@
             <cell>String</cell>
             <cell>Transaction price in USD</cell>
             <cell>4.99</cell>
+        </row>
+    </table>
+    <table id="2">
+        <row>
+            <cell>  One-Step Payment (OSP)</cell>
+            <cell>  Native Android SDK</cell>
+        </row>
+        <row>
+            <cell>  Similar to Alipay</cell>
+            <cell>  Similar to Google Play</cell>
+        </row>
+        <row>
+            <cell>  10 hours for the full integration</cell>
+            <cell>  14 hours for the full integration</cell>
+        </row>
+        <row>
+            <cell>  One week integration timeline</cell>
+            <cell>  Two weeks integration timeline</cell>
+        </row>
+        <row>
+            <cell>  Supports in-app purchases (and subscriptions coming soon)</cell>
+            <cell>  Supports in-app purchases and subscriptions</cell>
+        </row>
+        <row>
+            <cell>  Supports remote validation</cell>
+            <cell>  Supports remote and/or local validation</cell>
         </row>
     </table>
 </company>
