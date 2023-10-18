@@ -37,7 +37,8 @@ This is what the flow of the steps look like
 ![AndroidStudioBillingPlugin](https://github.com/Aptoide/AppCoins-Integration-AndroidStudio-Plugin/assets/109087647/56def2bc-c59c-4b88-a380-ea5ab7cdff0f)
 
 ## 🚀 How to run it
-It's recommended to develop the plugin in IntellIJ. There you will find an option to run gradle tasks. The one used to compile the plugin is `buildDependentes`.
+It's recommended to develop the plugin in IntellIJ. There you will find an option to run gradle tasks. The one used to compile the plugin is `
+buildDependentes`.
 
 <img width="316" alt="image" src="https://github.com/Aptoide/AppCoins-Integration-AndroidStudio-Plugin/assets/109087647/f65f38a0-7120-4063-9602-299dd9edd664">
 
@@ -47,6 +48,14 @@ In Android Studio the plugin can be imported via Preferences either by using the
 
 <img width="977" alt="image" src="https://github.com/Aptoide/AppCoins-Integration-AndroidStudio-Plugin/assets/109087647/03f0d310-83d5-4b6b-94d4-306a0ced5f16">
 
+
+## How to-do
+- Change the metrics API URL -> When compile the production plugin do not forget to
+change the to the production metrics API url at:
+```Interactive Plugin/src/main/java/utils/MetricsClient.java```
+
+- Release a new version -> change Plugin version and notes at:
+```Interactive Plugin/src/main/resources/META-INF/plugin.xml```
 
 ## 🛠 Techs
 
