@@ -3,10 +3,8 @@ package dialogs;
 import actions.*;
 import utils.ActionsSDK;
 import utils.DialogColors;
-import visual_elements.Card;
-import visual_elements.CodeWindow;
+import visual_elements.*;
 import visual_elements.Panel;
-import visual_elements.Table;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -150,7 +148,7 @@ public class SDKDialogs {
         Card startingTheServiceConnection2 = new Card();
         startingTheServiceConnection2.setLayout(new BorderLayout(0,20));
 
-        ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(9);
+        ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(10);
         String title = dialogElements.get(0);
         String body =  dialogElements.get(2);
 
@@ -160,12 +158,12 @@ public class SDKDialogs {
         Panel panel = new Panel(DialogColors.white);
 
         JLabel textCard2 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67 size=5><b>" + dialogElements.get(6) + "</b></font>" +
-                "<br><br><font color=#220F67>"+ dialogElements.get(7) +"</font></html>");
+                "<font color=#220F67 size=5><b>" + dialogElements.get(3) + "</b></font>" +
+                "<br><br><font color=#220F67>"+ dialogElements.get(4) +"</font></html>");
         textCard2.setHorizontalAlignment(JLabel.LEFT);
 
         JLabel textCard3 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67>"+ dialogElements.get(8) +"</font></html>");
+                "<font color=#220F67>"+ dialogElements.get(5) +"</font></html>");
         textCard3.setHorizontalAlignment(JLabel.LEFT);
 
         String data[][] ={
@@ -211,6 +209,9 @@ public class SDKDialogs {
         JLabel textCard3 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
                 "<font color=#220F67>"+ dialogElements.get(4) +"</font></html>");
 
+        JLabel textCard4 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
+                "<font color=#220F67>"+ dialogElements.get(5) +"</font></html>");
+
         String data[][] ={
                 {"Name","Definition"},
                 {"onSkuDetailsResponse(responseCode, skuDetailsList)","This method receives the result of a query of SKU" +
@@ -222,6 +223,7 @@ public class SDKDialogs {
         panel.addRigidArea(new Dimension(0, 20));
         panel.add(table.getTable());
         panel.addRigidArea(new Dimension(0, 20));
+        panel.add(textCard3);
 
         CodeWindow skuDetailsResponseListener = new CodeWindow(CardLayoutDialog.projLanguage, snippets.skuDetailsResponseListener(),
                 DialogColors.darkBlue, ActionsSDK.implementedQuerySku);
@@ -229,7 +231,7 @@ public class SDKDialogs {
         panel.add(skuDetailsResponseListener.getPanel());
 
         panel.addRigidArea(new Dimension(0, 30));
-        panel.add(textCard3);
+        panel.add(textCard4);
         panel.addRigidArea(new Dimension(0, 10));
 
         CodeWindow callSkuDetails = new CodeWindow(CardLayoutDialog.projLanguage, snippets.callSkuDetails(),
@@ -261,7 +263,7 @@ public class SDKDialogs {
         CodeWindow startPurchase = new CodeWindow(CardLayoutDialog.projLanguage, snippets.startPurchase(),
                 DialogColors.darkBlue, ActionsSDK.implementedMakingPurchase);
 
-        if (CardLayoutDialog.files.containsKey(5) && CardLayoutDialog.files.containsKey(7)){
+        if (CardLayoutDialog.files.containsKey(5) && CardLayoutDialog.files.containsKey(7)){;
             startPurchase.addButtonAction(new ImplementMakingAPurchaseChanges(
                     CardLayoutDialog.project,CardLayoutDialog.files,CardLayoutDialog.toolWindow));
         }
@@ -384,5 +386,81 @@ public class SDKDialogs {
         lastPage.add(panel.getPanel(), BorderLayout.SOUTH);
 
         return lastPage.getPanel();
+    }
+
+    public static RoundedScrollablePanelBorder serverCheck(){
+        Card serverCheck = new Card();
+
+        serverCheck.setLayout(new BorderLayout(20,20));
+
+        ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(33);
+        String title = dialogElements.get(0);
+        String body =  dialogElements.get(2);
+
+        String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
+        serverCheck.add(CardLayoutDialog.moreInformationLabel(topText, "https://docs.catappult.io/docs/native-android-sdk#2-query-in-app-products"), BorderLayout.NORTH);
+
+        Panel panel = new Panel(DialogColors.white);
+
+        JLabel textCard2 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
+                "<font color=#220F67 size=5><b>" + dialogElements.get(3) + "</b></font</html>");
+        JLabel textCard3 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
+                "<font color=#220F67>"+ dialogElements.get(4) +"</font></html>");
+        JLabel textCard4 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
+                "<font color=#220F67>"+ dialogElements.get(5) +"</font></html>");
+        JLabel textCard5 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
+                "<font color=#220F67>"+ dialogElements.get(6) +"</font></html>");
+        JLabel textCard6 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
+                "<font color=#220F67>"+ dialogElements.get(7) +"</font></html>");
+        JLabel textCard7 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
+                "<font color=#220F67 size=5><b>" + dialogElements.get(8) + "</b></font</html>");
+        JLabel textCard8 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
+                "<font color=#220F67>"+ dialogElements.get(9) +"</font></html>");
+
+        panel.add(textCard2);
+        panel.addRigidArea(new Dimension(0, 20));
+        panel.add(textCard3);
+        panel.addRigidArea(new Dimension(0, 10));
+
+        CodeWindow receipt = new CodeWindow("JSON", snippets.serverCheckReceipt(),
+                DialogColors.darkBlue);
+        panel.add(receipt.getPanel());
+
+        panel.addRigidArea(new Dimension(0, 20));
+        panel.add(textCard4);
+        panel.addRigidArea(new Dimension(0, 10));
+
+        CodeWindow apiRequestPurchase = new CodeWindow("HTTP", snippets.serverCheckAPIRequest(),
+                DialogColors.darkBlue);
+        panel.add(apiRequestPurchase.getPanel());
+        panel.addRigidArea(new Dimension(0, 20));
+        panel.add(textCard5);
+        panel.addRigidArea(new Dimension(0, 10));
+        CodeWindow apiRequestPurchaseSubscriptions = new CodeWindow("HTTP", snippets.serverCheckAPIRequestSubscriptions(),
+                DialogColors.darkBlue);
+        panel.add(apiRequestPurchaseSubscriptions.getPanel());
+        panel.addRigidArea(new Dimension(0, 20));
+        panel.add(textCard6);
+        panel.addRigidArea(new Dimension(0, 10));
+
+        CodeWindow performRequest = new CodeWindow("PHP", snippets.serverCheckRequestPHP(), DialogColors.darkBlue);
+        performRequest.addSnippetContent("Java", snippets.serverCheckRequestJava(), DialogColors.darkBlue);
+        performRequest.addSnippetContent("Python", snippets.serverCheckRequestPython(), DialogColors.darkBlue);
+
+        panel.add(performRequest.getPanel());
+
+        panel.addRigidArea(new Dimension(0, 20));
+        panel.add(textCard7);
+        panel.addRigidArea(new Dimension(0, 10));
+        panel.add(textCard8);
+        panel.addRigidArea(new Dimension(0, 20));
+
+        CodeWindow apiRequestResponse = new CodeWindow("JSON", snippets.serverCheckResponse(),
+                DialogColors.darkBlue);
+        panel.add(apiRequestResponse.getPanel());
+
+        serverCheck.add(panel.getScrollablePanel(), BorderLayout.CENTER);
+
+        return serverCheck.getScrollablePanel();
     }
 }

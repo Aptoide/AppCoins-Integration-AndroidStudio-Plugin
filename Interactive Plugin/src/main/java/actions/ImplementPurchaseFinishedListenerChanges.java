@@ -8,6 +8,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
+import window_factory.BillingToolWindowFactory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -35,6 +36,14 @@ public class ImplementPurchaseFinishedListenerChanges extends AbstractAction {
         String toOnCreate = "";
         String variables = "";
         int classIndex = newOnCreateContent.indexOf("{");
+        if(oldContent.contains("cab")){
+            if (BillingToolWindowFactory.projectIsKotlin()) {
+                classIndex=newOnCreateContent.indexOf("AppcoinsBillingClient",newOnCreateContent.indexOf("cab"));
+                classIndex += "AppcoinsBillingClient".length();
+            } else {
+                classIndex = newOnCreateContent.indexOf(";", newOnCreateContent.indexOf("cab"));
+            }
+        }
         FileEditorManager.getInstance(project).openTextEditor(
                 new OpenFileDescriptor(project,files.get(4),classIndex),
                 true // request focus to editor
@@ -46,7 +55,10 @@ public class ImplementPurchaseFinishedListenerChanges extends AbstractAction {
             firstIndex = newOnCreateContent.indexOf("@Override",lastIndex);
             lastIndex= newOnCreateContent.indexOf("{", firstIndex);
             String method = newOnCreateContent.substring(firstIndex,lastIndex);
-            if (method.contains(" public ") && method.contains(" void ") && method.contains(" onCreate")){
+            if ((method.contains(" public ") ||
+                    method.contains(" protected ") ||
+                    method.contains(" private ")) &&
+                    method.contains(" void ") && method.contains(" onCreate")){
                 break;
             }
         }
@@ -69,25 +81,7 @@ public class ImplementPurchaseFinishedListenerChanges extends AbstractAction {
         }
 
         if (!oldContent.contains("PurchasesUpdatedListener")){
-            listeners = listeners.concat("\tPurchasesUpdatedListener purchaseFinishedListener = (responseCode, purchases) -> {\n\t\t" +
-                    "if (responseCode == ResponseCode.OK.getValue()) {\n\t\t\t" +
-                    "for (Purchase purchase : purchases) {\n\t\t\t\t" +
-                    "// These are examples of parameters you can use for purchase validation\n\t\t\t\t" +
-                    "String token = purchase.getToken();\n\t\t\t\t" +
-                    "String purchasePayload = purchase.developerPayload;\n\t\t\t\t" +
-                    "String signature = purchase.signature;\n\t\t\t\t" +
-                    "String json = purchase.originalJson;\n\t\t\t\t" +
-                    "consumePurchases();\n\t\t\t"+
-                    "}\n\t\t" +
-                    "} else {\n\t\t\t" +
-                    "new AlertDialog.Builder(this).setMessage(\n\t\t\t" +
-                    "String.format(Locale.ENGLISH, \"response code: %d -> %s\", responseCode,\n\t\t\t" +
-                    "ResponseCode.values()[responseCode].name()))\n\t\t\t" +
-                    ".setPositiveButton(android.R.string.ok, (dialog, which) -> dialog.dismiss())\n\t\t\t" +
-                    ".create()\n\t\t\t" +
-                    ".show();\n\t\t" +
-                    "}\n\t" +
-                    "};\n");
+            listeners = listeners.concat(BillingToolWindowFactory.snippets.onPurchasesUpdated());
             toImport=toImport.concat("\nimport com.appcoins.sdk.billing.PurchasesUpdatedListener;"
                     + "\nimport com.appcoins.sdk.billing.Purchase;");
             if(!oldContent.contains("android.app.AlertDialog")){

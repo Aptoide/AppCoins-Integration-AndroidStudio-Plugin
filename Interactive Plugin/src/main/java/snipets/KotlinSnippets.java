@@ -3,7 +3,7 @@ package snipets;
 public class KotlinSnippets implements Snippets {
     @Override
     public String buildGradleCodeAllprojects() {
-        return "allprojects {                               \n" +
+        return "\nallprojects {                               \n" +
                 "    repositories {                         \n" +
                 "        google()                           \n" +
                 "        mavenCentral()                     \n" +
@@ -37,51 +37,53 @@ public class KotlinSnippets implements Snippets {
     @Override
     public String appCoinsBillingStateListener() {
         return "val appCoinsBillingStateListener: AppCoinsBillingStateListener =\n" +
-        "        object : AppCoinsBillingStateListener {\n" +
-        "    override fun onBillingSetupFinished(responseCode: Int) {\n" +
-        "        if (responseCode != ResponseCode.OK.value) {\n" +
-        "            Log.d(TAG, \"Problem setting up in-app billing: $responseCode\")\n" +
-        "            return\n" +
-        "        }\n" +
-        "        // Check for pending and/or owned purchases\n" +
-        "        checkPurchases()\n" +
-        "        // Query in-app sku details\n" +
-        "        queryInapps()\n" +
-        "        // Qury subscriptions sku details\n" +
-        "        querySubs()\n" +
-        "        Log.d(TAG, \"Setup successful. Querying inventory.\")\n" +
-        "    }\n" +
-        "    override fun onBillingServiceDisconnected() {\n" +
-        "        Log.d(\"Message: \", \"Disconnected\")\n" +
-        "    }\n" +
-        "}";
+                "    object : AppCoinsBillingStateListener {\n" +
+                "      override fun onBillingSetupFinished(responseCode: Int) {\n" +
+                "        if (responseCode != ResponseCode.OK.value) {\n" +
+                "          Log.d(TAG, \"Problem setting up in-app billing: $responseCode\")\n" +
+                "            return\n" +
+                "        }\n" +
+                "        \n" +
+                "        // Check for pending and/or owned purchases\n" +
+                "        checkPurchases()\n" +
+                "        // Query in-app sku details\n" +
+                "        queryInapps()\n" +
+                "        // Query subscriptions sku details\n" +
+                "        querySubs()\n" +
+                "        Log.d(TAG, \"Setup successful. Querying inventory.\")\n" +
+                "      }\n" +
+                "\n" +
+                "      override fun onBillingServiceDisconnected() {\n" +
+                "        Log.d(\"Message: \", \"Disconnected\")\n" +
+                "      }\n" +
+                "    }";
     }
 
     @Override
     public String onPurchasesUpdated() {
-        return "private var purchasesUpdatedListener = \n" +
-            "PurchasesUpdatedListener { responseCode: Int, purchases: List<Purchase> ->\n" +
-            "   if (responseCode == ResponseCode.OK.value) {\n" +
-            "     for (purchase in purchases) {\n" +
-            "        token = purchase.token\n" +
-            "        // After validating and attributing consumePurchase may be called\n" +
-            "        // to allow the user to purchase the item again.\n" +
-            "        // You might also want to check the purchase type to prevent consumption of subscription\n" +
-            "        // consumeResponseListener is explained in point 6\n" +
-            "        cab.consumeAsync(token, consumeResponseListener);\n" +
-            "      }\n" +
-            "   } else {\n" +
-            "       AlertDialog.Builder(this).setMessage(\n" +
-            "                    String.format(\n" +
-            "                            Locale.ENGLISH, \"response code: %d -> %s\", responseCode,\n" +
-            "                            ResponseCode.values()[responseCode].name\n" +
-            "                    )\n" +
-            "            )\n" +
-            "       .setPositiveButton(android.R.string.ok) { dialog, which -> dialog.dismiss() }\n" +
-            "       .create()\n" +
-            "       .show()\n" +
-            "   }\n" +
-            "}\n";
+        return "private var purchasesUpdatedListener =\n" +
+                "    PurchasesUpdatedListener { responseCode: Int, purchases: List<Purchase> ->\n" +
+                "      if (responseCode == ResponseCode.OK.value) {\n" +
+                "        for (purchase in purchases) {\n" +
+                "            token = purchase.token\n" +
+                "\n" +
+                "            // After validating and attributing the product, consumePurchase should be called \n" +
+                "            // to allow the user to purchase the item again and change the purchase's state.\n" +
+                "            // Also consume subscriptions to make them active, there will be no issue in consuming more than once\n" +
+                "            cab.consumeAsync(token, consumeResponseListener);\n" +
+                "        }\n" +
+                "      } else {\n" +
+                "        AlertDialog.Builder(this).setMessage(\n" +
+                "          String.format(\n" +
+                "            Locale.ENGLISH, \"response code: %d -> %s\", responseCode,\n" +
+                "            ResponseCode.values()[responseCode].name\n" +
+                "          )\n" +
+                "        )\n" +
+                "        .setPositiveButton(android.R.string.ok) { dialog, which -> dialog.dismiss() }\n" +
+                "        .create()\n" +
+                "        .show()\n" +
+                "      }\n" +
+                "    }";
     }
 
     @Override
@@ -91,47 +93,56 @@ public class KotlinSnippets implements Snippets {
 
     @Override
     public String onCreate() {
-        return "val base64EncodedPublicKey = MY_KEY\n" +
-        "    cab = CatapultBillingAppCoinsFactory.BuildAppcoinsBilling(\n" +
-        "            this,\n" +
-        "            base64EncodedPublicKey,\n" +
-        "            purchasesUpdatedListener\n" +
-        "    )\n" +
-        "    cab.startConnection(appCoinsBillingStateListener)\n";
+        return "private lateinit var cab: AppcoinsBillingClient\n" +
+                "    private val purchasesUpdatedListener =\n" +
+                "    PurchasesUpdatedListener { responseCode: Int, purchases: List<Purchase> -> {\n" +
+                "    //Defined in step 4\n" +
+                "    }}\n" +
+                "    override fun onCreate(savedInstanceState: Bundle ?) {\n" +
+                "        val base64EncodedPublicKey = MY_KEY // Key obtained in Catappult's console\n" +
+                "        cab = CatapultBillingAppCoinsFactory.BuildAppcoinsBilling(\n" +
+                "            this,\n" +
+                "            base64EncodedPublicKey,\n" +
+                "            purchasesUpdatedListener\n" +
+                "        )\n" +
+                "        cab.startConnection(appCoinsBillingStateListener)\n" +
+                "    }";
     }
 
     @Override
     public String startPurchase() {
         return "private fun startPurchase(sku: String, developerPayload: String) {\n" +
-                "   Log.d(TAG, \"Launching purchase flow.\");\n" +
-                "   // Your sku type, can also be SkuType.subs.toString()\n" +
-                "   val skuType = SkuType.inapp.toString()\n" +
-                "   val billingFlowParams = BillingFlowParams(\n" +
+                "    Log.d(TAG, \"Launching purchase flow.\");\n" +
+                "    // Your sku type, can also be SkuType.subs.toString()\n" +
+                "    val skuType = SkuType.inapp.toString()\n" +
+                "    val billingFlowParams = BillingFlowParams(\n" +
                 "        sku,\n" +
                 "        skuType,\n" +
                 "        \"orderId=\" + System.currentTimeMillis(),\n" +
                 "        developerPayload,\n" +
                 "        \"BDS\"\n" +
-                "   )\n" +
-                "   if (!cab.isReady) {\n" +
-                "       cab.startConnection(appCoinsBillingStateListener)\n" +
-                "   }\n" +
-                "   val activity: Activity = this\n" +
-                "   val thread = Thread {\n" +
-                "       val responseCode = cab.launchBillingFlow(activity, billingFlowParams)\n" +
-                "       runOnUiThread {\n" +
-                "           if (responseCode != ResponseCode.OK.value) {\n" +
-                "               val builder =\n" +
-                "               AlertDialog.Builder(this)\n" +
-                "               builder.setMessage(\"Error purchasing with response code : $responseCode\")\n" +
-                "               builder.setNeutralButton(\"OK\", null)\n" +
-                "               Log.d(TAG, \"Error purchasing with response code : $responseCode\")\n" +
-                "                   builder.create().show()\n" +
-                "           }\n" +
-                "       }\n" +
-                "   }\n" +
-                "   thread.start()\n" +
-                "}\n";
+                "    )\n" +
+                "\n" +
+                "    if (!cab.isReady) {\n" +
+                "        cab.startConnection(appCoinsBillingStateListener)\n" +
+                "    }\n" +
+                "\n" +
+                "    val activity: Activity = this\n" +
+                "    val thread = Thread {\n" +
+                "        val responseCode = cab.launchBillingFlow(activity, billingFlowParams)\n" +
+                "        runOnUiThread {\n" +
+                "            if (responseCode != ResponseCode.OK.value) {\n" +
+                "                val builder =\n" +
+                "                    AlertDialog.Builder(this)\n" +
+                "                builder.setMessage(\"Error purchasing with response code : $responseCode\")\n" +
+                "                builder.setNeutralButton(\"OK\", null)\n" +
+                "                Log.d(TAG, \"Error purchasing with response code : $responseCode\")\n" +
+                "                builder.create().show()\n" +
+                "            }\n" +
+                "        }\n" +
+                "    }\n" +
+                "    thread.start()\n" +
+                "}";
     }
 
     @Override
@@ -188,24 +199,25 @@ public class KotlinSnippets implements Snippets {
 
     @Override
     public String callSkuDetails() {
-        return "\n\tprivate fun queryInapps() {\n\t" +
-                "   cab.querySkuDetailsAsync(\n\t" +
-                "       SkuDetailsParams().apply{\n\t" +
-                "           itemType = SkuType.inapp.toString()\n\t" +
-                "           moreItemSkus = mutableListOf<String>() // Fill with the skus of items\n\t" +
-                "       },\n\t" +
-                "       skuDetailsResponseListener\n\t" +
-                "   )\n\t" +
-                "}\n\t" +
-                "private fun querySubs() {\n\t" +
-                "   cab.querySkuDetailsAsync(\n\t" +
-                "       SkuDetailsParams().apply{\n\t" +
-                "           itemType = SkuType.subs.toString()\n\t" +
-                "           moreItemSkus = mutableListOf<String>() // Fill with the skus of subscriptions\n\t" +
-                "       },\n\t" +
-                "       skuDetailsResponseListener\n\t" +
-                "   )\n\t" +
-                "}\n";
+        return "private fun queryInapps() {\n" +
+                "    cab.querySkuDetailsAsync(\n" +
+                "        SkuDetailsParams().apply{\n" +
+                "            itemType = SkuType.inapp.toString()\n" +
+                "            moreItemSkus = mutableListOf<String>() // Fill with the skus of items\n" +
+                "        },\n" +
+                "        skuDetailsResponseListener\n" +
+                "    )\n" +
+                "}\n" +
+                "\n" +
+                "private fun querySubs() {\n" +
+                "    cab.querySkuDetailsAsync(\n" +
+                "        SkuDetailsParams().apply{\n" +
+                "            itemType = SkuType.subs.toString()\n" +
+                "            moreItemSkus = mutableListOf<String>() // Fill with the skus of subscriptions\n" +
+                "        },\n" +
+                "        skuDetailsResponseListener\n" +
+                "    )\n" +
+                "}";
     }
     public String ospIntent() {
         return "\n  fun launchOsp(activity: Activity) {\n" +
@@ -308,5 +320,118 @@ public class KotlinSnippets implements Snippets {
                 "secret_key = b'secret'\n" +
                 "signature = hmac.new(secret_key, url.encode(\"utf-8\"), hashlib.sha256).hexdigest()\n" +
                 "signed_url = url + \"&signature=\" + signature";
+    }
+    @Override
+    public String serverCheckReceipt() {
+        return  "{\n" +
+                "  \"Store\": \"storeName\",\n" +
+                "  \"TransactionID\": \"anIdWithNumbersAndLetters\",\n" +
+                "  \"Payload\": {\n" +
+                "    \"ItemType\": \"inapp\",\n" +
+                "    \"ProductId\": \"full_trajectory\",\n" +
+                "    \"GameOrderId\": \"anIdWithNumbersAndLetters\",\n" +
+                "    \"OrderQueryToken\": \"aLargeIdWithNumbersAndLetters\",\n" +
+                "    \"StorePurchaseJsonString\": {\n" +
+                "      \"developerPayload\": \"unity://unity3d.comcpOrderId=anIdWithNumbersAndLetters&payload=\",\n" +
+                "      \"itemType\": \"inapp\",\n" +
+                "      \"orderId\": \"catappult.inapp.purchase.anIdWithNumbersAndLetters\",\n" +
+                "      \"originalJson\": {\n" +
+                "        \"orderId \": \"anIdWithNumbersAndLetters\",\n" +
+                "        \"packageName\": \"your.package.name\",\n" +
+                "        \"productId \": \"yourSKU\",\n" +
+                "        \"purchaseTime\": 123456789,\n" +
+                "        \"purchaseToken\": \"catappult.inapp.purchase.anIdWithNumbersAndLetters\",\n" +
+                "        \"purchaseState\": 0,\n" +
+                "        \"developerPayload\":\"unity://unity3d.com?cpOrderId=anIdWithNumbersAndLetters&payload=\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }\n" +
+                "}";
+    }
+
+    @Override
+    public String serverCheckAPIRequest() {
+        return "GET https://api.catappult.io/product/8.20191001/google/inapp/v3/applications/**packageName**/purchases/products/**productId**/tokens/**token**";
+    }
+
+    public String serverCheckAPIRequestSubscriptions() {
+        return "GET https://api.catappult.io/product/8.20191001/google/inapp/v3/applications/**packageName**/purchases/subscriptions/**productId**/tokens/**token**";
+    }
+
+    @Override
+    public String serverCheckRequestPython() {
+        return "def validate_purchase(self, package_name: str, sku: str,\n" +
+                "                      purchase_token: str, access_token: str) -> bool:\n" +
+                " \n" +
+                "    api_purchase_url = \"https://api.catappult.io/product/8.20191001/google/inapp/v3/\" \\\n" +
+                "           \"applications/{packageName}/purchases/products/{productId}/tokens/\" \\\n" +
+                "           \"{purchaseToken}\"\n" +
+                " \n" +
+                "    response = requests.get(api_purchase_url\n" +
+                "                            .format(packageName=package_name, productId=sku,\n" +
+                "                                    purchaseToken=purchase_token))\n" +
+                " \n" +
+                "    if response.status_code == 200:\n" +
+                "        return True\n" +
+                "    else:\n" +
+                "        return False";
+    }
+
+    @Override
+    public String serverCheckRequestJava() {
+        return "private boolean validatePurchase(String packageName, String sku, \n" +
+                "                                 String purchaseToken, String accessToken\n" +
+                "                                ) throws Exception {\n" +
+                "    String apiPurchaseUrl = String.format(\"https://api.catappult.io/product/8.20191001/\" +                                 \"inapp/google/v3/applications/%s/purchases/products/%s/tokens/%s\", \n" +
+                "            packageName, sku, purchaseToken);\n" +
+                "    HttpGet request = new HttpGet(apiPurchaseUrl);\n" +
+                "\n" +
+                "    Request request = new Request.Builder()\n" +
+                "                .url(apiPurchaseUrl)\n" +
+                "                .build();\n" +
+                "    try (Response response = httpClient.newCall(request).execute()) {\n" +
+                "        return response.isSuccessful();\n" +
+                "    }\n" +
+                "}";
+    }
+
+    @Override
+    public String serverCheckRequestPHP() {
+        return "function validatePurchase($packageName, $sku, \n" +
+                "\t\t\t\t\t\t\t\t\t\t\t\t\t$purchaseToken, $accessToken) {\n" +
+                "    $curl = curl_init();\n" +
+                "    $apiPurchaseUrl = \n" +
+                "'https://api.catappult.io/product/8.20191001/inapp/google/v3/applications/' . $packageName . '/purchases/products/' . $sku . '/tokens/' . $purchaseToken\n" +
+                "\n" +
+                "    curl_setopt($ch, CURLOPT_URL, $apiPurchaseUrl);\n" +
+                "    curl_setopt($ch, CURLOPT_HEADER, true);\n" +
+                "    curl_setopt($ch, CURLOPT_NOBODY, true);\n" +
+                "    $response = curl_exec($ch);\n" +
+                "    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);\n" +
+                "    curl_close($ch);\n" +
+                "    if ($httpcode == 200) {\n" +
+                "        return true;\n" +
+                "    } else {\n" +
+                "        return false;\n" +
+                "    }\n" +
+                "}";
+    }
+
+    @Override
+    public String serverCheckResponse() {
+        return "{\"resource\":\n" +
+                "\t{\n" +
+                "    \"kind\": \"androidpublisher#productPurchase\",\n" +
+                "    \"purchaseTimeMillis\": long,\n" +
+                "    \"purchaseState\": integer,\n" +
+                "    \"consumptionState\": integer,\n" +
+                "    \"developerPayload\": string,\n" +
+                "    \"orderId\": string,\n" +
+                "    \"acknowledgementState\": integer,\n" +
+                "    \"purchaseToken\": string,\n" +
+                "    \"productId\": string,\n" +
+                "    \"regionCode\": string\n" +
+                "\t}\n" +
+                "}";
     }
 }

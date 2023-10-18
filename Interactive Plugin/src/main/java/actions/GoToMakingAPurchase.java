@@ -1,6 +1,6 @@
 package actions;
 
-import dialogs.DialogCreator;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -10,6 +10,7 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
+import dialogs.DialogCreator;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -36,7 +37,7 @@ public class GoToMakingAPurchase extends AbstractAction {
                 true // request focus to editor
         );
         toolWindow.getContentManager().removeAllContents(true);
-        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+        ContentFactory contentFactory = ApplicationManager.getApplication().getService(ContentFactory.class);
         Content content = contentFactory.createContent(DialogCreator.makingAPurchaseDialog(project,files,toolWindow), "", false);
         toolWindow.getContentManager().addContent(content);
     }

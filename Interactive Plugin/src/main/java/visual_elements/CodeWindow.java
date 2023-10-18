@@ -185,4 +185,10 @@ public class CodeWindow {
     public JPanel getPanel(){
         return getEmbeddedPanelInGridBagLayout();
     }
+
+    public void setImplementAutomaticallyButtonText(String text){
+        implementAutomatically.setText(text);
+        implementAutomatically.revalidate();
+        implementAutomatically.repaint();
+    }
 }

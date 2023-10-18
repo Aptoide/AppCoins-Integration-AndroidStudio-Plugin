@@ -1,9 +1,6 @@
 package window_factory;
 
-import snipets.JavaSnippets;
-import snipets.KotlinSnippets;
-import snipets.Snippets;
-import dialogs.*;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
@@ -14,7 +11,11 @@ import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
+import dialogs.DialogCreator;
 import org.jetbrains.annotations.NotNull;
+import snipets.JavaSnippets;
+import snipets.KotlinSnippets;
+import snipets.Snippets;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,9 +77,9 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
                 return true;
             }
         };
-        ProjectFileIndex.SERVICE.getInstance(project).iterateContent(iterator2);
+        ProjectFileIndex.getInstance(project).iterateContent(iterator2);
         createSnipetsObject();
-        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+        ContentFactory contentFactory = ApplicationManager.getApplication().getService(ContentFactory.class);
         Content content = contentFactory.createContent(DialogCreator.cardLayout(project,files,toolWindow), "", false);
         toolWindow.getContentManager().addContent(content);
     }
@@ -162,7 +163,7 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
     }
 
     private void locateNecessaryFilesInProject(ContentIterator iterator) {
-        ProjectFileIndex.SERVICE.getInstance(targetProject).iterateContent(iterator);
+        ProjectFileIndex.getInstance(targetProject).iterateContent(iterator);
     }
 
     private String grabActivityName(){
@@ -226,7 +227,10 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
             firstIndex = content.indexOf("@Override",lastIndex);
             lastIndex= content.indexOf("{", firstIndex);
             String method = content.substring(firstIndex,lastIndex);
-            if (method.contains(" public ") && method.contains(" void ") && method.contains(" onCreate")){
+            if ((method.contains(" public ") ||
+                method.contains(" protected ") ||
+                method.contains(" private ")) &&
+                method.contains(" void ") && method.contains(" onCreate")){
                 return true;
             }
         }
