@@ -27,18 +27,3 @@ static, so there is no need to ever create a DialogCreator object. The private m
 
 The MainClasses package contains a single class: BillingToolWindowFactory. This class is called when Android Studio starts and is responsible for creating the
 tool window and searching for all the files relevant to the plugin.
-
-# To do in the future
-One of the limitations of the plugin is that it reads all files as strings. This is a problem especially because of commented code that can trick the plugin.
-To solve this issue, there already is a method called "isCommented", that recognizes if the specified index on a file's string is commented or not, but
-this method was created very recently and so it wasn't applied to most cases where this can be an issue.
-
-Another limitation of the plugin is that it only works on java code. For the plugin to also work on kotlin, the corresponding code snippets have to be added
-and there needs to be created some logic to choose, for each stage, which tutorial should be shown, java or kotlin.
-
-It would also be important to track how many developers have migrated their apps thanks to the plugin, so an endpoint should be created to count how many
-developers have reached the end of the plugin tutorial.
-
-The plugin was only tested in a simple app, so it is still recomended to verify its functionality on multiple and possibly more complex apps.
-
-The user interface is still very raw, as it can be greatly improved.

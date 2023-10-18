@@ -381,12 +381,6 @@
     <option name="" hit="-T option" />
     <option name="option" hit="-T option" />
     <option name="t" hit="-T option" />
-    <option name="" hit="/usr/local/Cellar/maven/3.8.6/libexec" />
-    <option name="cellar" hit="/usr/local/Cellar/maven/3.8.6/libexec" />
-    <option name="libexec" hit="/usr/local/Cellar/maven/3.8.6/libexec" />
-    <option name="local" hit="/usr/local/Cellar/maven/3.8.6/libexec" />
-    <option name="maven" hit="/usr/local/Cellar/maven/3.8.6/libexec" />
-    <option name="usr" hit="/usr/local/Cellar/maven/3.8.6/libexec" />
     <option name="always" hit="Always update snapshots" />
     <option name="snapshots" hit="Always update snapshots" />
     <option name="update" hit="Always update snapshots" />
