@@ -323,6 +323,29 @@
         <body>If you get a status code 200 OK form the request it means the purchase was successfully validated.</body>
         <body>In the response, you have multiple fields providing a variety of information regarding the transaction. Here's a sample response with an explanation for each parameter.</body>
     </page>
+    <page id="34">
+        <title>Starting the service connection</title>
+        <step>3</step>
+        <body>Once the permissions and dependencies are all added, you need to initialize an instance of AppcoinsBillingClient. This is the instance used to communicate with Catappult Billing Library. You should have only one active instance at any time. To initialize the billing client and start the connection, the PurchasesUpdatedListener is required for the client initialization and AppCoinsBillingStateListener is required to start the connection. This section explains how to create the 2 required instances and how to instantiate and connect the AppcoinsBillingClient.</body>
+        <body>AppCoinsBillingStateListener</body>
+        <body>Add the AppCoinsBillingStateListener and PurchasesUpdatedListener interfaces.
+            The automatic changes will use these listeners in the onCreate method.</body>
+        <body>Add the AppCoinsBillingStateListener interface, implementing two methods:
+            onBillingSetupFinished(responseCode) and onBillingServiceDisconnected().
+            When the setup finishes successfully you should immediately check for pending and/or owned subscriptions. If there are pending purchases you should consume them.
+            Here's a template for the implementation:</body>
+
+        <body>AppcoinsBillingClient</body>
+        <body>Below you can see an example of how to build and start Appcoins IAB by passing AppCoinsBillingStateListener, PurchasesUpdatedListener, and the public key as arguments.</body>
+        <body>When the setup finishes successfully you should immediately check for pending and/or owned subscriptions. If there are pending purchases you should consume them.</body>
+        <body>The example below shows how to check pending or owned purchases:</body>
+
+
+
+
+        <button1>Go to main activity</button1>
+        <button2>Go back</button2>
+    </page>
     <table id="0">
         <row>
             <cell>Name</cell>
