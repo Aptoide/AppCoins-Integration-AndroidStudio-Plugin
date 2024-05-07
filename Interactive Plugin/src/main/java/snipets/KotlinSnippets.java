@@ -13,7 +13,7 @@ public class KotlinSnippets implements Snippets {
 
     @Override
     public String appCoinsBillingDependency() {
-        return "\n\timplementation 'io.catappult:android-appcoins-billing:0.6.7.0'";
+        return "\n\timplementation(\"io.catappult:android-appcoins-billing:0.7.1.0\")";
     }
 
     @Override
