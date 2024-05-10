@@ -392,7 +392,7 @@ public class CardLayoutDialog extends JPanel {
         Card changesToAndroidManifest = new Card();
         changesToAndroidManifest.setLayout(new BorderLayout(0,20));
 
-        ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(9);
+        ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(34);
         String title = dialogElements.get(0);
         String body =  dialogElements.get(2);
 
@@ -441,6 +441,69 @@ public class CardLayoutDialog extends JPanel {
 
         panel.addRigidArea(new Dimension(0, 20));
         panel.add(appCoinsBillingStateListener.getPanel());
+
+
+
+
+        JLabel textCard4 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
+                "<font color=#220F67 size=5><b>" + dialogElements.get(6) + "</b></font>");
+        panel.addRigidArea(new Dimension(0, 20));
+        panel.add(textCard4);
+
+        JLabel textCard5 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
+                "<font color=#220F67>"+ dialogElements.get(7) +"</font></html>");
+        panel.addRigidArea(new Dimension(0, 20));
+        panel.add(textCard5);
+
+
+        CodeWindow appCoinsBillingClient = new CodeWindow(CardLayoutDialog.projLanguage, snippets.appCoinsBillingStateListener(),
+                DialogColors.darkBlue, ActionsSDK.implementedStartingServiceConnection);
+        appCoinsBillingClient.setImplementAutomaticallyButtonText("Partially implement changes automatically");
+
+        if(CardLayoutDialog.files.get(4)!=null){
+            appCoinsBillingClient.addButtonActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    VirtualFile file = CardLayoutDialog.files.get(4);
+                    FileEditorManager.getInstance(CardLayoutDialog.project).openTextEditor(
+                            new OpenFileDescriptor(CardLayoutDialog.project,file),
+                            true // request focus to editor
+                    );
+                    cObjl.show(cPanel, "sdk" + (PUBLICK_KEY_PAGE));
+                }
+            });
+        }
+        panel.addRigidArea(new Dimension(0, 20));
+        panel.add(appCoinsBillingClient.getPanel());
+
+
+
+        JLabel textCard7 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
+                "<font color=#220F67>"+ dialogElements.get(8) +"</font></html>");
+        panel.addRigidArea(new Dimension(0, 20));
+        panel.add(textCard7);
+
+        CodeWindow checkPurchases = new CodeWindow(CardLayoutDialog.projLanguage, snippets.checkPurchases(),
+                DialogColors.darkBlue, ActionsSDK.implementedStartingServiceConnection);
+        checkPurchases.setImplementAutomaticallyButtonText("Partially implement changes automatically");
+
+        if(CardLayoutDialog.files.get(4)!=null){
+            checkPurchases.addButtonActionListener(new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    VirtualFile file = CardLayoutDialog.files.get(4);
+                    FileEditorManager.getInstance(CardLayoutDialog.project).openTextEditor(
+                            new OpenFileDescriptor(CardLayoutDialog.project,file),
+                            true // request focus to editor
+                    );
+                    cObjl.show(cPanel, "sdk" + (PUBLICK_KEY_PAGE));
+                }
+            });
+        }
+        panel.addRigidArea(new Dimension(0, 20));
+        panel.add(checkPurchases.getPanel());
+
+
 
         changesToAndroidManifest.add(panel.getScrollablePanel(), BorderLayout.CENTER);
 
