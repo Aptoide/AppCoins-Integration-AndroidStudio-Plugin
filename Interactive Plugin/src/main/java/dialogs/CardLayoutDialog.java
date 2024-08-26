@@ -6,6 +6,7 @@ import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.ui.components.JBScrollPane;
 import snipets.Snippets;
 import utils.*;
 import visual_elements.Panel;
@@ -57,7 +58,7 @@ public class CardLayoutDialog extends JPanel {
         this.toolWindow = toolWindow;
         this.snippets = billingToolWindowFactory.snippets;
         this.projLanguage = billingToolWindowFactory.projectLanguage;
-        this.httpRequest = new MetricsClient();
+        //this.httpRequest = new MetricsClient();
 
 
         setSize(390, 250);
@@ -87,7 +88,7 @@ public class CardLayoutDialog extends JPanel {
         cPanel.add(OSPDialogs.createWebServiceEndpoint(),"osp4");
         cPanel.add(SDKDialogs.lastPage(),"osp5");
 
-        httpRequest.registerAction(ActionsSDK.start);
+        //httpRequest.registerAction(ActionsSDK.start);
 
         this.setLayout(new BorderLayout());
         this.add(catappultLogoPanel(), BorderLayout.NORTH);
@@ -227,68 +228,36 @@ public class CardLayoutDialog extends JPanel {
         this.add(progressPanel, BorderLayout.SOUTH);
     }
 
+
+
     public JPanel methodChoosingPage(){
         Card lastPage = new Card();
 
-        Panel successPanel = new Panel(DialogColors.lightBlue);
-        successPanel.setLayout(new BoxLayout(successPanel.getPanel(), BoxLayout.Y_AXIS));
+        JPanel successPanel = new JPanel();
+        successPanel.setLayout(new BoxLayout(successPanel, BoxLayout.Y_AXIS));
+
         JLabel textCard1 = new JLabel("<html><br>" +
                 "<font color=#FFFFFF size=6><b> Faster development with one single integration </b></font>" +
-                "</html>", JLabel.CENTER);
+                "<br/><br/></html>", JLabel.CENTER);
         textCard1.setAlignmentX(Component.CENTER_ALIGNMENT);
         JLabel textCard2 = new JLabel("<html>"+
-                "<font color=#FFFFFF size=5> Developers should spend their time creating the best games and apps and not integrating SDKs. </font></html>", JLabel.CENTER);
+                "<font color=#FFFFFF size=5> Developers should spend their time creating the best games and apps and not integrating SDKs. </font><br/><br/></html>", JLabel.CENTER);
         textCard2.setAlignmentX(Component.CENTER_ALIGNMENT);
         successPanel.add(textCard1);
         successPanel.add(textCard2);
-        successPanel.addRigidArea(new Dimension(0, 20));
-
-        String data[][] = getTableByIndex(2);
-        JTable table = new TableComparation(data).getTable();
-        successPanel.add(table);
+        //successPanel.addRigidArea(new Dimension(0, 20));
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(1,2));
         panel.setBackground(DialogColors.lightBlue);
 
-        JLabel label1 = new JLabel("<html><div style='text-align:center;'>"
-                + "<span style='font-size:14px;font-weight:bold;color:#FFFFFF;'>"
-                + "One-Step Payment</span><br>"
-                + "<span style='font-size:10px;color:#FFFFFF;'>"
-                + "Easy and simple way</span></div></html>");
-
         JLabel label2 = new JLabel("<html><div style='text-align:center;'>"
                 + "<span style='font-size:14px;font-weight:bold;color:#FFFFFF;'>"
-                + "          SDK          </span><br>"
-                + "<span style='font-size:10px;color:#FFFFFF;'>"
-                + "Traditional way</span></div></html>");
-
-        JPanel buttonLeft = new JPanel(new GridBagLayout());
-        buttonLeft.setBackground(DialogColors.lightBlue);
-        selectFlowOnClick(buttonLeft, "osp");
+                + "          Start Implementing SDK          </span><br>"
+                + "</div></html>");
 
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
-        JButton languageButton = new JButton("Recommended");
-        languageButton.setForeground(DialogColors.white);
-        languageButton.setBackground(DialogColors.pink);
-        languageButton.setUI(new BestChoiceTab());
-        c.gridx = 0;
-        c.gridy = 0;
-        c.weightx = 0;
-        c.gridwidth = 1;
-        buttonLeft.add(languageButton, c);
-
-        JPanel btn1 = new JPanel();
-        c.insets = new Insets(0,0,0,10);
-        c.gridx = 0;
-        c.gridy = 1;
-        c.weightx = 0.3;
-        c.gridwidth = 3;
-        btn1.setBorder(BorderFactory.createLineBorder(DialogColors.pink));
-        btn1.setBackground(DialogColors.lightBlue);
-        btn1.add(label1);
-        buttonLeft.add(btn1, c);
 
         JPanel buttonRight = new JPanel();
         buttonRight.setLayout(new GridBagLayout());
@@ -307,19 +276,25 @@ public class CardLayoutDialog extends JPanel {
         c.gridwidth = 1;
         buttonRight.add(btn2,c);
 
-        panel.add(buttonLeft);
         panel.add(buttonRight);
         successPanel.add(panel);
 
-        lastPage.add(successPanel.getPanel(), BorderLayout.CENTER);
+        JBScrollPane scrollPane = new JBScrollPane(successPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        lastPage.add(scrollPane, BorderLayout.CENTER);
 
         return lastPage.getPanel();
     }
 
+
     public JPanel startImplementation(){
         Card startImplementation = new Card();
-        Panel panel = new Panel(DialogColors.darkBlue);
+        JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout(0,20));
+
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(2);
         String title = dialogElements.get(0);
@@ -328,7 +303,9 @@ public class CardLayoutDialog extends JPanel {
         JLabel text = new JLabel("<html>" + CardLayoutDialog.titleAndBodyHTMLFormated(title, body) + "</html>");
         panel.add(text, BorderLayout.CENTER);
 
-        JButton startImplementationButton = CardLayoutDialog.createColoredButton("Go to build.gradle", DialogColors.pink, ActionsSDK.goToBuildGradleButton);
+        JButton startImplementationButton = new JButton("Go to build.gradle");
+
+        //JButton startImplementationButton = CardLayoutDialog.createColoredButton("Go to build.gradle", DialogColors.pink, ActionsSDK.goToBuildGradleButton);
 
         startImplementationButton.addActionListener(new ActionListener()
         {
@@ -345,7 +322,14 @@ public class CardLayoutDialog extends JPanel {
         });
 
         panel.add(startImplementationButton, BorderLayout.SOUTH);
-        startImplementation.add(panel.getPanel());
+        startImplementation.add(panel);
+
+        JBScrollPane scrollPane = new JBScrollPane(panel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        startImplementation.add(scrollPane, BorderLayout.CENTER);
 
         return startImplementation.getPanel();
     }
@@ -365,7 +349,8 @@ public class CardLayoutDialog extends JPanel {
                 "<font color=#ffffff>" + body + "</font></html>");
         panel.add(text, BorderLayout.CENTER);
 
-        JButton goToAndroidManifestButton = CardLayoutDialog.createColoredButton("Go to Android Manifest", DialogColors.pink, ActionsSDK.goToAndroidManifest);
+        JButton goToAndroidManifestButton = new JButton("Go to Android Manifest");
+        //JButton goToAndroidManifestButton = CardLayoutDialog.createColoredButton("Go to Android Manifest", DialogColors.pink, ActionsSDK.goToAndroidManifest);
         goToAndroidManifestButton.addActionListener(new ActionListener()
         {
             @Override
@@ -421,7 +406,7 @@ public class CardLayoutDialog extends JPanel {
         panel.addRigidArea(new Dimension(0, 20));
         panel.add(textCard3);
 
-        CodeWindow appCoinsBillingStateListener = new CodeWindow(CardLayoutDialog.projLanguage, snippets.appCoinsBillingStateListener(),
+       /** CodeWindow appCoinsBillingStateListener = new CodeWindow(CardLayoutDialog.projLanguage, snippets.appCoinsBillingStateListener(),
                 DialogColors.darkBlue, ActionsSDK.implementedStartingServiceConnection);
         appCoinsBillingStateListener.setImplementAutomaticallyButtonText("Partially implement changes automatically");
 
@@ -440,7 +425,7 @@ public class CardLayoutDialog extends JPanel {
         }
 
         panel.addRigidArea(new Dimension(0, 20));
-        panel.add(appCoinsBillingStateListener.getPanel());
+        //panel.add(appCoinsBillingStateListener.getPanel());
 
 
 
@@ -503,7 +488,7 @@ public class CardLayoutDialog extends JPanel {
         panel.addRigidArea(new Dimension(0, 20));
         panel.add(checkPurchases.getPanel());
 
-
+        **/
 
         changesToAndroidManifest.add(panel.getScrollablePanel(), BorderLayout.CENTER);
 
@@ -586,11 +571,12 @@ public class CardLayoutDialog extends JPanel {
     }
 
     static JButton createColoredButton(String text, Color color, ActionsSDK action){
-        JButton button = new StatisticsRegisterButton(text, action);
+        JButton button = new JButton(text);
         button.setForeground(Color.decode("#FFFFFF"));
         setBackgroundColor(button, color);
         button.setUI(new RoundedButton());
         setButtonMargin(button);
+        button.setBorder(BorderFactory.createLineBorder(Color.WHITE)); // Set white border
         return button;
     }
 
@@ -629,6 +615,7 @@ public class CardLayoutDialog extends JPanel {
                 "<font color=#FFFFFF>If you need help send us an email: </font>" +
                 "<font color=#FD197C>support@catappult.io</font>" +
                 "</html>");
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
         makeClickable(label, link);
         return label;
     }
@@ -676,9 +663,9 @@ public class CardLayoutDialog extends JPanel {
 
     private void registerActionOfFlow(String flow, int position){
         if (flow == "sdk"){
-            httpRequest.registerAction(ActionsSDK.values()[position]);
+            //httpRequest.registerAction(ActionsSDK.values()[position]);
         } else {
-            httpRequest.registerAction(ActionsOSP.values()[position]);
+            //httpRequest.registerAction(ActionsOSP.values()[position]);
         }
     }
 }

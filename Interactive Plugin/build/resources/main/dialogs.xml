@@ -16,7 +16,7 @@
         <title>Changes on build.gradle file</title>
         <step>1</step>
         <body>Add new dependencies to this file.</body>
-        <body>After you located the build.gradle file, add the following code:</body>
+        <body>After you located the build.gradle file, add the following code.</body>
         <body>Our native android SDK uses one main library:</body>
         <body>Android-appcoins-billing </body>
         <body>(Check link for latest version)</body>

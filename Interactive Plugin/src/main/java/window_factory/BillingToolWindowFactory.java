@@ -1,6 +1,8 @@
 package window_factory;
 
+
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
@@ -20,13 +22,16 @@ import snipets.Snippets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import com.intellij.openapi.ui.Messages;
+
+import javax.swing.*;
 
 public class BillingToolWindowFactory implements ToolWindowFactory {
     Map<Integer, VirtualFile> files = new HashMap<>();
     ArrayList<VirtualFile> buildGradleFiles = new ArrayList<>();
     ArrayList<String> buildGradleLocations = new ArrayList<>();
     Project targetProject;
-    public static String projectLanguage;
+    public static String projectLanguage = "Java";
     public static Snippets snippets;
 
     /**
@@ -37,8 +42,10 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
      */
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         targetProject = project;
+        projectLanguage = "Java";
+        snippets = new JavaSnippets();
 
-        ContentIterator iterator = fileOrDir -> {
+       ContentIterator iterator = fileOrDir -> {
             try{
                 if (fileOrDir.isValid() && !fileOrDir.isDirectory()) {
                     String content = getFileContent(fileOrDir);
@@ -48,7 +55,7 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
                     grabGradlePropertiesFile(fileOrDir);
                     grabAllPurchaseFlowFunctionFile(content,fileOrDir);
                     handleMultipleGradleFiles();
-                    getProjectLanguage(fileOrDir);
+                    //getProjectLanguage(fileOrDir);
                 }
                 return true;
             } catch (Exception exp) {
@@ -58,7 +65,8 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
 
         locateNecessaryFilesInProject(iterator);
 
-        String mainActivityName = grabActivityName();
+        String mainActivityName = "Teste";//grabActivityName();
+
         ContentIterator iterator2 = fileOrDir -> {
             try {
                 if (fileOrDir.isValid() && !fileOrDir.isDirectory()) {
@@ -78,7 +86,9 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
             }
         };
         ProjectFileIndex.getInstance(project).iterateContent(iterator2);
-        createSnipetsObject();
+
+        //createSnipetsObject();
+
         ContentFactory contentFactory = ApplicationManager.getApplication().getService(ContentFactory.class);
         Content content = contentFactory.createContent(DialogCreator.cardLayout(project,files,toolWindow), "", false);
         toolWindow.getContentManager().addContent(content);
@@ -109,6 +119,7 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
 
     private Document convertFileToDocument(VirtualFile file){
         FileDocumentManager fileInstance = FileDocumentManager.getInstance();
+
         Document fileDocument = fileInstance.getDocument(file);
         return fileDocument;
     }
@@ -119,10 +130,23 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
         }
     }
 
+    private static final Logger LOG = Logger.getInstance(BillingToolWindowFactory.class);
+
     private String getFileContent(VirtualFile file){
+        if (file == null) {
+            LOG.warn("Attempted to process a null file.");
+            return "";
+        }
+
+        //Messages.showMessageDialog("Processing file: " + file.getName(), "File Info", Messages.getInformationIcon());
+
         Document fileDocument = convertFileToDocument(file);
-        String content = fileDocument.getText();
-        return content;
+        if (fileDocument == null) {
+            LOG.warn("Document conversion failed for file: " + file.getName());
+            return "";
+        }
+
+        return fileDocument.getText();
     }
 
     private void grabGradleFile(VirtualFile file) {
@@ -171,12 +195,23 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
         String content = getFileContent(androidManifest);
 
         int activityIndex =  content.indexOf("<activity");
+        if (activityIndex == -1) {
+            throw new IllegalArgumentException("No <activity> tag found in the content.");
+        }
+
         int activityNameIndex = content.indexOf("android:name",activityIndex);
+        if (activityNameIndex == -1) {
+            throw new IllegalArgumentException("No android:name attribute found in the <activity> tag.");
+        }
 
         char separator = getNameSeparatorChar(content, activityNameIndex);
 
         int nameStartIndex = content.indexOf(separator,activityNameIndex);
         int nameEndIndex = content.indexOf(separator,nameStartIndex+1);
+
+        if (nameStartIndex == -1 || nameEndIndex == -1) {
+            throw new IllegalArgumentException("Invalid name separator positions.");
+        }
 
         String rawName = content.substring(nameStartIndex,nameEndIndex);
         String fullName = cleanActivityName(rawName);
@@ -191,13 +226,18 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
 
     private char getNameSeparatorChar(String content, int activityNameIndex){
         int apostropheIndex = content.indexOf("'", activityNameIndex);
-        int quoteIdex = content.indexOf('"', activityNameIndex);
-        if (apostropheAndQuoteExist(apostropheIndex, quoteIdex)){
-            int firstToOccur = Math.min(apostropheIndex,quoteIdex);
+        int quoteIndex = content.indexOf('"', activityNameIndex);
+
+        if (apostropheIndex == -1 && quoteIndex == -1) {
+            throw new IllegalArgumentException("No valid separator found in the content.");
+        }
+
+        if (apostropheAndQuoteExist(apostropheIndex, quoteIndex)){
+            int firstToOccur = Math.min(apostropheIndex,quoteIndex);
             return content.charAt(firstToOccur);
         }
         else {
-            int separatorIndex = Math.max(apostropheIndex,quoteIdex);
+            int separatorIndex = Math.max(apostropheIndex,quoteIndex);
             return content.charAt(separatorIndex);
         }
     }

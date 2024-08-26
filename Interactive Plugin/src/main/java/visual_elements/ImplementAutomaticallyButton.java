@@ -10,8 +10,8 @@ public class ImplementAutomaticallyButton extends BasicButtonUI {
     @Override
     protected void installDefaults(AbstractButton b) {
         super.installDefaults(b);
-        b.setOpaque(false);
-        b.setForeground(DialogColors.lightBlue);
+        b.setOpaque(true);
+        b.setForeground(Color.WHITE);
     }
 
     @Override
@@ -21,10 +21,9 @@ public class ImplementAutomaticallyButton extends BasicButtonUI {
                 RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON
         );
         g2d.setRenderingHints(hints);
-        g2d.setColor(DialogColors.lightGray);
         g2d.fillRoundRect(10,0,c.getWidth()+30,c.getHeight(),15,15);
         //g2d.fillRoundedRect(new RoundRectangle2D.Double(20, 0, c.getWidth()+50, c.getHeight(), 15, 15));
-        g2d.setColor(c.getForeground());
+        g2d.setColor(Color.GREEN);
         super.paint(g, c);
         g2d.dispose();
     }

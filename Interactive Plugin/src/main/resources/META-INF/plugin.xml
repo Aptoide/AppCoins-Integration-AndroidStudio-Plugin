@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>catappult.billing.integration</id>
     <name>Catappult Billing Integration</name>
-    <version>1.1.7</version>
+    <version>1.1.58</version>
     <vendor email="support@catappult.io" url="https://catappult.io">Catappult</vendor>
     <idea-version since-build="212.5712"/>
 
@@ -27,12 +27,58 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Catappult Billing Implementation" secondary="true" icon="/icons/pluginIcon.svg"
                     anchor="right" factoryClass="window_factory.BillingToolWindowFactory"/>
+        <toolWindow id="Catappult Billing Implementation CoPilot" secondary="true" icon="AllIcons.Windows.Help"
+                    anchor="right" factoryClass="window_factory.BillingCoPilotToolWindowFactory"/>
+
         <notificationGroup id="Error Group"
                            displayType="STICKY_BALLOON"
                            key="notification.group.name"/>
     </extensions>
 
+
     <actions>
-        <!-- Add your actions here -->
+        <group text="Aptoide CoPilot" id="Polaris.HELP" icon="AllIcons.Windows.Help" popup="true">
+            <add-to-group group-id="EditorPopupMenu"/>
+            <separator/>
+        </group>
+
+        <action id="explain"
+                class="actions.Action1"
+                text="Explain This">
+            <add-to-group group-id="Polaris.HELP" anchor="first"/>
+        </action>
+        <action id="fix"
+                class="actions.Action1"
+                text="Fix This">
+            <add-to-group group-id="Polaris.HELP" anchor="first"/>
+        </action>
+        <group>
+            <action id="implement_appcoinsbillinginit"
+                    class="actions.Action1"
+                    text="Implement Billing Init">
+                <add-to-group group-id="Polaris.HELP" anchor="last"/>
+            </action>
+            <action id="implement_queryskus"
+                    class="actions.Action1"
+                    text="Implement Query SKUs">
+                <add-to-group group-id="Polaris.HELP" anchor="last"/>
+            </action>
+            <action id="implement_purchase"
+                    class="actions.Action1"
+                    text="Implement Purchases">
+                <add-to-group group-id="Polaris.HELP" anchor="last"/>
+            </action>
+            <action id="implement_consume"
+                    class="actions.Action1"
+                    text="Implement Consume">
+                <add-to-group group-id="Polaris.HELP" anchor="last"/>
+            </action>
+            <action id="implement_querypurchases"
+                    class="actions.Action1"
+                    text="Implement Query Purchases">
+                <add-to-group group-id="Polaris.HELP" anchor="last"/>
+            </action>
+        </group>
     </actions>
+
 </idea-plugin>
