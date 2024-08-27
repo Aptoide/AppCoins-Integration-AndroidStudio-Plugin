@@ -608,7 +608,7 @@ public class CardLayoutDialog extends JPanel {
     static JLabel moreInformationLabel(String text, String link){
 
         JLabel label = new JLabel("<html>" + text +
-                "<br><br>" +
+                "<br>" +
                 "<font color=#FFFFFF>More information in </font>" +
                 "<font color=#FD197C> https://docs.catappult.io/docs/native-android-sdk </font>" +
                 "<br>" +

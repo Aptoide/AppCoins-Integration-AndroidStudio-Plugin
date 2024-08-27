@@ -126,12 +126,10 @@ public class SDKDialogs {
         appCoinsSnippet.addButtonAction(new ImplementAndroidManifestAppCoinsChanges(CardLayoutDialog.project,CardLayoutDialog.files));
         changesToAndroidManifestPanel.add(appCoinsSnippet.getPanel());
 
-
-
-
         changesToAndroidManifestPanel.add(CardLayoutDialog.moreInformationLabel("",
                         "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),
                 BorderLayout.SOUTH);
+
 
         JBScrollPane scrollPane = new JBScrollPane(changesToAndroidManifestPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -144,34 +142,38 @@ public class SDKDialogs {
     }
 
     public static JPanel changesToAndroidManifest2(){
-        Card startingTheServiceConnection = new Card();
-        startingTheServiceConnection.setLayout(new BorderLayout(0,20));
+        Card changesToAndroidManifest2 = new Card();
+
+        JPanel changesToAndroidManifestPanel2 = new JPanel();
+        changesToAndroidManifestPanel2.setLayout(new BorderLayout(0,20));
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(6);
-        String title = "<h1>TESTE 313</h1>"+dialogElements.get(0);
-        String body =  dialogElements.get(2);
+        String title = dialogElements.get(0);
+        String body =  "<b>" + dialogElements.get(7) + "<b><br /><br />" + "<font color=#fff>" + dialogElements.get(8) + "</font>";
 
         String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
-        startingTheServiceConnection.add(CardLayoutDialog.moreInformationLabel(topText, "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"), BorderLayout.NORTH);
+        JLabel label = new JLabel("<html>" + topText + "</html>");
+        changesToAndroidManifestPanel2.add(label, BorderLayout.NORTH);
 
-        Panel panel = new Panel(DialogColors.white);
-
-        JLabel textCard = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67 size=5><b>" + dialogElements.get(7) + "</b></font>" +
-                "<br><br><font color=#220F67>"+ dialogElements.get(8) +"</font></html>");
-
-        panel.add(textCard);
-        panel.addRigidArea(new Dimension(0, 30));
 
         CodeWindow androidManifestQueries = new CodeWindow("XML", snippets.androidManifestQueries(),
                 DialogColors.darkBlue, ActionsSDK.implementedChangesToAndroidManifest2);
         androidManifestQueries.addButtonAction(new ImplementAndroidManifestQueriesChanges(CardLayoutDialog.project,CardLayoutDialog.files, snippets));
+        changesToAndroidManifestPanel2.add(androidManifestQueries.getPanel());
 
-        panel.add(androidManifestQueries.getPanel());
 
-        startingTheServiceConnection.add(panel.getScrollablePanel(), BorderLayout.CENTER);
+        changesToAndroidManifestPanel2.add(CardLayoutDialog.moreInformationLabel("",
+                        "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                BorderLayout.SOUTH);
 
-        return startingTheServiceConnection.getPanel();
+        JBScrollPane scrollPane = new JBScrollPane(changesToAndroidManifestPanel2);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        changesToAndroidManifest2.add(scrollPane, BorderLayout.CENTER);
+
+        return changesToAndroidManifest2.getPanel();
     }
 
     public static JPanel startingTheServiceConnection2(){
