@@ -149,7 +149,7 @@ public class SDKDialogs {
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(6);
         String title = dialogElements.get(0);
-        String body =  "<b>" + dialogElements.get(7) + "<b><br /><br />" + "<font color=#fff>" + dialogElements.get(8) + "</font>";
+        String body =   dialogElements.get(7) + "<br /><br />tt123" + "<font color=#fff>" + dialogElements.get(8) + "</font>";
 
         String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
         JLabel label = new JLabel("<html>" + topText + "</html>");

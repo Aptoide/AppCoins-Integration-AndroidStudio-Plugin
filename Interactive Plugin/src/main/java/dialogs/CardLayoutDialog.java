@@ -1,6 +1,7 @@
 package dialogs;
 
 import actions.ContinueStartingServiceConnectionChanges;
+import actions.ImplementAndroidManifestQueriesChanges;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import static dialogs.XmlDialogParser.getTableByIndex;
+import static window_factory.BillingToolWindowFactory.snippets;
 
 public class CardLayoutDialog extends JPanel {
     private final int PUBLICK_KEY_PAGE = 16;
@@ -374,24 +376,22 @@ public class CardLayoutDialog extends JPanel {
     }
 
     public JPanel startingTheServiceConnection(){
-        Card changesToAndroidManifest = new Card();
-        changesToAndroidManifest.setLayout(new BorderLayout(0,20));
+        Card changesToAndroidManifest2 = new Card();
+
+        JPanel changesToAndroidManifestPanel2 = new JPanel();
+        changesToAndroidManifestPanel2.setLayout(new BorderLayout(0,20));
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(34);
         String title = dialogElements.get(0);
-        String body =  dialogElements.get(2);
+        String body =  dialogElements.get(2) + "<br /><br />" + dialogElements.get(3) + "<br /><br />" + dialogElements.get(4)
+                +  "<font color=#ffffff size=5><br /><br /><b>" + dialogElements.get(5) + "</b></font>" +
+                "<br><br><font color=#ffffff>"+ dialogElements.get(6) +"</font><br /><br />" +
+                "<font color=#ffffff>"+ dialogElements.get(7) +"</font></html>";
 
         String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
-        changesToAndroidManifest.add(CardLayoutDialog.moreInformationLabel(topText, "https://docs.catappult.io/docs/native-android-sdk#starting-the-service-connection"), BorderLayout.NORTH);
+        JLabel label = new JLabel("<html>" + topText + "</html>");
+        changesToAndroidManifestPanel2.add(label, BorderLayout.NORTH);
 
-        Panel panel = new Panel(DialogColors.white);
-
-        JLabel textCard2 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67 size=5><b>" + dialogElements.get(3) + "</b></font>" +
-                "<br><br><font color=#220F67>"+ dialogElements.get(4) +"</font></html>");
-
-        JLabel textCard3 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67>"+ dialogElements.get(5) +"</font></html>");
 
         String data[][] ={
                 {"Name","Definition"},
@@ -399,12 +399,8 @@ public class CardLayoutDialog extends JPanel {
                 {"onBiilingServiceDisconnected()","This method is called when the billing connection is lost."}
         };
         Table table = new Table(data);
+        changesToAndroidManifestPanel2.add(table.getTable());
 
-        panel.add(textCard2);
-        panel.addRigidArea(new Dimension(0, 20));
-        panel.add(table.getTable());
-        panel.addRigidArea(new Dimension(0, 20));
-        panel.add(textCard3);
 
        /** CodeWindow appCoinsBillingStateListener = new CodeWindow(CardLayoutDialog.projLanguage, snippets.appCoinsBillingStateListener(),
                 DialogColors.darkBlue, ActionsSDK.implementedStartingServiceConnection);
@@ -490,9 +486,18 @@ public class CardLayoutDialog extends JPanel {
 
         **/
 
-        changesToAndroidManifest.add(panel.getScrollablePanel(), BorderLayout.CENTER);
+        changesToAndroidManifestPanel2.add(CardLayoutDialog.moreInformationLabel("",
+                        "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                BorderLayout.SOUTH);
 
-        return changesToAndroidManifest.getPanel();
+        JBScrollPane scrollPane = new JBScrollPane(changesToAndroidManifestPanel2);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        changesToAndroidManifest2.add(scrollPane, BorderLayout.CENTER);
+
+        return changesToAndroidManifest2.getPanel();
     }
 
     public RoundedScrollablePanelBorder publicKey(){

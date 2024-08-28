@@ -23,7 +23,7 @@ public class TableFullContentCellRenderer extends JTextArea implements TableCell
             setFont(getFont().deriveFont(Font.BOLD));
         }
         if (row % 2 == 0) {
-            setBackground(Color.decode("#EFF1F3"));
+            setBackground(Color.decode("#D3D3D3"));
         }
         return this;
     }
