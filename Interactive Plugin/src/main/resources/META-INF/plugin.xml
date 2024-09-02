@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>catappult.billing.integration</id>
     <name>Catappult Billing Integration</name>
-    <version>1.1.58</version>
+    <version>1.1.67</version>
     <vendor email="support@catappult.io" url="https://catappult.io">Catappult</vendor>
     <idea-version since-build="212.5712"/>
 
