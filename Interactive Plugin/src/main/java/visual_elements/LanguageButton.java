@@ -1,17 +1,21 @@
 package visual_elements;
 
+import utils.DialogColors;
+
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicButtonUI;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 
 public class LanguageButton extends BasicButtonUI {
+
+    //flag on top of codeWindow
     @Override
     protected void installDefaults(AbstractButton b) {
         super.installDefaults(b);
         b.setOpaque(false);
         b.setBorderPainted(false);
-        b.setForeground(Color.decode("#220F67"));
+        b.setForeground(DialogColors.white);
     }
 
     @Override

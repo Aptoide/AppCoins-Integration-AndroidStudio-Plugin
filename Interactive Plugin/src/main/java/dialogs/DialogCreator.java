@@ -8,6 +8,7 @@ import com.intellij.uiDesigner.core.AbstractLayout;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.JBUI;
 import snipets.Snippets;
+import utils.DialogColors;
 import utils.JKeyComponent;
 import window_factory.BillingToolWindowFactory;
 
@@ -89,7 +90,7 @@ public class DialogCreator {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx=0;
         c.gridy=0;
-        panel.add(getTitle(dialogElements.get(0)),c);
+        panel.add(getTitle("TESTE 1 " + dialogElements.get(0)),c);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx=0;
         c.gridy=1;
@@ -101,7 +102,11 @@ public class DialogCreator {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx=0;
         c.gridy=3;
-        panel.add(new JButton(new GoToBuildGradle(project,files,toolWindow)),c);
+
+
+        JButton button = new JButton(new GoToBuildGradle(project, files, toolWindow));
+        panel.add(button,c);
+
         return panel;
     }
 

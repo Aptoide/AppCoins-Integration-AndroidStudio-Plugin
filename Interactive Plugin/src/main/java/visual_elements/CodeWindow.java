@@ -66,9 +66,9 @@ public class CodeWindow {
     private void addLanguageButton(String language){
         JButton languageButton = new JButton(language);
         if (languageButtonsMap.size() == 0){
-            languageButton.setBackground(DialogColors.lightGray);
+            languageButton.setBackground(DialogColors.white);
         } else {
-            languageButton.setBackground(DialogColors.gray);
+            languageButton.setBackground(DialogColors.lightGray);
         }
         languageButton.setUI(new LanguageButton());
         languageButton.setMargin(new Insets(20, 20, 20, 20));
@@ -136,13 +136,13 @@ public class CodeWindow {
     }
 
     private void addImplementAutomaticallyButton(Actions action) {
-        implementAutomatically = new StatisticsRegisterButton("Implement automatically", action);
+        implementAutomatically = new JButton();//new StatisticsRegisterButton("Implement automatically", action);
         implementAutomatically.setUI(new ImplementAutomaticallyButton());
         implementAutomatically.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(DialogColors.lightBlue, 1, true),
+                BorderFactory.createLineBorder(DialogColors.white, 1, true),
                 BorderFactory.createEmptyBorder(0, 5, 0, 5)));
         JPanel grayRow = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        grayRow.setBackground(DialogColors.lightGray);
+        //grayRow.setBackground(DialogColors.lightGray);
         grayRow.add(implementAutomatically);
         c.gridx = 0;
         c.gridy = 2;

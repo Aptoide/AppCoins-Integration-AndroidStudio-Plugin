@@ -16,7 +16,7 @@
         <title>Changes on build.gradle file</title>
         <step>1</step>
         <body>Add new dependencies to this file.</body>
-        <body>After you located the build.gradle file, add the following code:</body>
+        <body>After you located the build.gradle file, add the following code.</body>
         <body>Our native android SDK uses one main library:</body>
         <body>Android-appcoins-billing </body>
         <body>(Check link for latest version)</body>
@@ -226,8 +226,8 @@
     <page id="24">
         <title>Consuming a Purchase</title>
         <step>6</step>
-        <body>Here's an example of the implementation of the ConsumeResponseListener listener:</body>
-        <body>To consume purchases which should, at least, be done in the PurchasesUpdatedListener, you can run the following method, which has to be done in a different thread:</body>
+        <body>Here's an example of the implementation of the ConsumeResponseListener listener: </body>
+        <body>To consume purchases which should, at least, be done in the PurchasesUpdatedListener, you can run the following method, which has to be done in a different thread: </body>
         <button1>Continue</button1>
         <button2>Go back</button2>
     </page>
@@ -244,7 +244,7 @@
         <body>To query purchases and obtain more details about them you must implement the skuDetailsResponseListener and call the querySkuDetailsAsync method. The automatic changes will add these methods to the main activity. If you implement the changes manually, please notice that the AppCoinsBillingStateListener uses callSkuDetails(), which is the method that calls querySkuDetailsAsync.</body>
         <body>SkuDetailsResponseListener</body>
         <body>After starting the connection, you can query Catappult for the products available to buy in order to display them to the user. This query includes not only the product's title but also the description, value, etc...
-            To query the products you can use the querySkuDetailsAsync which requires a SkuDetailsResponseListener to process Catappult's response.F</body>
+            To query the products you can use the querySkuDetailsAsync which requires a SkuDetailsResponseListener to process Catappult's response.</body>
         <body>Here's an example of the implementation of the skuDetailsResponseListener:</body>
         <body>A possible implementation of the callSkuDetails method, which calls querySkuDetailsAsync, is the following:</body>
         <button1>Implement changes automatically</button1>
@@ -322,6 +322,34 @@
         <body>Response</body>
         <body>If you get a status code 200 OK form the request it means the purchase was successfully validated.</body>
         <body>In the response, you have multiple fields providing a variety of information regarding the transaction. Here's a sample response with an explanation for each parameter.</body>
+    </page>
+    <page id="34">
+        <title>Starting the service connection</title>
+        <step>3</step>
+        <body>Once the permissions and dependencies are all added, you need to initialize an instance of AppcoinsBillingClient. This is the instance used to communicate with Catappult Billing Library.  </body>
+        <body>You should have only one active instance at any time. To initialize the billing client and start the connection, the PurchasesUpdatedListener is required for the client initialization and AppCoinsBillingStateListener is required to start the connection.</body>
+        <body>This section explains how to create the 2 required instances and how to instantiate and connect the AppcoinsBillingClient.</body>
+        <body>AppCoinsBillingStateListener</body>
+        <body>Add the AppCoinsBillingStateListener and PurchasesUpdatedListener interfaces.
+            The automatic changes will use these listeners in the onCreate method.</body>
+        <body>Add the AppCoinsBillingStateListener interface, implementing two methods:
+
+            onBillingSetupFinished(responseCode) and onBillingServiceDisconnected().
+
+            When the setup finishes successfully you should immediately check for pending and/or owned subscriptions.
+            If there are pending purchases you should consume them.
+            Here's a template for the implementation:</body>
+
+        <body>AppcoinsBillingClient</body>
+        <body>Below you can see an example of how to build and start Appcoins IAB by passing AppCoinsBillingStateListener, PurchasesUpdatedListener, and the public key as arguments.</body>
+        <body>When the setup finishes successfully you should immediately check for pending and/or owned subscriptions. If there are pending purchases you should consume them.</body>
+        <body>The example below shows how to check pending or owned purchases:</body>
+
+
+
+
+        <button1>Go to main activity</button1>
+        <button2>Go back</button2>
     </page>
     <table id="0">
         <row>
@@ -459,6 +487,32 @@
             <cell>String</cell>
             <cell>Transaction price in USD</cell>
             <cell>4.99</cell>
+        </row>
+    </table>
+    <table id="2">
+        <row>
+            <cell>  One-Step Payment (OSP)</cell>
+            <cell>  Native Android SDK</cell>
+        </row>
+        <row>
+            <cell>  Similar to Alipay</cell>
+            <cell>  Similar to Google Play</cell>
+        </row>
+        <row>
+            <cell>  10 hours for the full integration</cell>
+            <cell>  14 hours for the full integration</cell>
+        </row>
+        <row>
+            <cell>  One week integration timeline</cell>
+            <cell>  Two weeks integration timeline</cell>
+        </row>
+        <row>
+            <cell>  Supports in-app purchases (and subscriptions coming soon)</cell>
+            <cell>  Supports in-app purchases and subscriptions</cell>
+        </row>
+        <row>
+            <cell>  Supports remote validation</cell>
+            <cell>  Supports remote and/or local validation</cell>
         </row>
     </table>
 </company>
