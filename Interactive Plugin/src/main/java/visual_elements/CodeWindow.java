@@ -46,7 +46,7 @@ public class CodeWindow {
         codePanel.add(code, c);
         showLanguageSnippets(languageSnippetsMap.get(language));
 
-        codePanel.setBackground(DialogColors.gray);
+        //codePanel.setBackground(DialogColors.gray);
         codePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
     }
 
@@ -66,7 +66,7 @@ public class CodeWindow {
     private void addLanguageButton(String language){
         JButton languageButton = new JButton(language);
         if (languageButtonsMap.size() == 0){
-            languageButton.setBackground(DialogColors.white);
+            //languageButton.setBackground(DialogColors.white);
         } else {
             languageButton.setBackground(DialogColors.lightGray);
         }
@@ -139,7 +139,7 @@ public class CodeWindow {
         implementAutomatically = new JButton();//new StatisticsRegisterButton("Implement automatically", action);
         implementAutomatically.setUI(new ImplementAutomaticallyButton());
         implementAutomatically.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(DialogColors.white, 1, true),
+                BorderFactory.createLineBorder(DialogColors.lightGray, 1, true),
                 BorderFactory.createEmptyBorder(0, 5, 0, 5)));
         JPanel grayRow = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         //grayRow.setBackground(DialogColors.lightGray);
@@ -173,7 +173,7 @@ public class CodeWindow {
 
     private JPanel getEmbeddedPanelInGridBagLayout(){
         JPanel parentPanel = new JPanel(new GridBagLayout());
-        parentPanel.setBackground(DialogColors.white);
+        //parentPanel.setBackground(DialogColors.white);
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 1;

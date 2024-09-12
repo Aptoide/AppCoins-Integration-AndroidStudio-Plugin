@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>catappult.billing.integration</id>
     <name>Catappult Billing Integration</name>
-    <version>1.1.67</version>
+    <version>1.1.77</version>
     <vendor email="support@catappult.io" url="https://catappult.io">Catappult</vendor>
     <idea-version since-build="212.5712"/>
 
@@ -27,8 +27,11 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Catappult Billing Implementation" secondary="true" icon="/icons/pluginIcon.svg"
                     anchor="right" factoryClass="window_factory.BillingToolWindowFactory"/>
-        <toolWindow id="Catappult Billing Implementation CoPilot" secondary="true" icon="AllIcons.Windows.Help"
-                    anchor="right" factoryClass="window_factory.BillingCoPilotToolWindowFactory"/>
+        <!-- <toolWindow id="Catappult Billing Implementation CoPilot" secondary="true" icon="AllIcons.Windows.Help"
+                    anchor="right" factoryClass="window_factory.BillingCoPilotToolWindowFactory"/> -->
+
+        <applicationService serviceImplementation="utils.MyStatePersistence"/>
+
 
         <notificationGroup id="Error Group"
                            displayType="STICKY_BALLOON"
@@ -36,7 +39,7 @@
     </extensions>
 
 
-    <actions>
+   <!-- <actions>
         <group text="Aptoide CoPilot" id="Polaris.HELP" icon="AllIcons.Windows.Help" popup="true">
             <add-to-group group-id="EditorPopupMenu"/>
             <separator/>
@@ -79,6 +82,6 @@
                 <add-to-group group-id="Polaris.HELP" anchor="last"/>
             </action>
         </group>
-    </actions>
+    </actions> -->
 
 </idea-plugin>

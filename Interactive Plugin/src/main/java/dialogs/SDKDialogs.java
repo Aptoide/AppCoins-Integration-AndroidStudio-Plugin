@@ -1,38 +1,140 @@
 package dialogs;
 
 import actions.*;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
-import com.intellij.openapi.vfs.VirtualFile;
+import api.ApiService;
 import com.intellij.ui.components.JBScrollPane;
 import utils.ActionsSDK;
 import utils.DialogColors;
+import utils.MyPluginComponent;
 import visual_elements.*;
 import visual_elements.Panel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.util.ArrayList;
+
+import java.awt.Component;
+
+import com.intellij.openapi.ui.Messages;
 
 import static window_factory.BillingToolWindowFactory.snippets;
 
 public class SDKDialogs {
 
+
+
+
+
     public static JPanel changesToGradle(){
+        MyPluginComponent myPluginComponent = new MyPluginComponent();
+        String newVal = myPluginComponent.getValue();
+
+        boolean isActive;
+        String isValid = myPluginComponent.getValue();
+        Messages.showMessageDialog("SDK  Value: " + isValid, "File Info", Messages.getInformationIcon());
+        if(isValid.equals("true")){
+            isActive = true;
+        }else {
+            isActive = false;
+        }
+
         Card changesToGradle = new Card();
         JPanel changesToGradlePanel = new JPanel();
-        changesToGradlePanel.setLayout(new BorderLayout(0,20));
+        changesToGradlePanel.setLayout(new BorderLayout(0, 20));
+
+        ImageIcon onIcon = new ImageIcon(CodeWindow.class.getClassLoader().getResource("1.png"));
+        ImageIcon offIcon = new ImageIcon(CodeWindow.class.getClassLoader().getResource("2.png"));
+
+        Image onImage = onIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+        Image offImage = offIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+
+        onIcon = new ImageIcon(onImage);
+        offIcon = new ImageIcon(offImage);
 
 
+        Messages.showMessageDialog("Processing file: " + isActive, "File Info", Messages.getInformationIcon());
+
+        JToggleButton aiCopilotToggle = new JToggleButton("AI Copilot: " + (isActive ? "ON" : "OFF"));
+        aiCopilotToggle.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        aiCopilotToggle.setFont(new Font(aiCopilotToggle.getFont().getName(), Font.BOLD, 20)); // Set font size to 20
+        aiCopilotToggle.setIcon(isActive ? onIcon : offIcon);
+
+
+        aiCopilotToggle.setForeground(isActive ? Color.GREEN : Color.RED);
+        aiCopilotToggle.setSelected(isActive);
+
+
+        ImageIcon finalOnIcon = onIcon;
+        ImageIcon finalOffIcon = offIcon;
+
+
+        aiCopilotToggle.addItemListener(e -> {
+            boolean isSelected = e.getStateChange() == ItemEvent.SELECTED;
+            aiCopilotToggle.setText("AI Copilot: " + (isSelected ? "ON" : "OFF"));
+            aiCopilotToggle.setIcon(isSelected ? finalOnIcon : finalOffIcon);
+            aiCopilotToggle.setForeground(isSelected ? Color.GREEN : Color.RED);
+
+            myPluginComponent.saveValue("newVall");
+            String newVall = myPluginComponent.getValue();
+
+            Messages.showMessageDialog("new SDK  Value: " + newVall, "File Info", Messages.getInformationIcon());
+
+
+
+            // Create an instance of ApiService
+            ApiService apiService = new ApiService();
+
+            // Call the makeApiCall method
+            String test = apiService.makeApiCall();
+
+            Messages.showMessageDialog("Processing file: " + test, "File Info", Messages.getInformationIcon());
+        });
+
+
+
+
+
+
+        /**JToggleButton toggleButton = new JToggleButton("AI Copilot: OFF");
+        toggleButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        toggleButton.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                toggleButton.setText("AI Copilot: ON");
+                toggleButton.setForeground(Color.GREEN);
+
+                // Create an instance of ApiService
+                ApiService apiService = new ApiService();
+
+                // Call the makeApiCall method
+                String test = apiService.makeApiCall();
+
+                Messages.showMessageDialog("Processing file: " + test, "File Info", Messages.getInformationIcon());
+
+            } else {
+                toggleButton.setText("AI Copilot: OFF");
+                toggleButton.setForeground(Color.RED);
+
+            }
+        });**/
+
+
+// Create a panel to hold the toggle button and the text
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(aiCopilotToggle, BorderLayout.NORTH);
+
+// Create and configure the text label
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(2);
-        String changesToGradleTitle = dialogElements.get(0);
-        String changesToGradleBody =  dialogElements.get(2) + "<br /><br />" + dialogElements.get(3);
-
+        String changesToGradleTitle = "<br /><br />" + dialogElements.get(0);
+        String changesToGradleBody = dialogElements.get(2) + "<br /><br />" + dialogElements.get(3);
         JLabel text = new JLabel("<html>" + CardLayoutDialog.titleAndBodyHTMLFormated(changesToGradleTitle, changesToGradleBody) + "</html>");
-        changesToGradlePanel.add(text, BorderLayout.NORTH);
+        topPanel.add(text, BorderLayout.CENTER);
+
+// Add the top panel to the changesToGradlePanel
+        changesToGradlePanel.add(topPanel, BorderLayout.NORTH);
+
 
 
         CodeWindow code = new CodeWindow("XML", snippets.buildGradleCodeAllprojects(),

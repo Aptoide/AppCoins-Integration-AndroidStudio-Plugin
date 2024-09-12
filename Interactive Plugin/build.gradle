@@ -8,14 +8,20 @@ group 'org.example'
 
 repositories {
     mavenCentral()
-    mavenCentral()
 }
 
 dependencies {
-    implementation "org.apache.httpcomponents:httpclient:4.5.14"
+
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+
+    implementation 'commons-httpclient:commons-httpclient:3.1'
+    implementation 'commons-logging:commons-logging:1.2' // Add the correct version of commons-logging
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/

@@ -713,8 +713,6 @@
     <option name="the" path="ActionManager" hit="Apply the reverse of the selected changes to the working copy" />
     <option name="to" path="ActionManager" hit="Apply the reverse of the selected changes to the working copy" />
     <option name="working" path="ActionManager" hit="Apply the reverse of the selected changes to the working copy" />
-    <option name="aptoide" path="ActionManager" hit="Aptoide CoPilot" />
-    <option name="copilot" path="ActionManager" hit="Aptoide CoPilot" />
     <option name="arrangement" path="ActionManager" hit="Arrangement Rules" />
     <option name="rules" path="ActionManager" hit="Arrangement Rules" />
     <option name="ask" path="ActionManager" hit="Ask Before Rewriting Mnemonic" />

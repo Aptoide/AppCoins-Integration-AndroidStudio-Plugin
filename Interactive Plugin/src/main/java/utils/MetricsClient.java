@@ -3,7 +3,7 @@ package utils;
 import com.intellij.openapi.application.PermanentInstallationID;
 import dialogs.CardLayoutDialog;
 import dialogs.DebugNotification;
-//import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 
 import java.io.File;
@@ -16,17 +16,17 @@ import window_factory.BillingToolWindowFactory;
 import javax.swing.filechooser.FileSystemView;
 
 public class MetricsClient {
-    //HttpClient client;
+    HttpClient client;
     PermanentInstallationID id;
     String requestString;
 
     ExecutorService executorService;
 
     public MetricsClient(){
-     /**   client = new HttpClient();
+        client = new HttpClient();
         id = new PermanentInstallationID();
         executorService = Executors.newFixedThreadPool(10);
-        requestString = Constants.METRICS_PROD;**/
+        requestString = Constants.METRICS_PROD;
     }
 
     public void registerAction(Actions action) {
@@ -35,9 +35,11 @@ public class MetricsClient {
         executorService.execute(new Runnable() {
             @Override
             public void run() {
-             /**   try {
-                    //client.executeMethod(method);
-                } catch (IOException e) { } **/
+                try {
+                    client.executeMethod(method);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

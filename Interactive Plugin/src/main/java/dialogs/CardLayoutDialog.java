@@ -2,12 +2,16 @@ package dialogs;
 
 import actions.ContinueStartingServiceConnectionChanges;
 import actions.ImplementAndroidManifestQueriesChanges;
+import com.intellij.ide.plugins.PluginManager;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.components.JBScrollPane;
+
 import snipets.Snippets;
 import utils.*;
 import visual_elements.Panel;
@@ -18,16 +22,14 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 import static dialogs.XmlDialogParser.getTableByIndex;
@@ -54,13 +56,16 @@ public class CardLayoutDialog extends JPanel {
     private JButton nextButton;
     private int pagesLimit;
     private MetricsClient httpRequest;
+
+
     public CardLayoutDialog(Project project, Map<Integer, VirtualFile> files, ToolWindow toolWindow, BillingToolWindowFactory billingToolWindowFactory) throws IOException {
         this.project = project;
         this.files = files;
         this.toolWindow = toolWindow;
         this.snippets = billingToolWindowFactory.snippets;
         this.projLanguage = billingToolWindowFactory.projectLanguage;
-        //this.httpRequest = new MetricsClient();
+        this.httpRequest = new MetricsClient();
+
 
 
         setSize(390, 250);
@@ -90,7 +95,7 @@ public class CardLayoutDialog extends JPanel {
         cPanel.add(OSPDialogs.createWebServiceEndpoint(),"osp4");
         cPanel.add(SDKDialogs.lastPage(),"osp5");
 
-        //httpRequest.registerAction(ActionsSDK.start);
+        httpRequest.registerAction(ActionsSDK.start);
 
         this.setLayout(new BorderLayout());
         this.add(catappultLogoPanel(), BorderLayout.NORTH);
@@ -233,6 +238,17 @@ public class CardLayoutDialog extends JPanel {
 
 
     public JPanel methodChoosingPage(){
+        // Create an instance of MyPluginComponent
+        MyPluginComponent myPluginComponent = new MyPluginComponent();
+
+// Set a value
+        myPluginComponent.saveValue("exampleValue");
+
+// Get the value
+        String retrievedValue = myPluginComponent.getValue();
+
+        Messages.showMessageDialog("Current Value: " + retrievedValue, "File Info", Messages.getInformationIcon());
+
         Card lastPage = new Card();
 
         JPanel successPanel = new JPanel();
@@ -245,8 +261,82 @@ public class CardLayoutDialog extends JPanel {
         JLabel textCard2 = new JLabel("<html>"+
                 "<font color=#FFFFFF size=5> Developers should spend their time creating the best games and apps and not integrating SDKs. </font><br/><br/></html>", JLabel.CENTER);
         textCard2.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel textCard3 = new JLabel("<html>"+
+                "<br/><br/><font color=#FFFFFF size=5><b>Implement using our AI Copilot</b></font><br/><br/></html>", JLabel.CENTER);
+        textCard3.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Create a toggle button to show on/off status of AI Copilot
+       /** JToggleButton aiCopilotToggle = new JToggleButton("AI Copilot: OFF");
+        aiCopilotToggle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        aiCopilotToggle.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                aiCopilotToggle.setText("AI Copilot: ON");
+                aiCopilotToggle.setForeground(Color.GREEN);
+
+            } else {
+                aiCopilotToggle.setText("AI Copilot: OFF");
+                aiCopilotToggle.setForeground(Color.RED);
+            }
+        }); **/
+
+        ImageIcon onIcon = new ImageIcon(CodeWindow.class.getClassLoader().getResource("1.png"));
+        ImageIcon offIcon = new ImageIcon(CodeWindow.class.getClassLoader().getResource("2.png"));
+
+        Image onImage = onIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+        Image offImage = offIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+
+        onIcon = new ImageIcon(onImage);
+        offIcon = new ImageIcon(offImage);
+
+        JToggleButton aiCopilotToggle = new JToggleButton("AI Copilot: " + (AICopilotState.isAICopilotOn() ? "ON" : "OFF"));
+        aiCopilotToggle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        aiCopilotToggle.setFont(new Font(getFont().getName(),Font.BOLD,20)); // Set font size to 16
+
+        boolean isActive = false;
+        aiCopilotToggle.setIcon(isActive ? onIcon : offIcon);
+        aiCopilotToggle.setForeground(isActive ? Color.GREEN : Color.RED);
+        aiCopilotToggle.setSelected(isActive);
+
+        ImageIcon finalOnIcon = onIcon;
+        ImageIcon finalOffIcon = offIcon;
+
+        aiCopilotToggle.addItemListener(e -> {
+            boolean isSelected = e.getStateChange() == ItemEvent.SELECTED;
+            aiCopilotToggle.setText("AI Copilot: " + (isSelected ? "ON" : "OFF"));
+            aiCopilotToggle.setIcon(isSelected ? finalOnIcon : finalOffIcon);
+            aiCopilotToggle.setForeground(isSelected ? Color.GREEN : Color.RED);
+
+            myPluginComponent.saveValue("true");
+
+// Get the value
+            String newVal = myPluginComponent.getValue();
+
+            Messages.showMessageDialog("Current Value 2: " + newVal, "File Info", Messages.getInformationIcon());
+
+            cPanel.remove(SDKDialogs.changesToGradle());
+            cPanel.add(SDKDialogs.changesToGradle(), "sdk3");
+
+            Messages.showMessageDialog("Current Value 2.1: " + newVal, "File Info", Messages.getInformationIcon());
+
+
+            Messages.showMessageDialog("+Processing file: " + isSelected, "File Info", Messages.getInformationIcon());
+        });
+
+
         successPanel.add(textCard1);
         successPanel.add(textCard2);
+        successPanel.add(textCard3);
+
+// Add the toggle button below textCard3
+        successPanel.add(aiCopilotToggle);
+
+        JLabel textCard4 = new JLabel("<html>"+
+                "<br/><br/><font color=#FFFFFF>Implementing with our Aptoide CoPilot we can provide contextualized snippets to ease your SDK integration.</font><br/><br/></html>", JLabel.CENTER);
+        textCard4.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        successPanel.add(textCard4);
+
         //successPanel.addRigidArea(new Dimension(0, 20));
 
         JPanel panel = new JPanel();
@@ -668,9 +758,9 @@ public class CardLayoutDialog extends JPanel {
 
     private void registerActionOfFlow(String flow, int position){
         if (flow == "sdk"){
-            //httpRequest.registerAction(ActionsSDK.values()[position]);
+            httpRequest.registerAction(ActionsSDK.values()[position]);
         } else {
-            //httpRequest.registerAction(ActionsOSP.values()[position]);
+            httpRequest.registerAction(ActionsOSP.values()[position]);
         }
     }
 }
