@@ -1,7 +1,6 @@
 package dialogs;
 
 import actions.*;
-import api.ApiService;
 import com.intellij.ui.components.JBScrollPane;
 import utils.ActionsSDK;
 import utils.DialogColors;
@@ -17,109 +16,29 @@ import java.util.ArrayList;
 
 import java.awt.Component;
 
-import com.intellij.openapi.ui.Messages;
-
+import static java.awt.Font.getFont;
 import static window_factory.BillingToolWindowFactory.snippets;
 
 public class SDKDialogs {
 
 
+    private static ImageIcon onIcon = new ImageIcon(new ImageIcon(CodeWindow.class.getClassLoader().getResource("1.png")).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+    private static ImageIcon offIcon = new ImageIcon(new ImageIcon(CodeWindow.class.getClassLoader().getResource("2.png")).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
 
 
 
-    public static JPanel changesToGradle(){
-        MyPluginComponent myPluginComponent = new MyPluginComponent();
-        String newVal = myPluginComponent.getValue();
-
-        boolean isActive;
-        String isValid = myPluginComponent.getValue();
-        Messages.showMessageDialog("SDK  Value: " + isValid, "File Info", Messages.getInformationIcon());
-        if(isValid.equals("true")){
-            isActive = true;
-        }else {
-            isActive = false;
-        }
-
+    public  static JPanel changesToGradle(MyPluginComponent myPluginComponent){
         Card changesToGradle = new Card();
         JPanel changesToGradlePanel = new JPanel();
         changesToGradlePanel.setLayout(new BorderLayout(0, 20));
 
-        ImageIcon onIcon = new ImageIcon(CodeWindow.class.getClassLoader().getResource("1.png"));
-        ImageIcon offIcon = new ImageIcon(CodeWindow.class.getClassLoader().getResource("2.png"));
 
-        Image onImage = onIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
-        Image offImage = offIcon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
-
-        onIcon = new ImageIcon(onImage);
-        offIcon = new ImageIcon(offImage);
-
-
-        Messages.showMessageDialog("Processing file: " + isActive, "File Info", Messages.getInformationIcon());
-
-        JToggleButton aiCopilotToggle = new JToggleButton("AI Copilot: " + (isActive ? "ON" : "OFF"));
+        JToggleButton aiCopilotToggle = new JToggleButton("");
+        aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
+        aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
+        aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
         aiCopilotToggle.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        aiCopilotToggle.setFont(new Font(aiCopilotToggle.getFont().getName(), Font.BOLD, 20)); // Set font size to 20
-        aiCopilotToggle.setIcon(isActive ? onIcon : offIcon);
-
-
-        aiCopilotToggle.setForeground(isActive ? Color.GREEN : Color.RED);
-        aiCopilotToggle.setSelected(isActive);
-
-
-        ImageIcon finalOnIcon = onIcon;
-        ImageIcon finalOffIcon = offIcon;
-
-
-        aiCopilotToggle.addItemListener(e -> {
-            boolean isSelected = e.getStateChange() == ItemEvent.SELECTED;
-            aiCopilotToggle.setText("AI Copilot: " + (isSelected ? "ON" : "OFF"));
-            aiCopilotToggle.setIcon(isSelected ? finalOnIcon : finalOffIcon);
-            aiCopilotToggle.setForeground(isSelected ? Color.GREEN : Color.RED);
-
-            myPluginComponent.saveValue("newVall");
-            String newVall = myPluginComponent.getValue();
-
-            Messages.showMessageDialog("new SDK  Value: " + newVall, "File Info", Messages.getInformationIcon());
-
-
-
-            // Create an instance of ApiService
-            ApiService apiService = new ApiService();
-
-            // Call the makeApiCall method
-            String test = apiService.makeApiCall();
-
-            Messages.showMessageDialog("Processing file: " + test, "File Info", Messages.getInformationIcon());
-        });
-
-
-
-
-
-
-        /**JToggleButton toggleButton = new JToggleButton("AI Copilot: OFF");
-        toggleButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        toggleButton.addItemListener(e -> {
-            if (e.getStateChange() == ItemEvent.SELECTED) {
-                toggleButton.setText("AI Copilot: ON");
-                toggleButton.setForeground(Color.GREEN);
-
-                // Create an instance of ApiService
-                ApiService apiService = new ApiService();
-
-                // Call the makeApiCall method
-                String test = apiService.makeApiCall();
-
-                Messages.showMessageDialog("Processing file: " + test, "File Info", Messages.getInformationIcon());
-
-            } else {
-                toggleButton.setText("AI Copilot: OFF");
-                toggleButton.setForeground(Color.RED);
-
-            }
-        });**/
-
+        aiCopilotToggle.setFont(new Font(aiCopilotToggle.getFont().getName(),Font.BOLD,20)); // Set font size to 16
 
 // Create a panel to hold the toggle button and the text
         JPanel topPanel = new JPanel(new BorderLayout());
@@ -129,6 +48,7 @@ public class SDKDialogs {
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(2);
         String changesToGradleTitle = "<br /><br />" + dialogElements.get(0);
         String changesToGradleBody = dialogElements.get(2) + "<br /><br />" + dialogElements.get(3);
+
         JLabel text = new JLabel("<html>" + CardLayoutDialog.titleAndBodyHTMLFormated(changesToGradleTitle, changesToGradleBody) + "</html>");
         topPanel.add(text, BorderLayout.CENTER);
 
@@ -136,12 +56,27 @@ public class SDKDialogs {
         changesToGradlePanel.add(topPanel, BorderLayout.NORTH);
 
 
-
         CodeWindow code = new CodeWindow("XML", snippets.buildGradleCodeAllprojects(),
                 DialogColors.darkBlue, ActionsSDK.implementedChangesToGradle);
         code.addButtonAction(new ImplementBuildGradleAllProjectChanges(CardLayoutDialog.project,
                 CardLayoutDialog.files, snippets));
         changesToGradlePanel.add(code.getPanel(), BorderLayout.CENTER);
+
+        aiCopilotToggle.addItemListener(e -> {
+            aiCopilotToggle.setText("AI Copilot: " + (!myPluginComponent.getValue() ? "ON" : "OFF"));
+            aiCopilotToggle.setIcon(!myPluginComponent.getValue() ? onIcon : offIcon);
+            aiCopilotToggle.setForeground(!myPluginComponent.getValue() ? Color.GREEN : Color.RED);
+
+
+            if(!myPluginComponent.getValue()) {
+                code.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
+            }else{
+                code.addAICopilotCode(snippets.buildGradleCodeAllprojects());
+            }
+
+            myPluginComponent.saveValue(!myPluginComponent.getValue());
+        });
+
 
 
         changesToGradlePanel.add(CardLayoutDialog.moreInformationLabel("",
@@ -160,25 +95,38 @@ public class SDKDialogs {
         return changesToGradle.getPanel();
     }
 
-    public static JPanel changesToGradle2(){
+    public static JPanel changesToGradle2(MyPluginComponent myPluginComponent){
         Card changesToGradle2 = new Card();
         JPanel changesToGradlePanel2 = new JPanel();
         changesToGradlePanel2.setLayout(new BorderLayout(0,20));
 
 
+
+        JToggleButton aiCopilotToggle = new JToggleButton("");
+        aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
+        aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
+        aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
+        aiCopilotToggle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        aiCopilotToggle.setFont(new Font(aiCopilotToggle.getFont().getName(),Font.BOLD,20)); // Set font size to 16
+
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(aiCopilotToggle, BorderLayout.NORTH);
+
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(2);
-        String changesToGradleTitle = dialogElements.get(0);
+        String changesToGradleTitle = "<br />" + dialogElements.get(0);
         String changesToGradleBody =  dialogElements.get(2) + "<br />" + dialogElements.get(3) +
                 "<br /><br />" + dialogElements.get(4) +
                 "<br><font color=#FD197C><a href=\"https://mvnrepository.com/artifact/io.catappult/android-appcoins-billing/usages\">" +
                  dialogElements.get(5) + dialogElements.get(6);
 
-
-
-
         JLabel text = new JLabel("<html>" + CardLayoutDialog.titleAndBodyHTMLFormated(changesToGradleTitle, changesToGradleBody) + "</html>");
-        CardLayoutDialog.makeClickable(text, "https://mvnrepository.com/artifact/io.catappult/android-appcoins-billing/usages");
-        changesToGradlePanel2.add(text, BorderLayout.NORTH);
+        topPanel.add(text, BorderLayout.CENTER);
+
+// Add the top panel to the changesToGradlePanel
+        changesToGradlePanel2.add(topPanel, BorderLayout.NORTH);
+
+
 
 
         CodeWindow code = new CodeWindow("XML", snippets.appCoinsBillingDependency(),
@@ -186,6 +134,20 @@ public class SDKDialogs {
         code.addButtonAction(new ImplementBuildGradleDependenciesChanges(CardLayoutDialog.project,
                 CardLayoutDialog.files, snippets));
         changesToGradlePanel2.add(code.getPanel(), BorderLayout.CENTER);
+
+
+        aiCopilotToggle.addItemListener(e -> {
+            aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
+            aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
+            aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
+
+            myPluginComponent.saveValue(myPluginComponent.getValue());
+
+            if(myPluginComponent.getValue()) {
+                code.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
+            }
+
+        });
 
 
         changesToGradlePanel2.add(CardLayoutDialog.moreInformationLabel("",
@@ -205,28 +167,49 @@ public class SDKDialogs {
 
     }
 
-    public static JPanel changesToAndroidManifest(){
+    public static JPanel changesToAndroidManifest(MyPluginComponent myPluginComponent){
         Card changesToAndroidManifest = new Card();
-
         JPanel changesToAndroidManifestPanel = new JPanel();
         changesToAndroidManifestPanel.setLayout(new BorderLayout(0,20));
 
+        JToggleButton aiCopilotToggle = new JToggleButton("");
+        aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
+        aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
+        aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
+        aiCopilotToggle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        aiCopilotToggle.setFont(new Font(aiCopilotToggle.getFont().getName(),Font.BOLD,20)); // Set font size to 16
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(aiCopilotToggle, BorderLayout.NORTH);
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(6);
-        String title = dialogElements.get(0);
+        String title = "<br />" + dialogElements.get(0);
         String body =  dialogElements.get(2) + "<br /><br />" + "<font color=#fff size=5><b>" + dialogElements.get(3) + "</b></font>" +
                 "<br /><br /><font color=#fff>"+ dialogElements.get(4) +"</font>";
 
-
-        String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
-        JLabel label = new JLabel("<html>" + topText + "<br /><br /></html>");
-        changesToAndroidManifestPanel.add(label, BorderLayout.NORTH);
+        JLabel text = new JLabel("<html>" + CardLayoutDialog.titleAndBodyHTMLFormated(title, body) + "</html>");
+        topPanel.add(text, BorderLayout.CENTER);
+        changesToAndroidManifestPanel.add(topPanel, BorderLayout.NORTH);
 
 
         CodeWindow appCoinsSnippet = new CodeWindow("XML", snippets.androidManifestAppCoinsPermissions(),
                 DialogColors.darkBlue, ActionsSDK.implementedChangesToAndroidManifest);
         appCoinsSnippet.addButtonAction(new ImplementAndroidManifestAppCoinsChanges(CardLayoutDialog.project,CardLayoutDialog.files));
         changesToAndroidManifestPanel.add(appCoinsSnippet.getPanel());
+
+        aiCopilotToggle.addItemListener(e -> {
+            aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
+            aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
+            aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
+
+            myPluginComponent.saveValue(myPluginComponent.getValue());
+
+            if(myPluginComponent.getValue()) {
+                appCoinsSnippet.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
+            }
+
+        });
+
 
         changesToAndroidManifestPanel.add(CardLayoutDialog.moreInformationLabel("",
                         "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),
@@ -243,19 +226,31 @@ public class SDKDialogs {
         return changesToAndroidManifest.getPanel();
     }
 
-    public static JPanel changesToAndroidManifest2(){
+    public static JPanel changesToAndroidManifest2(MyPluginComponent myPluginComponent){
         Card changesToAndroidManifest2 = new Card();
-
         JPanel changesToAndroidManifestPanel2 = new JPanel();
         changesToAndroidManifestPanel2.setLayout(new BorderLayout(0,20));
 
+        JToggleButton aiCopilotToggle = new JToggleButton("");
+        aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
+        aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
+        aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
+        aiCopilotToggle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        aiCopilotToggle.setFont(new Font(aiCopilotToggle.getFont().getName(),Font.BOLD,20)); // Set font size to 16
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(aiCopilotToggle, BorderLayout.NORTH);
+
+
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(6);
-        String title = dialogElements.get(0);
+        String title = "<br />" + dialogElements.get(0);
         String body =   dialogElements.get(7) + "<br /><br />" + "<font color=#fff>" + dialogElements.get(8) + "</font>";
 
-        String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
-        JLabel label = new JLabel("<html>" + topText + "</html>");
-        changesToAndroidManifestPanel2.add(label, BorderLayout.NORTH);
+
+        JLabel text = new JLabel("<html>" + CardLayoutDialog.titleAndBodyHTMLFormated(title, body) + "</html>");
+        topPanel.add(text, BorderLayout.CENTER);
+        changesToAndroidManifestPanel2.add(topPanel, BorderLayout.NORTH);
+
 
 
         CodeWindow androidManifestQueries = new CodeWindow("XML", snippets.androidManifestQueries(),
@@ -263,6 +258,18 @@ public class SDKDialogs {
         androidManifestQueries.addButtonAction(new ImplementAndroidManifestQueriesChanges(CardLayoutDialog.project,CardLayoutDialog.files, snippets));
         changesToAndroidManifestPanel2.add(androidManifestQueries.getPanel());
 
+        aiCopilotToggle.addItemListener(e -> {
+            aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
+            aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
+            aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
+
+            myPluginComponent.saveValue(myPluginComponent.getValue());
+
+            if(myPluginComponent.getValue()) {
+                androidManifestQueries.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
+            }
+
+        });
 
         changesToAndroidManifestPanel2.add(CardLayoutDialog.moreInformationLabel("",
                         "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),
@@ -278,7 +285,7 @@ public class SDKDialogs {
         return changesToAndroidManifest2.getPanel();
     }
 
-    public static JPanel startingTheServiceConnection2(){
+    public static JPanel startingTheServiceConnection2(MyPluginComponent myPluginComponent){
         Card startingTheServiceConnection2 = new Card();
         startingTheServiceConnection2.setLayout(new BorderLayout(0,20));
 
@@ -292,6 +299,18 @@ public class SDKDialogs {
         JPanel startingTheServiceConnection2Panel3 = new JPanel();
         startingTheServiceConnection2Panel3.setLayout(new BorderLayout(0, 20));
 
+
+        JToggleButton aiCopilotToggle = new JToggleButton("");
+        aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
+        aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
+        aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
+        aiCopilotToggle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        aiCopilotToggle.setFont(new Font(aiCopilotToggle.getFont().getName(),Font.BOLD,20)); // Set font size to 16
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(aiCopilotToggle, BorderLayout.NORTH);
+
+
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(10);
         String title = dialogElements.get(0);
         String body = dialogElements.get(2) + "<br /><br />" +
@@ -299,9 +318,11 @@ public class SDKDialogs {
                 "<br><br><font color=#ffffff>"+ dialogElements.get(4) +"</font>";
 
         String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
-        JLabel label1 = new JLabel("<html>" + topText + "</html>");
-        startingTheServiceConnection2Panel1.add(label1, BorderLayout.NORTH);
+        JLabel label1 = new JLabel("<html><br />" + topText + "</html>");
+        topPanel.add(label1, BorderLayout.CENTER);
+        startingTheServiceConnection2Panel1.add(topPanel, BorderLayout.NORTH);
         startingTheServiceConnection2Panel.add(startingTheServiceConnection2Panel1);
+
 
 
         String data[][] ={
@@ -331,6 +352,19 @@ public class SDKDialogs {
         startingTheServiceConnection2Panel.add(startingTheServiceConnection2Panel4);
 
 
+        aiCopilotToggle.addItemListener(e -> {
+            aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
+            aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
+            aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
+
+            myPluginComponent.saveValue(myPluginComponent.getValue());
+
+            if(myPluginComponent.getValue()) {
+                onPurchasesUpdated.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
+            }
+
+        });
+
         startingTheServiceConnection2Panel.add(CardLayoutDialog.moreInformationLabel("",
                         "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),
                 BorderLayout.SOUTH);
@@ -349,11 +383,21 @@ public class SDKDialogs {
     }
 
 
-    public static JPanel querySku() {
+    public static JPanel querySku(MyPluginComponent myPluginComponent) {
         Card querySku = new Card();
-
         JPanel querySkuPanel = new JPanel();
         querySkuPanel.setLayout(new BoxLayout(querySkuPanel, BoxLayout.Y_AXIS));
+
+        JToggleButton aiCopilotToggle = new JToggleButton("");
+        aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
+        aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
+        aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
+        aiCopilotToggle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        aiCopilotToggle.setFont(new Font(aiCopilotToggle.getFont().getName(),Font.BOLD,20)); // Set font size to 16
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(aiCopilotToggle, BorderLayout.NORTH);
+        querySkuPanel.add(topPanel, BorderLayout.NORTH);
 
 
         JPanel querySkuPanel1 = new JPanel();
@@ -380,6 +424,7 @@ public class SDKDialogs {
         JLabel label3 = new JLabel("<html>" + "<br /><br /><font color=#ffffff>"+ dialogElements.get(5) +"</font></html>" + "<br /><br />" + "<br /><br /></html>");
         querySkuPanel3.add(label3, BorderLayout.NORTH);
 
+
         querySkuPanel.add(querySkuPanel1);
 
         String data[][] ={
@@ -387,6 +432,7 @@ public class SDKDialogs {
                 {"onSkuDetailsResponse(responseCode, skuDetailsList)","This method receives the result of a query of SKU" +
                         " details and the list of SKU details that were queried"}
         };
+
         Table table = new Table(data);
         table.getTable().setAlignmentX(Component.CENTER_ALIGNMENT);
         querySkuPanel.add(table.getTable(), BorderLayout.CENTER);
@@ -412,6 +458,20 @@ public class SDKDialogs {
 
         querySkuPanel.add(querySkuPanel5);
 
+        aiCopilotToggle.addItemListener(e -> {
+            aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
+            aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
+            aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
+
+            myPluginComponent.saveValue(myPluginComponent.getValue());
+
+            if(myPluginComponent.getValue()) {
+                skuDetailsResponseListener.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
+                callSkuDetails.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
+            }
+
+        });
+
         querySkuPanel.add(CardLayoutDialog.moreInformationLabel("",
                         "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),
                 BorderLayout.SOUTH);
@@ -431,20 +491,36 @@ public class SDKDialogs {
 
 
 
-    public static JPanel makingPurchase(){
+    public static JPanel makingPurchase(MyPluginComponent myPluginComponent){
         Card makingPurchase = new Card();
-
         JPanel makingPurchasePanel2 = new JPanel();
         makingPurchasePanel2.setLayout(new BorderLayout(0,20));
+
+        JToggleButton aiCopilotToggle = new JToggleButton("");
+        aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
+        aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
+        aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
+        aiCopilotToggle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        aiCopilotToggle.setFont(new Font(aiCopilotToggle.getFont().getName(),Font.BOLD,20)); // Set font size to 16
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(aiCopilotToggle, BorderLayout.NORTH);
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(16);
         String title = dialogElements.get(0);
         String body =   dialogElements.get(2) + "<br /><br />" +
                 "<font color=#FFFFFF>"+ dialogElements.get(4) +"</font></html>";
 
-        String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
+        JLabel text = new JLabel("<html><br />" + CardLayoutDialog.titleAndBodyHTMLFormated(title, body) + "</html>");
+        topPanel.add(text, BorderLayout.CENTER);
+
+        // Add the top panel to the changesToGradlePanel
+        makingPurchasePanel2.add(topPanel, BorderLayout.NORTH);
+
+        /**String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
         JLabel label = new JLabel("<html>" + topText + "</html>");
         makingPurchasePanel2.add(label, BorderLayout.NORTH);
+        **/
 
         CodeWindow startPurchase = new CodeWindow(CardLayoutDialog.projLanguage, snippets.startPurchase(),
                 DialogColors.darkBlue, ActionsSDK.implementedMakingPurchase);
@@ -455,6 +531,18 @@ public class SDKDialogs {
         //}
         makingPurchasePanel2.add(startPurchase.getPanel());
 
+        aiCopilotToggle.addItemListener(e -> {
+            aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
+            aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
+            aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
+
+            myPluginComponent.saveValue(myPluginComponent.getValue());
+
+            if(myPluginComponent.getValue()) {
+                startPurchase.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
+            }
+
+        });
 
         makingPurchasePanel2.add(CardLayoutDialog.moreInformationLabel("",
                         "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),
@@ -474,11 +562,21 @@ public class SDKDialogs {
         return makingPurchase.getPanel();
     }
 
-    public static JPanel makingPurchase2(){
+    public static JPanel makingPurchase2(MyPluginComponent myPluginComponent){
         Card makingPurchase2 = new Card();
-
         JPanel makingPurchasePanel2 = new JPanel();
         makingPurchasePanel2.setLayout(new BorderLayout(0,20));
+
+        JToggleButton aiCopilotToggle = new JToggleButton("");
+        aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
+        aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
+        aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
+        aiCopilotToggle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        aiCopilotToggle.setFont(new Font(aiCopilotToggle.getFont().getName(),Font.BOLD,20)); // Set font size to 16
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(aiCopilotToggle, BorderLayout.NORTH);
+
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(16);
         String title = dialogElements.get(0);
@@ -486,12 +584,28 @@ public class SDKDialogs {
                 "<font color=#FFFFFF>"+ dialogElements.get(6) +"</font></html>";
 
         String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
-        JLabel label = new JLabel("<html>" + topText + "</html>");
-        makingPurchasePanel2.add(label, BorderLayout.NORTH);
+        JLabel label = new JLabel("<html><br />" + topText + "</html>");
+        topPanel.add(label, BorderLayout.CENTER);
+        // Add the top panel to the changesToGradlePanel
+        makingPurchasePanel2.add(topPanel, BorderLayout.NORTH);
+
 
         CodeWindow noOnActivityResult = new CodeWindow(CardLayoutDialog.projLanguage, snippets.noOnActivityResult(),
                 DialogColors.darkBlue);
         makingPurchasePanel2.add(noOnActivityResult.getPanel());
+
+        aiCopilotToggle.addItemListener(e -> {
+            aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
+            aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
+            aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
+
+            myPluginComponent.saveValue(myPluginComponent.getValue());
+
+            if(myPluginComponent.getValue()) {
+                noOnActivityResult.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
+            }
+
+        });
 
 
         makingPurchasePanel2.add(CardLayoutDialog.moreInformationLabel("",
@@ -513,7 +627,7 @@ public class SDKDialogs {
     }
 
 
-    public static JPanel consumePurchase(){
+    public static JPanel consumePurchase(MyPluginComponent myPluginComponent){
         Card consumePurchase = new Card();
 
         JPanel consumePurchasePanel = new JPanel();
@@ -530,12 +644,25 @@ public class SDKDialogs {
         JPanel querySkuPanel5 = new JPanel();
         querySkuPanel5.setLayout(new BorderLayout(0, 20));
 
+        JToggleButton aiCopilotToggle = new JToggleButton("");
+        aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
+        aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
+        aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
+        aiCopilotToggle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        aiCopilotToggle.setFont(new Font(aiCopilotToggle.getFont().getName(),Font.BOLD,20)); // Set font size to 16
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(aiCopilotToggle, BorderLayout.NORTH);
+
+
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(22);
         String title = dialogElements.get(0);
         String body =  dialogElements.get(2);
         String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
         JLabel label1 = new JLabel("<html>" + topText + "</html>");
-        querySkuPanel1.add(label1, BorderLayout.NORTH);
+        topPanel.add(label1, BorderLayout.CENTER);
+        // Add the top panel to the changesToGradlePanel
+        querySkuPanel1.add(topPanel, BorderLayout.NORTH);
 
 
         consumePurchasePanel.add(querySkuPanel1);
@@ -569,6 +696,19 @@ public class SDKDialogs {
         querySkuPanel5.add(consumePurchase1.getPanel(), BorderLayout.CENTER);
         consumePurchasePanel.add(querySkuPanel5);
 
+        aiCopilotToggle.addItemListener(e -> {
+            aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
+            aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
+            aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
+
+            myPluginComponent.saveValue(myPluginComponent.getValue());
+
+            if(myPluginComponent.getValue()) {
+                consumePurchase1.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
+            }
+
+        });
+
 
         consumePurchasePanel.add(CardLayoutDialog.moreInformationLabel("",
                         "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),
@@ -589,14 +729,14 @@ public class SDKDialogs {
 
     }
 
-    static JPanel lastPage(){
+    static JPanel lastPage(MyPluginComponent myPluginComponent){
         Card lastPage = new Card();
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(29);
 
-        Panel successPanel = new Panel(DialogColors.lightBlue);
+        JPanel successPanel = new JPanel();
         successPanel.setLayout(new BorderLayout(0,20));
-        successPanel.setLayout(new BoxLayout(successPanel.getPanel(), BoxLayout.Y_AXIS));
+        successPanel.setLayout(new BoxLayout(successPanel, BoxLayout.Y_AXIS));
         JLabel greenIcon = CardLayoutDialog.imageFromFileName("successImage.png");
         greenIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
         JLabel textCard1 = new JLabel("<html><br>" +
@@ -609,9 +749,9 @@ public class SDKDialogs {
         successPanel.add(textCard1);
         successPanel.add(textCard2);
 
-        lastPage.add(successPanel.getPanel(), BorderLayout.CENTER);
+        lastPage.add(successPanel, BorderLayout.CENTER);
 
-        Panel panel = new Panel(DialogColors.darkBlue);
+        JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout(0,20));
 
         JLabel textCard3 = new JLabel("<html>" +
@@ -625,17 +765,25 @@ public class SDKDialogs {
         panel.add(CardLayoutDialog.imageFromFileName("informationSymbol.png"), BorderLayout.WEST);
         panel.add(textCard3, BorderLayout.CENTER);
 
-        lastPage.add(panel.getPanel(), BorderLayout.SOUTH);
+        lastPage.add(panel, BorderLayout.SOUTH);
 
         return lastPage.getPanel();
     }
 
-    public static JPanel serverCheck(){
+    public static JPanel serverCheck(MyPluginComponent myPluginComponent){
         Card serverCheck = new Card();
-
         JPanel serverCheckPanel = new JPanel();
         serverCheckPanel.setLayout(new BoxLayout(serverCheckPanel, BoxLayout.Y_AXIS));
 
+        JToggleButton aiCopilotToggle = new JToggleButton("");
+        aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
+        aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
+        aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
+        aiCopilotToggle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        aiCopilotToggle.setFont(new Font(aiCopilotToggle.getFont().getName(),Font.BOLD,20)); // Set font size to 16
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(aiCopilotToggle, BorderLayout.NORTH);
 
         JPanel querySkuPanel1 = new JPanel();
         querySkuPanel1.setLayout(new BorderLayout(0, 20));
@@ -648,6 +796,8 @@ public class SDKDialogs {
         JPanel querySkuPanel5 = new JPanel();
         querySkuPanel5.setLayout(new BorderLayout(0, 20));
 
+
+
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(33);
         String title = dialogElements.get(0);
         String body = dialogElements.get(2) + "<br /><br />" +
@@ -655,7 +805,11 @@ public class SDKDialogs {
                 "<br /><br /><font color=#ffffff>"+ dialogElements.get(4) +"</font>";
         String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
         JLabel label1 = new JLabel("<html>" + topText + "<br/></html>");
-        querySkuPanel1.add(label1, BorderLayout.NORTH);
+        topPanel.add(label1, BorderLayout.CENTER);
+        // Add the top panel to the changesToGradlePanel
+        querySkuPanel1.add(topPanel, BorderLayout.NORTH);
+
+
 
         serverCheckPanel.add(querySkuPanel1);
 
@@ -713,6 +867,23 @@ public class SDKDialogs {
         serverCheckPanel.add(apiRequestResponse.getPanel());
 
 
+
+        aiCopilotToggle.addItemListener(e -> {
+            aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
+            aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
+            aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
+
+            myPluginComponent.saveValue(myPluginComponent.getValue());
+
+            if(myPluginComponent.getValue()) {
+                receipt.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
+                apiRequestPurchase.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
+                apiRequestPurchaseSubscriptions.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
+                performRequest.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
+                apiRequestResponse.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
+            }
+
+        });
 
         serverCheckPanel.add(CardLayoutDialog.moreInformationLabel("",
                         "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),

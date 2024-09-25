@@ -37,6 +37,7 @@ public class CodeWindow {
     private void createCodePanel(String language, String snippet, Color color) {
         c.fill = GridBagConstraints.HORIZONTAL;
         JTextPane code = createCodeArea();
+        //code.setText(snippet);
         addLanguageButton(language);
         addSnippetContent(language,snippet,color);
         c.gridx = 0;
@@ -67,8 +68,9 @@ public class CodeWindow {
         JButton languageButton = new JButton(language);
         if (languageButtonsMap.size() == 0){
             //languageButton.setBackground(DialogColors.white);
+            languageButton.setBackground(getPanel().getBackground());
         } else {
-            languageButton.setBackground(DialogColors.lightGray);
+            languageButton.setBackground(getPanel().getBackground());
         }
         languageButton.setUI(new LanguageButton());
         languageButton.setMargin(new Insets(20, 20, 20, 20));
@@ -111,6 +113,12 @@ public class CodeWindow {
     private void clearTextPane(){
         tPane.setText("");
     }
+
+
+    public void addAICopilotCode(String newCode){
+        tPane.setText(""+newCode);
+    }
+
 
     private void appendToPane(String msg, Color c) {
         StyleContext sc = StyleContext.getDefaultStyleContext();
@@ -173,7 +181,7 @@ public class CodeWindow {
 
     private JPanel getEmbeddedPanelInGridBagLayout(){
         JPanel parentPanel = new JPanel(new GridBagLayout());
-        //parentPanel.setBackground(DialogColors.white);
+        //parentPanel.setBackground(DialogColors.lightBlue);
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx = 1;
