@@ -1,5 +1,6 @@
 package api;
 
+import com.google.gson.Gson;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,7 +36,10 @@ public class ApiService {
                     // Handle successful response
                     //System.out.println("Response: " + response.body().toString());
                     try {
-                        result[0] = response.body().string();
+                        String responseBody = response.body().string();
+                        Gson gson = new Gson();
+                        BillingResponse billingResponse = gson.fromJson(responseBody, BillingResponse.class);
+                        result[0] = billingResponse.getNewCode();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

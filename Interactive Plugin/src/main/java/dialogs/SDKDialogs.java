@@ -1,6 +1,7 @@
 package dialogs;
 
 import actions.*;
+import api.ApiService;
 import com.intellij.ui.components.JBScrollPane;
 import utils.ActionsSDK;
 import utils.DialogColors;
@@ -68,8 +69,14 @@ public class SDKDialogs {
             aiCopilotToggle.setForeground(!myPluginComponent.getValue() ? Color.GREEN : Color.RED);
 
 
+            // Create an instance of ApiService
+            ApiService apiService = new ApiService();
+            // Call the makeApiCall method
+            String test = apiService.makeApiCall();
+
+
             if(!myPluginComponent.getValue()) {
-                code.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
+                code.addAICopilotCode(test);
             }else{
                 code.addAICopilotCode(snippets.buildGradleCodeAllprojects());
             }
