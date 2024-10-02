@@ -23,7 +23,7 @@ public class ImplementAutomaticallyButton extends BasicButtonUI {
         g2d.setRenderingHints(hints);
         g2d.fillRoundRect(10,0,c.getWidth()+30,c.getHeight(),15,15);
         //g2d.fillRoundedRect(new RoundRectangle2D.Double(20, 0, c.getWidth()+50, c.getHeight(), 15, 15));
-        g2d.setColor(Color.GREEN);
+        //g2d.setColor(Color.GREEN);
         super.paint(g, c);
         g2d.dispose();
     }

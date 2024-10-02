@@ -2,6 +2,9 @@ package dialogs;
 
 import actions.*;
 import api.ApiService;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.components.JBScrollPane;
 import utils.ActionsSDK;
 import utils.DialogColors;
@@ -13,10 +16,13 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import java.awt.Component;
 
+import static dialogs.CardLayoutDialog.project;
 import static java.awt.Font.getFont;
 import static window_factory.BillingToolWindowFactory.snippets;
 
@@ -59,7 +65,7 @@ public class SDKDialogs {
 
         CodeWindow code = new CodeWindow("XML", snippets.buildGradleCodeAllprojects(),
                 DialogColors.darkBlue, ActionsSDK.implementedChangesToGradle);
-        code.addButtonAction(new ImplementBuildGradleAllProjectChanges(CardLayoutDialog.project,
+        code.addButtonAction(new ImplementBuildGradleAllProjectChanges(project,
                 CardLayoutDialog.files, snippets));
         changesToGradlePanel.add(code.getPanel(), BorderLayout.CENTER);
 
@@ -71,8 +77,11 @@ public class SDKDialogs {
 
             // Create an instance of ApiService
             ApiService apiService = new ApiService();
+            //
+            String snippetContext = snippets.buildGradleCodeAllprojects();
+
             // Call the makeApiCall method
-            String test = apiService.makeApiCall();
+            String test = apiService.changesToGradle2(snippetContext);
 
 
             if(!myPluginComponent.getValue()) {
@@ -138,7 +147,7 @@ public class SDKDialogs {
 
         CodeWindow code = new CodeWindow("XML", snippets.appCoinsBillingDependency(),
                 DialogColors.darkBlue, ActionsSDK.implementedChangesToGradle2);
-        code.addButtonAction(new ImplementBuildGradleDependenciesChanges(CardLayoutDialog.project,
+        code.addButtonAction(new ImplementBuildGradleDependenciesChanges(project,
                 CardLayoutDialog.files, snippets));
         changesToGradlePanel2.add(code.getPanel(), BorderLayout.CENTER);
 
@@ -148,11 +157,40 @@ public class SDKDialogs {
             aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
             aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
 
+
+
+            // Create an instance of ApiService
+            ApiService apiService = new ApiService();
+
+            // Step 1: Retrieve the content of the open file
+            VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+            String fileContent = "";
+            try {
+                fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
+                //Messages.showMessageDialog("Data from file1: " + fileContent, "File Info", Messages.getInformationIcon());
+
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            //Messages.showMessageDialog("Data from file2: " + fileContent, "File Info", Messages.getInformationIcon());
+
+
+
+            //obtain context of snippet
+            String snippetContext = fileContent;
+
+            // Call the makeApiCall method
+            String test = apiService.changesToGradle2(snippetContext);
+
+
+            if(!myPluginComponent.getValue()) {
+                code.addAICopilotCode(test);
+            }else{
+                code.addAICopilotCode(snippets.appCoinsBillingDependency());
+            }
+
             myPluginComponent.saveValue(myPluginComponent.getValue());
 
-            if(myPluginComponent.getValue()) {
-                code.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
-            }
 
         });
 
@@ -201,7 +239,7 @@ public class SDKDialogs {
 
         CodeWindow appCoinsSnippet = new CodeWindow("XML", snippets.androidManifestAppCoinsPermissions(),
                 DialogColors.darkBlue, ActionsSDK.implementedChangesToAndroidManifest);
-        appCoinsSnippet.addButtonAction(new ImplementAndroidManifestAppCoinsChanges(CardLayoutDialog.project,CardLayoutDialog.files));
+        appCoinsSnippet.addButtonAction(new ImplementAndroidManifestAppCoinsChanges(project,CardLayoutDialog.files));
         changesToAndroidManifestPanel.add(appCoinsSnippet.getPanel());
 
         aiCopilotToggle.addItemListener(e -> {
@@ -209,11 +247,24 @@ public class SDKDialogs {
             aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
             aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
 
+
+            // Create an instance of ApiService
+            ApiService apiService = new ApiService();
+            //
+            String snippetContext = "string";
+
+            // Call the makeApiCall method
+            String test = apiService.changesToAndroidManifest(snippetContext);
+
+
+            if(!myPluginComponent.getValue()) {
+                appCoinsSnippet.addAICopilotCode(test);
+            }else{
+                appCoinsSnippet.addAICopilotCode(snippets.buildGradleCodeAllprojects());
+            }
+
             myPluginComponent.saveValue(myPluginComponent.getValue());
 
-            if(myPluginComponent.getValue()) {
-                appCoinsSnippet.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
-            }
 
         });
 
@@ -262,7 +313,7 @@ public class SDKDialogs {
 
         CodeWindow androidManifestQueries = new CodeWindow("XML", snippets.androidManifestQueries(),
                 DialogColors.darkBlue, ActionsSDK.implementedChangesToAndroidManifest2);
-        androidManifestQueries.addButtonAction(new ImplementAndroidManifestQueriesChanges(CardLayoutDialog.project,CardLayoutDialog.files, snippets));
+        androidManifestQueries.addButtonAction(new ImplementAndroidManifestQueriesChanges(project,CardLayoutDialog.files, snippets));
         changesToAndroidManifestPanel2.add(androidManifestQueries.getPanel());
 
         aiCopilotToggle.addItemListener(e -> {
@@ -270,11 +321,22 @@ public class SDKDialogs {
             aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
             aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
 
-            myPluginComponent.saveValue(myPluginComponent.getValue());
+            // Create an instance of ApiService
+            ApiService apiService = new ApiService();
+            //
+            String snippetContext = "string";
 
-            if(myPluginComponent.getValue()) {
-                androidManifestQueries.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
+            // Call the makeApiCall method
+            String test = apiService.changesToAndroidManifest2(snippetContext);
+
+
+            if(!myPluginComponent.getValue()) {
+                androidManifestQueries.addAICopilotCode(test);
+            }else{
+                androidManifestQueries.addAICopilotCode(snippets.buildGradleCodeAllprojects());
             }
+
+            myPluginComponent.saveValue(myPluginComponent.getValue());
 
         });
 
@@ -354,7 +416,7 @@ public class SDKDialogs {
                 DialogColors.darkBlue, ActionsSDK.implementedStartingServiceConnection2);
         onPurchasesUpdated.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
         onPurchasesUpdated.addButtonAction(new ImplementPurchaseFinishedListenerChanges(
-                CardLayoutDialog.project,CardLayoutDialog.files,CardLayoutDialog.toolWindow));
+                project,CardLayoutDialog.files,CardLayoutDialog.toolWindow));
         startingTheServiceConnection2Panel4.add(onPurchasesUpdated.getPanel(), BorderLayout.CENTER);
         startingTheServiceConnection2Panel.add(startingTheServiceConnection2Panel4);
 
@@ -364,11 +426,22 @@ public class SDKDialogs {
             aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
             aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
 
-            myPluginComponent.saveValue(myPluginComponent.getValue());
+            // Create an instance of ApiService
+            ApiService apiService = new ApiService();
+            //
+            String snippetContext = "string";
 
-            if(myPluginComponent.getValue()) {
-                onPurchasesUpdated.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
+            // Call the makeApiCall method
+            String test = apiService.changesToAndroidManifest2(snippetContext);
+
+
+            if(!myPluginComponent.getValue()) {
+                onPurchasesUpdated.addAICopilotCode(test);
+            }else{
+                onPurchasesUpdated.addAICopilotCode(snippets.buildGradleCodeAllprojects());
             }
+
+            myPluginComponent.saveValue(myPluginComponent.getValue());
 
         });
 
@@ -450,7 +523,7 @@ public class SDKDialogs {
         CodeWindow skuDetailsResponseListener = new CodeWindow(CardLayoutDialog.projLanguage, snippets.skuDetailsResponseListener(),
                 DialogColors.darkBlue, ActionsSDK.implementedQuerySku);
         skuDetailsResponseListener.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
-        skuDetailsResponseListener.addButtonAction(new ImplementQueryPurchasesSkuListenerChanges(CardLayoutDialog.project,CardLayoutDialog.files));
+        skuDetailsResponseListener.addButtonAction(new ImplementQueryPurchasesSkuListenerChanges(project,CardLayoutDialog.files));
         querySkuPanel4.add(skuDetailsResponseListener.getPanel(), BorderLayout.CENTER);
         querySkuPanel.add(querySkuPanel4);
 
@@ -460,7 +533,7 @@ public class SDKDialogs {
                 DialogColors.darkBlue);
         callSkuDetails.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
         //not displaying
-        callSkuDetails.addButtonAction(new ImplementQueryPurchasesExampleChanges(CardLayoutDialog.project,CardLayoutDialog.files));
+        callSkuDetails.addButtonAction(new ImplementQueryPurchasesExampleChanges(project,CardLayoutDialog.files));
         querySkuPanel5.add(callSkuDetails.getPanel(), BorderLayout.CENTER);
 
         querySkuPanel.add(querySkuPanel5);
@@ -470,12 +543,26 @@ public class SDKDialogs {
             aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
             aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
 
-            myPluginComponent.saveValue(myPluginComponent.getValue());
 
-            if(myPluginComponent.getValue()) {
-                skuDetailsResponseListener.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
-                callSkuDetails.addAICopilotCode(snippets.androidManifestGooglePlayPermissions());
+            // Create an instance of ApiService
+            ApiService apiService = new ApiService();
+            //
+            String snippetContext = "string";
+            String snippetContext1 = "string";
+
+            // Call the makeApiCall method
+            String test = apiService.skuDetailsResponseListener(snippetContext);
+            String test1 = apiService.queryInapps(snippetContext);
+
+            if(!myPluginComponent.getValue()) {
+                skuDetailsResponseListener.addAICopilotCode(test);
+                callSkuDetails.addAICopilotCode(test1);
+            }else{
+                skuDetailsResponseListener.addAICopilotCode(snippets.buildGradleCodeAllprojects());
+                callSkuDetails.addAICopilotCode(snippets.buildGradleCodeAllprojects());
             }
+
+            myPluginComponent.saveValue(myPluginComponent.getValue());
 
         });
 
@@ -534,7 +621,7 @@ public class SDKDialogs {
 
         //if (CardLayoutDialog.files.containsKey(5) && CardLayoutDialog.files.containsKey(7)){;
             startPurchase.addButtonAction(new ImplementMakingAPurchaseChanges(
-                    CardLayoutDialog.project,CardLayoutDialog.files,CardLayoutDialog.toolWindow));
+                    project,CardLayoutDialog.files,CardLayoutDialog.toolWindow));
         //}
         makingPurchasePanel2.add(startPurchase.getPanel());
 
@@ -698,7 +785,7 @@ public class SDKDialogs {
 
         CodeWindow consumePurchase1 = new CodeWindow(CardLayoutDialog.projLanguage, snippets.consumePurchase1(),
                 DialogColors.darkBlue, ActionsSDK.implementedConsumePurchase);
-        consumePurchase1.addButtonAction(new ImplementConsumeAPurchaseChanges(CardLayoutDialog.project, CardLayoutDialog.files));
+        consumePurchase1.addButtonAction(new ImplementConsumeAPurchaseChanges(project, CardLayoutDialog.files));
         consumePurchasePanel.add(consumePurchase1.getPanel());
         querySkuPanel5.add(consumePurchase1.getPanel(), BorderLayout.CENTER);
         consumePurchasePanel.add(querySkuPanel5);

@@ -144,7 +144,7 @@ public class CodeWindow {
     }
 
     private void addImplementAutomaticallyButton(Actions action) {
-        implementAutomatically = new JButton();//new StatisticsRegisterButton("Implement automatically", action);
+        implementAutomatically = new StatisticsRegisterButton("Implement automatically", action);
         implementAutomatically.setUI(new ImplementAutomaticallyButton());
         implementAutomatically.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(DialogColors.lightGray, 1, true),
@@ -159,9 +159,9 @@ public class CodeWindow {
         implementAutomatically.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-                implementAutomatically.setOpaque(false);
+                //implementAutomatically.setOpaque(false);
                 implementAutomatically.setForeground(DialogColors.green);
-                implementAutomatically.setBorder(BorderFactory.createEmptyBorder());
+                //implementAutomatically.setBorder(BorderFactory.createEmptyBorder());
                 implementAutomatically.setHorizontalAlignment(SwingConstants.RIGHT);
                 implementAutomatically.setText("Implemented!");
                 implementAutomatically.revalidate();
