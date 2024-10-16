@@ -51,9 +51,6 @@ public class CardLayoutDialog extends JPanel {
 
     private MyPluginComponent myPluginComponent;
 
-    private ImageIcon onIcon = new ImageIcon(new ImageIcon(CodeWindow.class.getClassLoader().getResource("1.png")).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
-    private ImageIcon offIcon = new ImageIcon(new ImageIcon(CodeWindow.class.getClassLoader().getResource("2.png")).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
-
 
     public CardLayoutDialog(Project project, Map<Integer, VirtualFile> files, ToolWindow toolWindow, BillingToolWindowFactory billingToolWindowFactory) throws IOException {
         this.project = project;
@@ -284,59 +281,44 @@ public class CardLayoutDialog extends JPanel {
         JPanel successPanel = new JPanel();
         successPanel.setLayout(new BoxLayout(successPanel, BoxLayout.Y_AXIS));
 
-        JLabel textCard1 = new JLabel("<html><br>" +
-                "<font color=#FFFFFF size=6><b> Faster development with one single integration </b></font>" +
-                "<br/><br/></html>", JLabel.CENTER);
-        textCard1.setAlignmentX(Component.CENTER_ALIGNMENT);
-        JLabel textCard2 = new JLabel("<html>"+
-                "<font color=#FFFFFF size=5> Developers should spend their time creating the best games and apps and not integrating SDKs. </font><br/><br/></html>", JLabel.CENTER);
-        textCard2.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel textCard3 = new JLabel("<html>"+
-                "<br/><br/><font color=#FFFFFF size=5><b>Implement using our AI Copilot</b></font><br/><br/></html>", JLabel.CENTER);
-        textCard3.setAlignmentX(Component.CENTER_ALIGNMENT);
+JLabel textCard1 = new JLabel("<html><div style='text-align:justify;'><br>" +
+        "<font color=#FFFFFF size=6><b> Faster development with one single integration </b></font>" +
+        "<br/><br/></div></html>", JLabel.CENTER);
+textCard1.setAlignmentX(Component.CENTER_ALIGNMENT);
+JLabel textCard2 = new JLabel("<html><div style='text-align:justify;'>"+
+        "<font color=#FFFFFF size=5> Developers should spend their time creating the best games and apps and not integrating SDKs. </font></div><br /><br /></html>", JLabel.CENTER);
+textCard2.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+JLabel textCard3 = new JLabel("<html><div style='text-align:justify;'>"+
+        "<br/><br/><font color=#FFFFFF size=5><b>Implement using our AI Copilot</b></font><br/><br/>" +
+        "</div></html>", JLabel.CENTER);
+textCard3.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JToggleButton aiCopilotToggle = new JToggleButton("");
-        aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
-        aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
-        aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
-        aiCopilotToggle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        aiCopilotToggle.setFont(new Font(getFont().getName(),Font.BOLD,20)); // Set font size to 16
+JLabel greenIcon = CardLayoutDialog.imageFromFileName("robot.png");
+greenIcon.setIcon(new ImageIcon(new ImageIcon(CodeWindow.class.getClassLoader().getResource("robot.png")).getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+greenIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        aiCopilotToggle.addItemListener(e -> {
-            aiCopilotToggle.setText("AI Copilot: " + (!myPluginComponent.getValue() ? "ON" : "OFF"));
-            aiCopilotToggle.setIcon(!myPluginComponent.getValue() ? onIcon : offIcon);
-            aiCopilotToggle.setForeground(!myPluginComponent.getValue() ? Color.GREEN : Color.RED);
+successPanel.add(textCard1);
+successPanel.add(textCard2);
+successPanel.add(greenIcon);
+successPanel.add(textCard3);
 
-            myPluginComponent.saveValue(!myPluginComponent.getValue());
-        });
+JLabel textCard4 = new JLabel("<html><div style='text-align:justify;'>"+
+        "<br/><br/><font color=#FFFFFF>Implementing with our Aptoide CoPilot we can provide contextualized snippets to ease your SDK integration.</font><br/><br/>Disclaimer: " +
+        "I’m powered by AI, so surprises and mistakes are possible. Make sure to verify any generated code or suggestions, and share feedback so that we can learn and improve.</div></html>", JLabel.CENTER);
+textCard4.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+successPanel.add(textCard4);
 
-        successPanel.add(textCard1);
-        successPanel.add(textCard2);
-        successPanel.add(textCard3);
+JPanel panel = new JPanel();
+panel.setLayout(new GridLayout(1,2));
+panel.setBackground(getBackground());
 
-        // Add the toggle button below textCard3
-        successPanel.add(aiCopilotToggle);
-
-        JLabel textCard4 = new JLabel("<html>"+
-                "<br/><br/><font color=#FFFFFF>Implementing with our Aptoide CoPilot we can provide contextualized snippets to ease your SDK integration.</font><br/><br/></html>", JLabel.CENTER);
-        textCard4.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        successPanel.add(textCard4);
-
-        //successPanel.addRigidArea(new Dimension(0, 20));
-
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(1,2));
-        panel.setBackground(getBackground());
-
-        JLabel label2 = new JLabel("<html><div style='text-align:center;'>"
-                + "<span style='font-size:14px;font-weight:bold;color:#FFFFFF;'>"
-                + "          Start Implementing SDK          </span><br>"
-                + "</div></html>");
-
+JLabel label2 = new JLabel("<html><div style='text-align:center;'>"
+        + "<span style='font-size:14px;font-weight:bold;color:#FFFFFF;'>"
+        + "          Start Implementing SDK          </span><br>"
+        + "</div></html>");
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
 
@@ -376,28 +358,7 @@ public class CardLayoutDialog extends JPanel {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout(0,20));
 
-
-        JToggleButton aiCopilotToggle = new JToggleButton("");
-        aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
-        aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
-        aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
-        aiCopilotToggle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        aiCopilotToggle.setFont(new Font(getFont().getName(),Font.BOLD,20)); // Set font size to 16
-
         JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.add(aiCopilotToggle, BorderLayout.NORTH);
-
-
-        aiCopilotToggle.addItemListener(e -> {
-            aiCopilotToggle.setText("AI Copilot: " + (!myPluginComponent.getValue() ? "ON" : "OFF"));
-            aiCopilotToggle.setIcon(!myPluginComponent.getValue() ? onIcon : offIcon);
-            aiCopilotToggle.setForeground(!myPluginComponent.getValue() ? Color.GREEN : Color.RED);
-
-            myPluginComponent.saveValue(!myPluginComponent.getValue());
-        });
-
-
-
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(2);
         String title = dialogElements.get(0);
@@ -446,23 +407,8 @@ public class CardLayoutDialog extends JPanel {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout(0,20));
 
-        JToggleButton aiCopilotToggle = new JToggleButton("");
-        aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
-        aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
-        aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
-        aiCopilotToggle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        aiCopilotToggle.setFont(new Font(getFont().getName(),Font.BOLD,20)); // Set font size to 16
 
-        aiCopilotToggle.addItemListener(e -> {
-            aiCopilotToggle.setText("AI Copilot: " + (!myPluginComponent.getValue() ? "ON" : "OFF"));
-            aiCopilotToggle.setIcon(!myPluginComponent.getValue() ? onIcon : offIcon);
-            aiCopilotToggle.setForeground(!myPluginComponent.getValue() ? Color.GREEN : Color.RED);
 
-            myPluginComponent.saveValue(!myPluginComponent.getValue());
-        });
-
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.add(aiCopilotToggle, BorderLayout.NORTH);
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(5);
         String title = "<br />" + dialogElements.get(0);
@@ -472,6 +418,7 @@ public class CardLayoutDialog extends JPanel {
                 "<font color=#ffffff size=6><B>" + title + "</B></font>" +
                 "<br><br>" +
                 "<font color=#ffffff>" + body + "</font></html>");
+        JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.add(text, BorderLayout.CENTER);
 
         panel.add(topPanel, BorderLayout.NORTH);
@@ -505,23 +452,7 @@ public class CardLayoutDialog extends JPanel {
         JPanel changesToAndroidManifestPanel2 = new JPanel();
         changesToAndroidManifestPanel2.setLayout(new BorderLayout(0,20));
 
-        JToggleButton aiCopilotToggle = new JToggleButton("");
-        aiCopilotToggle.setText("AI Copilot: " + (myPluginComponent.getValue() ? "ON" : "OFF"));
-        aiCopilotToggle.setIcon(myPluginComponent.getValue() ? onIcon : offIcon);
-        aiCopilotToggle.setForeground(myPluginComponent.getValue() ? Color.GREEN : Color.RED);
-        aiCopilotToggle.setAlignmentX(Component.CENTER_ALIGNMENT);
-        aiCopilotToggle.setFont(new Font(aiCopilotToggle.getFont().getName(),Font.BOLD,20)); // Set font size to 16
 
-        aiCopilotToggle.addItemListener(e -> {
-            aiCopilotToggle.setText("AI Copilot: " + (!myPluginComponent.getValue() ? "ON" : "OFF"));
-            aiCopilotToggle.setIcon(!myPluginComponent.getValue() ? onIcon : offIcon);
-            aiCopilotToggle.setForeground(!myPluginComponent.getValue() ? Color.GREEN : Color.RED);
-
-            myPluginComponent.saveValue(!myPluginComponent.getValue());
-        });
-
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.add(aiCopilotToggle, BorderLayout.NORTH);
 
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(34);
@@ -533,6 +464,8 @@ public class CardLayoutDialog extends JPanel {
 
         String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
         JLabel label = new JLabel("<html><br />" + topText + "</html>");
+
+        JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.add(label, BorderLayout.CENTER);
         changesToAndroidManifestPanel2.add(topPanel, BorderLayout.NORTH);
 

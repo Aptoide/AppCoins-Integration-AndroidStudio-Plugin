@@ -1,5 +1,14 @@
 package visual_elements;
 
+import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.vfs.VirtualFile;
+import dialogs.CardLayoutDialog;
+import snipets.Snippets;
 import utils.Actions;
 import utils.DialogColors;
 
@@ -16,6 +25,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static dialogs.CardLayoutDialog.project;
+
 public class CodeWindow {
     JPanel codePanel = new JPanel(new GridBagLayout());
     GridBagConstraints c = new GridBagConstraints();
@@ -23,7 +34,12 @@ public class CodeWindow {
     Map<String, JButton> languageButtonsMap = new HashMap<String, JButton>();
     Map<String, ArrayList<Snippet>> languageSnippetsMap = new HashMap<String, ArrayList<Snippet>>();
 
-    JButton implementAutomatically = new JButton("Implement automatically");;
+    JButton implementAutomatically = new JButton("Implement automatically");
+
+    JButton aiImplement = new JButton("Implement via Aptoide CoPilot");
+
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+
 
     public CodeWindow(String language, String snippet, Color color) {
         createCodePanel(language, snippet, color);
@@ -32,6 +48,131 @@ public class CodeWindow {
     public CodeWindow(String language, String snippet, Color color, Actions action) {
         createCodePanel(language, snippet, color);
         addImplementAutomaticallyButton(action);
+        addAIImplementButton();
+
+        // Add the button panel to the code panel
+        c.gridx = 0;
+        c.gridy = 2;
+        c.weightx = 1;
+        codePanel.add(buttonPanel, c);
+    }
+
+    private Project projectToSet;
+    private Map<Integer, VirtualFile> filesToSet;
+
+    private String newCodeH;
+
+    public void setCodeFiles(Project project, Map<Integer, VirtualFile> files) {
+        projectToSet=project;
+        filesToSet=files;
+        newCodeH="";
+    }
+
+    private void writeOnFile(Project project, Map<Integer, VirtualFile> files, String test) {
+            // Write the code to the file
+            Document buildGradleDocument = FileDocumentManager.getInstance().getDocument(files.get(2));
+
+        String oldBuildGradleContent = buildGradleDocument.getText();
+            String newBuildGradleContent = oldBuildGradleContent;
+            if (!oldBuildGradleContent.contains("google()")||!oldBuildGradleContent.contains("mavenCentral()")){
+                newBuildGradleContent = newBuildGradleContent.concat(
+                        test
+                );
+            }
+
+
+            // Clear the content of the document
+            Runnable clearContent = () -> {
+                buildGradleDocument.setReadOnly(false);
+                buildGradleDocument.setText("");
+            };
+            WriteCommandAction.runWriteCommandAction(project, clearContent);
+
+            // Writing build.gradle file changes
+            String finalBuildGradleContent = newBuildGradleContent;
+            Runnable r2 = () -> {
+                buildGradleDocument.setReadOnly(false);
+                buildGradleDocument.setText(finalBuildGradleContent);
+            };
+            WriteCommandAction.runWriteCommandAction(project, r2);
+
+    }
+
+
+    private void writeOnFileManifest(Project project, Map<Integer, VirtualFile> files, String test) {
+        // Retrieve the currently open file
+        VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+
+        // Get the document associated with the file
+        Document currentDocument = FileDocumentManager.getInstance().getDocument(currentFile);
+
+        // Clear the content of the document
+        Runnable clearContent = () -> {
+            currentDocument.setReadOnly(false);
+            currentDocument.setText("");
+        };
+        WriteCommandAction.runWriteCommandAction(project, clearContent);
+
+        // Write the content of the test variable to the document
+        Runnable writeContent = () -> {
+            currentDocument.setReadOnly(false);
+            currentDocument.setText(test);
+        };
+        WriteCommandAction.runWriteCommandAction(project, writeContent);
+    }
+
+    private void justWrite(Project project, Map<Integer, VirtualFile> files, String test) {
+        // Retrieve the currently open file
+        VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+
+        // Get the document associated with the file
+        Document currentDocument = FileDocumentManager.getInstance().getDocument(currentFile);
+
+        if (currentDocument != null) {
+            // Clear the content of the document
+            Runnable clearContent = () -> {
+                currentDocument.setReadOnly(false);
+                currentDocument.setText("");
+            };
+            WriteCommandAction.runWriteCommandAction(project, clearContent);
+
+            // Write the content of the test variable to the document
+            Runnable writeContent = () -> {
+                currentDocument.setReadOnly(false);
+                currentDocument.setText(test);
+            };
+            WriteCommandAction.runWriteCommandAction(project, writeContent);
+        } else {
+            Messages.showMessageDialog("No document found for the current file.", "Error", Messages.getErrorIcon());
+        }
+    }
+
+    private void addAIImplementButton(){
+        aiImplement.setUI(new ImplementAutomaticallyButton());
+        aiImplement.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(DialogColors.lightGray, 1, true),
+                BorderFactory.createEmptyBorder(0, 5, 0, 5)));
+        buttonPanel.add(aiImplement);
+        aiImplement.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                //Messages.showMessageDialog("Contains?: " + newCodeH, "File Info", Messages.getInformationIcon());
+
+
+                if(newCodeH.contains("implementation")){
+                    writeOnFile(projectToSet, filesToSet, newCodeH);
+                }else if(newCodeH.contains("?xml version") && !newCodeH.contains("uses-permission")){
+                    writeOnFileManifest(projectToSet, filesToSet, newCodeH);
+                }else if(newCodeH.contains("?xml version") && newCodeH.contains("uses-permission")){
+                    //Messages.showMessageDialog("Aqui: " + newCodeH, "PASSOU AQUI", Messages.getInformationIcon());
+                    justWrite(projectToSet, filesToSet, newCodeH);
+                }
+
+                //write filter for other parts like consume pruchase listener makepurchase startconnection
+
+            }
+        });
     }
 
     private void createCodePanel(String language, String snippet, Color color) {
@@ -39,6 +180,7 @@ public class CodeWindow {
         JTextPane code = createCodeArea();
         //code.setText(snippet);
         addLanguageButton(language);
+
         addSnippetContent(language,snippet,color);
         c.gridx = 0;
         c.gridy = 1;
@@ -117,6 +259,11 @@ public class CodeWindow {
 
     public void addAICopilotCode(String newCode){
         tPane.setText(""+newCode);
+        newCodeH=newCode;
+    }
+
+    public void addAICopilotAction(String action){
+
     }
 
 
@@ -144,18 +291,14 @@ public class CodeWindow {
     }
 
     private void addImplementAutomaticallyButton(Actions action) {
-        implementAutomatically = new StatisticsRegisterButton("Implement automatically", action);
+        // Create and configure the Implement Automatically button
+        implementAutomatically = new StatisticsRegisterButton("Implement Static", action);
         implementAutomatically.setUI(new ImplementAutomaticallyButton());
         implementAutomatically.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(DialogColors.lightGray, 1, true),
                 BorderFactory.createEmptyBorder(0, 5, 0, 5)));
-        JPanel grayRow = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        //grayRow.setBackground(DialogColors.lightGray);
-        grayRow.add(implementAutomatically);
-        c.gridx = 0;
-        c.gridy = 2;
-        c.weightx = 1;
-        codePanel.add(grayRow, c);
+        buttonPanel.add(implementAutomatically);
+
         implementAutomatically.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {

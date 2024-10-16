@@ -31,7 +31,7 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
     ArrayList<VirtualFile> buildGradleFiles = new ArrayList<>();
     ArrayList<String> buildGradleLocations = new ArrayList<>();
     Project targetProject;
-    public static String projectLanguage = "Java";
+    public static String projectLanguage;
     public static Snippets snippets;
 
     /**
@@ -55,7 +55,7 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
                     grabGradlePropertiesFile(fileOrDir);
                     grabAllPurchaseFlowFunctionFile(content,fileOrDir);
                     handleMultipleGradleFiles();
-                    //getProjectLanguage(fileOrDir);
+                    getProjectLanguage(fileOrDir);
                 }
                 return true;
             } catch (Exception exp) {

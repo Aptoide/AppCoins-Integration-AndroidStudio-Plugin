@@ -1,6 +1,7 @@
 package api;
 
 import com.google.gson.Gson;
+import com.intellij.openapi.ui.Messages;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -11,7 +12,7 @@ import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
 public class ApiService {
-    private static final String BASE_URL = "http://localhost:8000/";
+    private static final String BASE_URL = "https://billing-integration-copilot.aptoide.com/";
 
     public String changesToGradle2(String snippetContext) {
         // Initialize Retrofit client
@@ -85,6 +86,12 @@ public class ApiService {
 
         // Make the API call
         Call<ResponseBody> call = api.postBillingIntegration(request);
+
+        /**Messages.showMessageDialog(
+                "Request: " + call.request().headers() + "|Body: " + call.request().body(),
+                "File Info",
+                Messages.getInformationIcon()
+        );**/
 
         final String[] result = {null};
         final CountDownLatch latch = new CountDownLatch(1);
