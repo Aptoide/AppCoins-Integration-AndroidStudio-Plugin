@@ -588,7 +588,7 @@ JLabel label2 = new JLabel("<html><div style='text-align:center;'>"
         **/
 
         startingTheServiceConnectionPanel.add(CardLayoutDialog.moreInformationLabel("",
-                        "https://docs.catappult.io/docs/native-android-billing-sdk"),
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
                 BorderLayout.SOUTH);
 
         JBScrollPane scrollPane = new JBScrollPane(startingTheServiceConnectionPanel);
@@ -617,7 +617,7 @@ JLabel label2 = new JLabel("<html><div style='text-align:center;'>"
         panel.setLayout(new BoxLayout(panel.getPanel(), BoxLayout.Y_AXIS));
 
         String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
-        JLabel label = CardLayoutDialog.moreInformationLabel(topText, "https://docs.catappult.io/docs/native-android-sdk#4-process-the-purchase-and-give-item-to-user");
+        JLabel label = CardLayoutDialog.moreInformationLabel(topText, "https://docs.catappult.io/docs/native-android-billing-sdk#4-process-the-purchase-and-give-item-to-user");
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(label);
         JLabel textCard2 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
@@ -720,7 +720,7 @@ JLabel label2 = new JLabel("<html><div style='text-align:center;'>"
         JLabel label = new JLabel("<html>" + text +
                 "<br>" +
                 "<font color=#FFFFFF>More information in </font>" +
-                "<font color=#FD197C> https://docs.catappult.io/docs/native-android-sdk </font>" +
+                "<font color=#FD197C> https://docs.catappult.io/docs/native-android-billing-sdk </font>" +
                 "<br>" +
                 "<font color=#FFFFFF>If you need help send us an email: </font>" +
                 "<font color=#FD197C>support@catappult.io</font>" +

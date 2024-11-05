@@ -1636,7 +1636,7 @@ public class DialogCreator {
     }
 
     private static JComponent getLink() {
-        JTextField link = new JTextField("More information in https://docs.catappult.io/docs/native-android-sdk");
+        JTextField link = new JTextField("More information in https://docs.catappult.io/docs/native-android-billing-sdk");
         link.setFont(new Font("SansSerif",Font.PLAIN,20));
         link.setForeground(Color.LIGHT_GRAY);
         link.setBackground(backgroundColor);
@@ -1646,7 +1646,9 @@ public class DialogCreator {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
-                    Desktop.getDesktop().browse(new URI("https://docs.catappult.io/docs/native-android-sdk-edit"));
+                    //5 Nov 2024 . this page doenst exist
+                    //Desktop.getDesktop().browse(new URI("https://docs.catappult.io/docs/native-android-sdk-edit"));
+                    Desktop.getDesktop().browse(new URI("#"));
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 } catch (URISyntaxException e2) {

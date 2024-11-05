@@ -25,7 +25,7 @@ public class OSPDialogs {
         String body =  dialogElements.get(2);
 
         String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
-        consumePurchase.add(CardLayoutDialog.moreInformationLabel(topText, "https://docs.catappult.io/docs/native-android-sdk#4-process-the-purchase-and-give-item-to-user"), BorderLayout.NORTH);
+        consumePurchase.add(CardLayoutDialog.moreInformationLabel(topText, "https://docs.catappult.io/docs/native-android-billing-sdk#4-process-the-purchase-and-give-item-to-user"), BorderLayout.NORTH);
 
         Panel panel = new Panel(DialogColors.white);
 

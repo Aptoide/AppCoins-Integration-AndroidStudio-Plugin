@@ -228,6 +228,7 @@ public class ApiService {
                         BillingResponse billingResponse = gson.fromJson(responseBody, BillingResponse.class);
                         result[0] = billingResponse.getNewCode();
                     } catch (IOException e) {
+
                         e.printStackTrace();
                     }
 

@@ -339,21 +339,23 @@ public class CodeWindow {
                     try {
                         fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
                         //Messages.showMessageDialog("Data from file1: " + fileContent, "File Info", Messages.getInformationIcon());
-
-
-                        //Messages.showMessageDialog("Data from file2: " + fileContent, "File Info", Messages.getInformationIcon());
-                        //obtain context of snippet
-                        String snippetContext = fileContent;
-                        // Call the makeApiCall method
-                        String test = apiService.skuDetailsResponseListener(snippetContext, language);
-
-                        addAICopilotCode(test);
-                        writeOnFileSkuDetails(projectToSet, filesToSet, test);
                     } catch (IOException ex) {
                         fileContent = ex.getMessage().toString();
-                        addAICopilotCode(fileContent);
                         throw new RuntimeException(ex);
                     }
+                    //Messages.showMessageDialog("Data from file2: " + fileContent, "File Info", Messages.getInformationIcon());
+                    //obtain context of snippet
+                    String snippetContext = fileContent;
+                    // Call the makeApiCall method
+                    String test = apiService.skuDetailsResponseListener(snippetContext, language);
+
+                    if(!test.equals("timeout")){
+                        addAICopilotCode(test);
+                        writeOnFileSkuDetails(projectToSet, filesToSet, test);
+                    }else{
+                        addAICopilotCode(snippetContext);
+                    }
+
 
 
                 }else if(step.equals("4.2")){

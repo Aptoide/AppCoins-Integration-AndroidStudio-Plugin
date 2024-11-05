@@ -68,7 +68,7 @@ public class SDKDialogs {
 
 
         changesToGradlePanel.add(CardLayoutDialog.moreInformationLabel("",
-                "https://docs.catappult.io/docs/native-android-billing-sdk"),
+                "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
                 BorderLayout.SOUTH);
 
         changesToGradle.add(changesToGradlePanel);
@@ -113,7 +113,7 @@ public class SDKDialogs {
 
 
         changesToGradlePanel2.add(CardLayoutDialog.moreInformationLabel("",
-                        "https://docs.catappult.io/docs/native-android-billing-sdk"),
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
                 BorderLayout.SOUTH);
 
         changesToGradle2.add(changesToGradlePanel2);
@@ -155,7 +155,7 @@ public class SDKDialogs {
 
 
         changesToAndroidManifestPanel.add(CardLayoutDialog.moreInformationLabel("",
-                        "https://docs.catappult.io/docs/native-android-billing-sdk"),
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
                 BorderLayout.SOUTH);
 
 
@@ -198,7 +198,7 @@ public class SDKDialogs {
 
 
         changesToAndroidManifestPanel2.add(CardLayoutDialog.moreInformationLabel("",
-                        "https://docs.catappult.io/docs/native-android-billing-sdk"),
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
                 BorderLayout.SOUTH);
 
         JBScrollPane scrollPane = new JBScrollPane(changesToAndroidManifestPanel2);
@@ -270,7 +270,7 @@ public class SDKDialogs {
 
 
         startingTheServiceConnection2Panel.add(CardLayoutDialog.moreInformationLabel("",
-                        "https://docs.catappult.io/docs/native-android-billing-sdk"),
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
                 BorderLayout.SOUTH);
 
         JBScrollPane scrollPane = new JBScrollPane(startingTheServiceConnection2Panel);
@@ -359,7 +359,7 @@ public class SDKDialogs {
 
 
         querySkuPanel.add(CardLayoutDialog.moreInformationLabel("",
-                        "https://docs.catappult.io/docs/native-android-billing-sdk"),
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
                 BorderLayout.SOUTH);
 
         JBScrollPane scrollPane = new JBScrollPane(querySkuPanel);
@@ -419,7 +419,7 @@ public class SDKDialogs {
 
 
         makingPurchasePanel2.add(CardLayoutDialog.moreInformationLabel("",
-                        "https://docs.catappult.io/docs/native-android-billing-sdk"),
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
                 BorderLayout.SOUTH);
 
         JBScrollPane scrollPane = new JBScrollPane(makingPurchasePanel2);
@@ -466,7 +466,7 @@ public class SDKDialogs {
 
 
         makingPurchasePanel2.add(CardLayoutDialog.moreInformationLabel("",
-                        "https://docs.catappult.io/docs/native-android-billing-sdk"),
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
                 BorderLayout.SOUTH);
 
         JBScrollPane scrollPane = new JBScrollPane(makingPurchasePanel2);
@@ -550,7 +550,7 @@ public class SDKDialogs {
 
 
         consumePurchasePanel.add(CardLayoutDialog.moreInformationLabel("",
-                        "https://docs.catappult.io/docs/native-android-billing-sdk"),
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
                 BorderLayout.SOUTH);
 
         JBScrollPane scrollPane = new JBScrollPane(consumePurchasePanel);
@@ -699,7 +699,7 @@ public class SDKDialogs {
 
 
         serverCheckPanel.add(CardLayoutDialog.moreInformationLabel("",
-                        "https://docs.catappult.io/docs/native-android-billing-sdk"),
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
                 BorderLayout.SOUTH);
 
         JBScrollPane scrollPane = new JBScrollPane(serverCheckPanel);
