@@ -198,7 +198,7 @@ public class ApiService {
         return result[0];
     }
 
-    public String skuDetailsResponseListener(String snippetContext) {
+    public String skuDetailsResponseListener(String snippetContext, String language) {
 
 
         // Initialize Retrofit client
@@ -208,7 +208,7 @@ public class ApiService {
         BillingIntegrationAPI api = retrofit.create(BillingIntegrationAPI.class);
 
         // Create a BillingRequest object
-        BillingRequest request = new BillingRequest("4.1", "java", snippetContext);
+        BillingRequest request = new BillingRequest("4.1", language, snippetContext);
 
         // Make the API call
         Call<ResponseBody> call = api.postBillingIntegration(request);
@@ -258,7 +258,7 @@ public class ApiService {
         return result[0];
     }
 
-    public String queryInapps(String snippetContext) {
+    public String queryInapps(String snippetContext, String language) {
 
 
         // Initialize Retrofit client
@@ -268,7 +268,7 @@ public class ApiService {
         BillingIntegrationAPI api = retrofit.create(BillingIntegrationAPI.class);
 
         // Create a BillingRequest object
-        BillingRequest request = new BillingRequest("4.2", "java", snippetContext);
+        BillingRequest request = new BillingRequest("4.2", language, snippetContext);
 
         // Make the API call
         Call<ResponseBody> call = api.postBillingIntegration(request);
@@ -318,7 +318,7 @@ public class ApiService {
         return result[0];
     }
 
-    public String startPurchase(String snippetContext) {
+    public String startPurchase(String snippetContext, String language) {
 
 
         // Initialize Retrofit client
@@ -328,7 +328,7 @@ public class ApiService {
         BillingIntegrationAPI api = retrofit.create(BillingIntegrationAPI.class);
 
         // Create a BillingRequest object
-        BillingRequest request = new BillingRequest("5", "java", snippetContext);
+        BillingRequest request = new BillingRequest("5", language, snippetContext);
 
         // Make the API call
         Call<ResponseBody> call = api.postBillingIntegration(request);
@@ -378,7 +378,7 @@ public class ApiService {
         return result[0];
     }
 
-    public String onActivityResult(String snippetContext) {
+    public String onActivityResult(String snippetContext, String language) {
 
 
         // Initialize Retrofit client
@@ -388,7 +388,7 @@ public class ApiService {
         BillingIntegrationAPI api = retrofit.create(BillingIntegrationAPI.class);
 
         // Create a BillingRequest object
-        BillingRequest request = new BillingRequest("6.1", "java", snippetContext);
+        BillingRequest request = new BillingRequest("6.1", language, snippetContext);
 
         // Make the API call
         Call<ResponseBody> call = api.postBillingIntegration(request);
@@ -439,7 +439,7 @@ public class ApiService {
     }
 
 
-    public String purchasesUpdatedListener(String snippetContext) {
+    public String purchasesUpdatedListener(String snippetContext, String language) {
 
 
         // Initialize Retrofit client
@@ -449,7 +449,7 @@ public class ApiService {
         BillingIntegrationAPI api = retrofit.create(BillingIntegrationAPI.class);
 
         // Create a BillingRequest object
-        BillingRequest request = new BillingRequest("6.2", "java", snippetContext);
+        BillingRequest request = new BillingRequest("6.2", language, snippetContext);
 
         // Make the API call
         Call<ResponseBody> call = api.postBillingIntegration(request);
@@ -499,7 +499,7 @@ public class ApiService {
         return result[0];
     }
 
-    public String consumeResponseListener(String snippetContext) {
+    public String consumeResponseListener(String snippetContext, String language) {
 
 
         // Initialize Retrofit client
@@ -509,7 +509,7 @@ public class ApiService {
         BillingIntegrationAPI api = retrofit.create(BillingIntegrationAPI.class);
 
         // Create a BillingRequest object
-        BillingRequest request = new BillingRequest("7", "java", snippetContext);
+        BillingRequest request = new BillingRequest("7", language, snippetContext);
 
         // Make the API call
         Call<ResponseBody> call = api.postBillingIntegration(request);

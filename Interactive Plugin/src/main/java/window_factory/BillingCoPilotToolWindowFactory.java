@@ -13,10 +13,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class BillingCoPilotToolWindowFactory implements ToolWindowFactory {
-    @Override
+    /**@Override
     public boolean isApplicable(@NotNull Project project) {
         return ToolWindowFactory.super.isApplicable(project);
-    }
+    }**/
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
@@ -68,11 +68,12 @@ public class BillingCoPilotToolWindowFactory implements ToolWindowFactory {
         return ToolWindowFactory.super.shouldBeAvailable(project);
     }
 
-    @Override
+    /**@Override
     public boolean isDoNotActivateOnStart() {
         return ToolWindowFactory.super.isDoNotActivateOnStart();
     }
 
+    //@SuppressWarnings("MissingRecentApi")
     @Override
     public @Nullable ToolWindowAnchor getAnchor() {
         return ToolWindowFactory.super.getAnchor();
@@ -81,5 +82,5 @@ public class BillingCoPilotToolWindowFactory implements ToolWindowFactory {
     @Override
     public @Nullable Icon getIcon() {
         return ToolWindowFactory.super.getIcon();
-    }
+    }**/
 }

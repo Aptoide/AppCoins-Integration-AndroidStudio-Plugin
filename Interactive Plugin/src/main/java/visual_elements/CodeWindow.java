@@ -1,11 +1,14 @@
 package visual_elements;
 
+import api.ApiService;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import dialogs.CardLayoutDialog;
 import snipets.Snippets;
@@ -21,9 +24,12 @@ import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TimerTask;
 
 import static dialogs.CardLayoutDialog.project;
 
@@ -34,9 +40,9 @@ public class CodeWindow {
     Map<String, JButton> languageButtonsMap = new HashMap<String, JButton>();
     Map<String, ArrayList<Snippet>> languageSnippetsMap = new HashMap<String, ArrayList<Snippet>>();
 
-    JButton implementAutomatically = new JButton("Implement automatically");
+    JButton implementAutomatically = new JButton("Static");
 
-    JButton aiImplement = new JButton("Implement via Aptoide CoPilot");
+    JButton aiImplement = new JButton("Aptoide CoPilot");
 
     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
@@ -45,16 +51,13 @@ public class CodeWindow {
         createCodePanel(language, snippet, color);
     }
 
-    public CodeWindow(String language, String snippet, Color color, Actions action) {
+    public CodeWindow(String language, String snippet, Color color, Actions action, String step) {
         createCodePanel(language, snippet, color);
         addImplementAutomaticallyButton(action);
-        addAIImplementButton();
+        if(!step.equals("0")){
+            addAIImplementButton(step, language.toLowerCase());
+        }
 
-        // Add the button panel to the code panel
-        c.gridx = 0;
-        c.gridy = 2;
-        c.weightx = 1;
-        codePanel.add(buttonPanel, c);
     }
 
     private Project projectToSet;
@@ -69,33 +72,29 @@ public class CodeWindow {
     }
 
     private void writeOnFile(Project project, Map<Integer, VirtualFile> files, String test) {
-            // Write the code to the file
-            Document buildGradleDocument = FileDocumentManager.getInstance().getDocument(files.get(2));
+        // Write the code to the file
+        Document buildGradleDocument = FileDocumentManager.getInstance().getDocument(files.get(2));
 
         String oldBuildGradleContent = buildGradleDocument.getText();
-            String newBuildGradleContent = oldBuildGradleContent;
-            if (!oldBuildGradleContent.contains("google()")||!oldBuildGradleContent.contains("mavenCentral()")){
-                newBuildGradleContent = newBuildGradleContent.concat(
-                        test
-                );
-            }
+        String newBuildGradleContent = oldBuildGradleContent;
+        if (!oldBuildGradleContent.contains("google()") || !oldBuildGradleContent.contains("mavenCentral()")) {
+            newBuildGradleContent = test;//newBuildGradleContent.concat(test);
+        }
 
+        // Clear the content of the document
+        Runnable clearContent = () -> {
+            buildGradleDocument.setReadOnly(false);
+            buildGradleDocument.setText("");
+        };
+        WriteCommandAction.runWriteCommandAction(project, clearContent);
 
-            // Clear the content of the document
-            Runnable clearContent = () -> {
-                buildGradleDocument.setReadOnly(false);
-                buildGradleDocument.setText("");
-            };
-            WriteCommandAction.runWriteCommandAction(project, clearContent);
-
-            // Writing build.gradle file changes
-            String finalBuildGradleContent = newBuildGradleContent;
-            Runnable r2 = () -> {
-                buildGradleDocument.setReadOnly(false);
-                buildGradleDocument.setText(finalBuildGradleContent);
-            };
-            WriteCommandAction.runWriteCommandAction(project, r2);
-
+        // Writing build.gradle file changes
+        String finalBuildGradleContent = newBuildGradleContent;
+        Runnable r2 = () -> {
+            buildGradleDocument.setReadOnly(false);
+            buildGradleDocument.setText(finalBuildGradleContent);
+        };
+        WriteCommandAction.runWriteCommandAction(project, r2);
     }
 
 
@@ -121,7 +120,7 @@ public class CodeWindow {
         WriteCommandAction.runWriteCommandAction(project, writeContent);
     }
 
-    private void justWrite(Project project, Map<Integer, VirtualFile> files, String test) {
+    private void writeOnFileManifest2(Project project, Map<Integer, VirtualFile> files, String test) {
         // Retrieve the currently open file
         VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
 
@@ -147,7 +146,63 @@ public class CodeWindow {
         }
     }
 
-    private void addAIImplementButton(){
+
+    private void writeOnFileSkuDetails(Project project, Map<Integer, VirtualFile> files, String test) {
+        // Retrieve the currently open file
+        VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+
+        // Get the document associated with the file
+        Document currentDocument = FileDocumentManager.getInstance().getDocument(currentFile);
+
+        if (currentDocument != null) {
+            // Clear the content of the document
+            Runnable clearContent = () -> {
+                currentDocument.setReadOnly(false);
+                currentDocument.setText("");
+            };
+            WriteCommandAction.runWriteCommandAction(project, clearContent);
+
+            // Write the content of the test variable to the document
+            Runnable writeContent = () -> {
+                currentDocument.setReadOnly(false);
+                currentDocument.setText(test);
+            };
+            WriteCommandAction.runWriteCommandAction(project, writeContent);
+        } else {
+            Messages.showMessageDialog("No document found for the current file.", "Error", Messages.getErrorIcon());
+        }
+    }
+
+
+    private void writeOnFileQuery(Project project, Map<Integer, VirtualFile> files, String test) {
+        // Retrieve the currently open file
+        VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+
+        // Get the document associated with the file
+        Document currentDocument = FileDocumentManager.getInstance().getDocument(currentFile);
+
+        if (currentDocument != null) {
+            // Clear the content of the document
+            Runnable clearContent = () -> {
+                currentDocument.setReadOnly(false);
+                currentDocument.setText("");
+            };
+            WriteCommandAction.runWriteCommandAction(project, clearContent);
+
+            // Write the content of the test variable to the document
+            Runnable writeContent = () -> {
+                currentDocument.setReadOnly(false);
+                currentDocument.setText(test);
+            };
+            WriteCommandAction.runWriteCommandAction(project, writeContent);
+        } else {
+            Messages.showMessageDialog("No document found for the current file.", "Error", Messages.getErrorIcon());
+        }
+    }
+
+
+
+    private void addAIImplementButton(String step, String language){
         aiImplement.setUI(new ImplementAutomaticallyButton());
         aiImplement.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(DialogColors.lightGray, 1, true),
@@ -157,28 +212,374 @@ public class CodeWindow {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+
+                addAICopilotCode("Loading...");
+
+
+                aiImplement.setForeground(DialogColors.green);
+                aiImplement.setText("Implemented!");
+                aiImplement.revalidate();
+                aiImplement.repaint();
+
+
                 //Messages.showMessageDialog("Contains?: " + newCodeH, "File Info", Messages.getInformationIcon());
 
+                //Messages.showMessageDialog("Step is: " + step, "Verify Step", Messages.getInformationIcon());
 
-                if(newCodeH.contains("implementation")){
-                    writeOnFile(projectToSet, filesToSet, newCodeH);
-                }else if(newCodeH.contains("?xml version") && !newCodeH.contains("uses-permission")){
-                    writeOnFileManifest(projectToSet, filesToSet, newCodeH);
-                }else if(newCodeH.contains("?xml version") && newCodeH.contains("uses-permission")){
+                //Colocar a filtragem por step e especificar o dispositivo
+
+                if(step.equals("0")){
+
+
+
+                }else if(step.equals("1")){
+                    VirtualFile file = CardLayoutDialog.files.get(2);
+                    FileEditorManager.getInstance(CardLayoutDialog.project).openTextEditor(
+                            new OpenFileDescriptor(CardLayoutDialog.project,file),
+                            true // request focus to editor
+                    );
+
+                    // Create an instance of ApiService
+                    ApiService apiService = new ApiService();
+                    // Step 1: Retrieve the content of the open file
+                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    String fileContent = "";
+                    try {
+                        fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
+                        //Messages.showMessageDialog("Data from file1: " + fileContent, "File Info", Messages.getInformationIcon());
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    //Messages.showMessageDialog("Data from file2: " + fileContent, "File Info", Messages.getInformationIcon());
+                    //obtain context of snippet
+                    String snippetContext = fileContent;
+                    // Call the makeApiCall method
+                    String test = apiService.changesToGradle2(snippetContext);
+
+                    addAICopilotCode(test);
+
+                    writeOnFile(projectToSet, filesToSet, test);
+                }else if(step.equals("2")){
+                    VirtualFile file = CardLayoutDialog.files.get(3);
+                    FileEditorManager.getInstance(CardLayoutDialog.project).openTextEditor(
+                            new OpenFileDescriptor(CardLayoutDialog.project,file),
+                            true // request focus to editor
+                    );
+
+                    // Create an instance of ApiService
+                    ApiService apiService = new ApiService();
+                    // Step 1: Retrieve the content of the open file
+                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    String fileContent = "";
+                    try {
+                        fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
+                        //Messages.showMessageDialog("Data from file1: " + fileContent, "File Info", Messages.getInformationIcon());
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    //Messages.showMessageDialog("Data from file2: " + fileContent, "File Info", Messages.getInformationIcon());
+                    //obtain context of snippet
+                    String snippetContext = fileContent;
+                    // Call the makeApiCall method
+                    String test = apiService.changesToAndroidManifest(snippetContext);
+
+                    addAICopilotCode(test);
+
+
+
+                    writeOnFileManifest(projectToSet, filesToSet, test);
+                }else if(step.equals("3")){
+                    VirtualFile file = CardLayoutDialog.files.get(3);
+                    FileEditorManager.getInstance(CardLayoutDialog.project).openTextEditor(
+                            new OpenFileDescriptor(CardLayoutDialog.project,file),
+                            true // request focus to editor
+                    );
+
+                    // Create an instance of ApiService
+                    ApiService apiService = new ApiService();
+                    // Step 1: Retrieve the content of the open file
+                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    String fileContent = "";
+                    try {
+                        fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
+                        //Messages.showMessageDialog("Data from file1: " + fileContent, "File Info", Messages.getInformationIcon());
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    //Messages.showMessageDialog("Data from file2: " + fileContent, "File Info", Messages.getInformationIcon());
+                    //obtain context of snippet
+                    String snippetContext = fileContent;
+                    // Call the makeApiCall method
+                    String test = apiService.changesToAndroidManifest2(snippetContext);
+
+                    addAICopilotCode(test);
+
+
                     //Messages.showMessageDialog("Aqui: " + newCodeH, "PASSOU AQUI", Messages.getInformationIcon());
-                    justWrite(projectToSet, filesToSet, newCodeH);
+                    writeOnFileManifest2(projectToSet, filesToSet, test);
+                }else if(step.equals("4.1")){
+                    VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
+
+                    if (mainActivityFile != null) {
+                        // Open the MainActivity.java file in the editor
+                        FileEditorManager.getInstance(project).openTextEditor(
+                                new OpenFileDescriptor(project, mainActivityFile), true);
+
+                    } else {
+
+                        Messages.showMessageDialog("MainActivity.java not found. Proceeding with currently opened file.", "Error", Messages.getErrorIcon());
+                    }
+
+
+                    // Create an instance of ApiService
+                    ApiService apiService = new ApiService();
+                    // Step 1: Retrieve the content of the open file
+                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    String fileContent = "";
+                    try {
+                        fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
+                        //Messages.showMessageDialog("Data from file1: " + fileContent, "File Info", Messages.getInformationIcon());
+
+
+                        //Messages.showMessageDialog("Data from file2: " + fileContent, "File Info", Messages.getInformationIcon());
+                        //obtain context of snippet
+                        String snippetContext = fileContent;
+                        // Call the makeApiCall method
+                        String test = apiService.skuDetailsResponseListener(snippetContext, language);
+
+                        addAICopilotCode(test);
+                        writeOnFileSkuDetails(projectToSet, filesToSet, test);
+                    } catch (IOException ex) {
+                        fileContent = ex.getMessage().toString();
+                        addAICopilotCode(fileContent);
+                        throw new RuntimeException(ex);
+                    }
+
+
+                }else if(step.equals("4.2")){
+                    VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
+
+                    if (mainActivityFile != null) {
+                        // Open the MainActivity.java file in the editor
+                        FileEditorManager.getInstance(project).openTextEditor(
+                                new OpenFileDescriptor(project, mainActivityFile), true);
+
+                    } else {
+
+                        Messages.showMessageDialog("MainActivity.java not found. Proceeding with currently opened file.", "Error", Messages.getErrorIcon());
+                    }
+
+
+                    // Create an instance of ApiService
+                    ApiService apiService = new ApiService();
+                    // Step 1: Retrieve the content of the open file
+                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    String fileContent = "";
+                    try {
+                        fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
+                        //Messages.showMessageDialog("Data from file1: " + fileContent, "File Info", Messages.getInformationIcon());
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    //Messages.showMessageDialog("Data from file2: " + fileContent, "File Info", Messages.getInformationIcon());
+                    //obtain context of snippet
+                    String snippetContext = fileContent;
+                    // Call the makeApiCall method
+                    String test = apiService.queryInapps(snippetContext, language);
+
+                    if(!test.equals("timeout")){
+                        addAICopilotCode(test);
+                        writeOnFileQuery(projectToSet, filesToSet, test);
+                    }
+
+
+
+                }else if(step.equals("5")){
+                    VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
+
+                    if (mainActivityFile != null) {
+                        // Open the MainActivity.java file in the editor
+                        FileEditorManager.getInstance(project).openTextEditor(
+                                new OpenFileDescriptor(project, mainActivityFile), true);
+
+                    } else {
+
+                        Messages.showMessageDialog("MainActivity.java not found. Proceeding with currently opened file.", "Error", Messages.getErrorIcon());
+                    }
+
+
+                    // Create an instance of ApiService
+                    ApiService apiService = new ApiService();
+                    // Step 1: Retrieve the content of the open file
+                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    String fileContent = "";
+                    try {
+                        fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
+                        //Messages.showMessageDialog("Data from file1: " + fileContent, "File Info", Messages.getInformationIcon());
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    //Messages.showMessageDialog("Data from file2: " + fileContent, "File Info", Messages.getInformationIcon());
+                    //obtain context of snippet
+                    String snippetContext = fileContent;
+                    // Call the makeApiCall method
+                    String test = apiService.startPurchase(snippetContext, language);
+
+                    if(!test.equals("timeout")){
+                        addAICopilotCode(test);
+                        writeOnFileQuery(projectToSet, filesToSet, test);
+                    }
+                }else if(step.equals("6.1")){
+                    VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
+
+                    if (mainActivityFile != null) {
+                        // Open the MainActivity.java file in the editor
+                        FileEditorManager.getInstance(project).openTextEditor(
+                                new OpenFileDescriptor(project, mainActivityFile), true);
+
+                    } else {
+
+                        Messages.showMessageDialog("MainActivity.java not found. Proceeding with currently opened file.", "Error", Messages.getErrorIcon());
+                    }
+
+
+                    // Create an instance of ApiService
+                    ApiService apiService = new ApiService();
+                    // Step 1: Retrieve the content of the open file
+                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    String fileContent = "";
+                    try {
+                        fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
+                        //Messages.showMessageDialog("Data from file1: " + fileContent, "File Info", Messages.getInformationIcon());
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    //Messages.showMessageDialog("Data from file2: " + fileContent, "File Info", Messages.getInformationIcon());
+                    //obtain context of snippet
+                    String snippetContext = fileContent;
+                    // Call the makeApiCall method
+                    String test = apiService.onActivityResult(snippetContext, language);
+
+                    if(!test.equals("timeout")){
+                        addAICopilotCode(test);
+                        writeOnFileQuery(projectToSet, filesToSet, test);
+                    }
+                }else if(step.equals("6.2")){
+                    VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
+
+                    if (mainActivityFile != null) {
+                        // Open the MainActivity.java file in the editor
+                        FileEditorManager.getInstance(project).openTextEditor(
+                                new OpenFileDescriptor(project, mainActivityFile), true);
+
+                    } else {
+
+                        Messages.showMessageDialog("MainActivity.java not found. Proceeding with currently opened file.", "Error", Messages.getErrorIcon());
+                    }
+
+
+                    // Create an instance of ApiService
+                    ApiService apiService = new ApiService();
+                    // Step 1: Retrieve the content of the open file
+                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    String fileContent = "";
+                    try {
+                        fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
+                        //Messages.showMessageDialog("Data from file1: " + fileContent, "File Info", Messages.getInformationIcon());
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    //Messages.showMessageDialog("Data from file2: " + fileContent, "File Info", Messages.getInformationIcon());
+                    //obtain context of snippet
+                    String snippetContext = fileContent;
+                    // Call the makeApiCall method
+                    String test = apiService.purchasesUpdatedListener(snippetContext, language);
+
+                    if(!test.equals("timeout")){
+                        addAICopilotCode(test);
+                        writeOnFileQuery(projectToSet, filesToSet, test);
+                    }else{
+                        addAICopilotCode("Please retry again.");
+                    }
+
+                }else if(step.equals("7")){
+
+                    VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
+
+                    if (mainActivityFile != null) {
+                        // Open the MainActivity.java file in the editor
+                        FileEditorManager.getInstance(project).openTextEditor(
+                                new OpenFileDescriptor(project, mainActivityFile), true);
+
+                    } else {
+
+                        Messages.showMessageDialog("MainActivity.java not found. Proceeding with currently opened file.", "Error", Messages.getErrorIcon());
+                    }
+
+
+                    // Create an instance of ApiService
+                    ApiService apiService = new ApiService();
+                    // Step 1: Retrieve the content of the open file
+                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    String fileContent = "";
+                    try {
+                        fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
+                        //Messages.showMessageDialog("Data from file1: " + fileContent, "File Info", Messages.getInformationIcon());
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    //Messages.showMessageDialog("Data from file2: " + fileContent, "File Info", Messages.getInformationIcon());
+                    //obtain context of snippet
+                    String snippetContext = fileContent;
+                    // Call the makeApiCall method
+                    String test = apiService.consumeResponseListener(snippetContext, language);
+
+                    if(!test.equals("timeout")){
+                        addAICopilotCode(test);
+                        writeOnFileQuery(projectToSet, filesToSet, test);
+                    }
                 }
 
-                //write filter for other parts like consume pruchase listener makepurchase startconnection
+
+                //write filter for other parts like consume purchase listener makepurchase startconnection
+
+
 
             }
         });
     }
 
+    public VirtualFile findFileByName(Project project, String fileName) {
+        //VirtualFile baseDir = project.getBaseDir();
+        String basePath = project.getBasePath();
+        if (basePath == null) {
+            basePath = "";
+        }
+        VirtualFile baseDir = LocalFileSystem.getInstance().findFileByPath(basePath);
+        return findFileRecursively(baseDir, fileName);
+    }
+
+    private VirtualFile findFileRecursively(VirtualFile dir, String fileName) {
+        if (dir == null || !dir.isDirectory()) {
+            return null;
+        }
+
+        for (VirtualFile file : dir.getChildren()) {
+            if (file.isDirectory()) {
+                VirtualFile found = findFileRecursively(file, fileName);
+                if (found != null) {
+                    return found;
+                }
+            } else if (file.getName().startsWith(fileName)) {
+                return file;
+            }
+        }
+        return null;
+    }
+
     private void createCodePanel(String language, String snippet, Color color) {
         c.fill = GridBagConstraints.HORIZONTAL;
         JTextPane code = createCodeArea();
-        //code.setText(snippet);
         addLanguageButton(language);
 
         addSnippetContent(language,snippet,color);
@@ -187,10 +588,27 @@ public class CodeWindow {
         c.weightx = 1;
         c.gridwidth = 6;
         codePanel.add(code, c);
+
+        JLabel codeLabel = new JLabel("Implement Via", SwingConstants.CENTER);
+        codeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // Step 3: Add the JLabel to the codePanel below the JTextPane
+        c.gridx = 0;
+        c.gridy = 2; // Assuming the JTextPane is at gridy = 1
+        c.weightx = 1;
+        c.gridwidth = 6;
+        c.anchor = GridBagConstraints.CENTER;
+        codePanel.add(codeLabel, c);
         showLanguageSnippets(languageSnippetsMap.get(language));
+
+        // Add the button panel to the code panel
+        c.gridx = 0;
+        c.gridy = 3;
+        c.weightx = 1;
+        codePanel.add(buttonPanel, c);
 
         //codePanel.setBackground(DialogColors.gray);
         codePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+
     }
 
     private JTextPane createCodeArea(){
@@ -292,7 +710,7 @@ public class CodeWindow {
 
     private void addImplementAutomaticallyButton(Actions action) {
         // Create and configure the Implement Automatically button
-        implementAutomatically = new StatisticsRegisterButton("Implement Static", action);
+        implementAutomatically = new StatisticsRegisterButton("Static", action);
         implementAutomatically.setUI(new ImplementAutomaticallyButton());
         implementAutomatically.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(DialogColors.lightGray, 1, true),

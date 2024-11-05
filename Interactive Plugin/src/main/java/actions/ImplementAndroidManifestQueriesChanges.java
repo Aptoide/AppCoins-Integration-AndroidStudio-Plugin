@@ -17,7 +17,7 @@ public class ImplementAndroidManifestQueriesChanges extends AbstractAction {
     private Snippets snippets;
     private String oldContent;
     public ImplementAndroidManifestQueriesChanges(Project project, Map<Integer, VirtualFile> files, Snippets snippets){
-        super("Implement automatically");
+        super("Static");
         this.project=project;
         this.files=files;
         this.snippets=snippets;

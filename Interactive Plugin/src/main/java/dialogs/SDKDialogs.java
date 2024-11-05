@@ -59,7 +59,7 @@ public class SDKDialogs {
 
 
         CodeWindow code = new CodeWindow("XML", snippets.buildGradleCodeAllprojects(),
-                DialogColors.darkBlue, ActionsSDK.implementedChangesToGradle);
+                DialogColors.darkBlue, ActionsSDK.implementedChangesToGradle, "0");
         code.addButtonAction(new ImplementBuildGradleAllProjectChanges(project,
                 CardLayoutDialog.files, snippets));
         code.setCodeFiles(project, CardLayoutDialog.files);
@@ -68,7 +68,7 @@ public class SDKDialogs {
 
 
         changesToGradlePanel.add(CardLayoutDialog.moreInformationLabel("",
-                "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                "https://docs.catappult.io/docs/native-android-billing-sdk"),
                 BorderLayout.SOUTH);
 
         changesToGradle.add(changesToGradlePanel);
@@ -105,7 +105,7 @@ public class SDKDialogs {
         changesToGradlePanel2.add(topPanel, BorderLayout.NORTH);
 
         CodeWindow code = new CodeWindow("XML", snippets.appCoinsBillingDependency(),
-                DialogColors.darkBlue, ActionsSDK.implementedChangesToGradle2);
+                DialogColors.darkBlue, ActionsSDK.implementedChangesToGradle2, "1");
         code.addButtonAction(new ImplementBuildGradleDependenciesChanges(project,
                 CardLayoutDialog.files, snippets));
         code.setCodeFiles(project, CardLayoutDialog.files);
@@ -113,7 +113,7 @@ public class SDKDialogs {
 
 
         changesToGradlePanel2.add(CardLayoutDialog.moreInformationLabel("",
-                        "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                        "https://docs.catappult.io/docs/native-android-billing-sdk"),
                 BorderLayout.SOUTH);
 
         changesToGradle2.add(changesToGradlePanel2);
@@ -147,7 +147,7 @@ public class SDKDialogs {
 
 
         CodeWindow appCoinsSnippet = new CodeWindow("XML", snippets.androidManifestAppCoinsPermissions(),
-                DialogColors.darkBlue, ActionsSDK.implementedChangesToAndroidManifest);
+                DialogColors.darkBlue, ActionsSDK.implementedChangesToAndroidManifest, "2");
         appCoinsSnippet.addButtonAction(new ImplementAndroidManifestAppCoinsChanges(project,CardLayoutDialog.files));
         appCoinsSnippet.setCodeFiles(project, CardLayoutDialog.files);
         changesToAndroidManifestPanel.add(appCoinsSnippet.getPanel());
@@ -155,7 +155,7 @@ public class SDKDialogs {
 
 
         changesToAndroidManifestPanel.add(CardLayoutDialog.moreInformationLabel("",
-                        "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                        "https://docs.catappult.io/docs/native-android-billing-sdk"),
                 BorderLayout.SOUTH);
 
 
@@ -191,14 +191,14 @@ public class SDKDialogs {
 
 
         CodeWindow androidManifestQueries = new CodeWindow("XML", snippets.androidManifestQueries(),
-                DialogColors.darkBlue, ActionsSDK.implementedChangesToAndroidManifest2);
+                DialogColors.darkBlue, ActionsSDK.implementedChangesToAndroidManifest2, "3");
         androidManifestQueries.addButtonAction(new ImplementAndroidManifestQueriesChanges(project,CardLayoutDialog.files, snippets));
         androidManifestQueries.setCodeFiles(project, CardLayoutDialog.files);
         changesToAndroidManifestPanel2.add(androidManifestQueries.getPanel());
 
 
         changesToAndroidManifestPanel2.add(CardLayoutDialog.moreInformationLabel("",
-                        "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                        "https://docs.catappult.io/docs/native-android-billing-sdk"),
                 BorderLayout.SOUTH);
 
         JBScrollPane scrollPane = new JBScrollPane(changesToAndroidManifestPanel2);
@@ -260,7 +260,7 @@ public class SDKDialogs {
 
 
         CodeWindow onPurchasesUpdated = new CodeWindow(CardLayoutDialog.projLanguage, snippets.onPurchasesUpdated(),
-                DialogColors.darkBlue, ActionsSDK.implementedStartingServiceConnection2);
+                DialogColors.darkBlue, ActionsSDK.implementedStartingServiceConnection2, "6.2");
         onPurchasesUpdated.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
         onPurchasesUpdated.addButtonAction(new ImplementPurchaseFinishedListenerChanges(
                 project,CardLayoutDialog.files,CardLayoutDialog.toolWindow));
@@ -270,7 +270,7 @@ public class SDKDialogs {
 
 
         startingTheServiceConnection2Panel.add(CardLayoutDialog.moreInformationLabel("",
-                        "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                        "https://docs.catappult.io/docs/native-android-billing-sdk"),
                 BorderLayout.SOUTH);
 
         JBScrollPane scrollPane = new JBScrollPane(startingTheServiceConnection2Panel);
@@ -338,7 +338,7 @@ public class SDKDialogs {
         querySkuPanel.add(querySkuPanel2);
 
         CodeWindow skuDetailsResponseListener = new CodeWindow(CardLayoutDialog.projLanguage, snippets.skuDetailsResponseListener(),
-                DialogColors.darkBlue, ActionsSDK.implementedQuerySku);
+                DialogColors.darkBlue, ActionsSDK.implementedQuerySku, "4.2");
         skuDetailsResponseListener.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
         skuDetailsResponseListener.addButtonAction(new ImplementQueryPurchasesSkuListenerChanges(project,CardLayoutDialog.files));
         skuDetailsResponseListener.setCodeFiles(project, CardLayoutDialog.files);
@@ -348,7 +348,7 @@ public class SDKDialogs {
         querySkuPanel.add(querySkuPanel3);
 
         CodeWindow callSkuDetails = new CodeWindow(CardLayoutDialog.projLanguage, snippets.callSkuDetails(),
-                DialogColors.darkBlue);
+                DialogColors.darkBlue, null, "4.2");
         callSkuDetails.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
         //not displaying
         callSkuDetails.addButtonAction(new ImplementQueryPurchasesExampleChanges(project,CardLayoutDialog.files));
@@ -359,7 +359,7 @@ public class SDKDialogs {
 
 
         querySkuPanel.add(CardLayoutDialog.moreInformationLabel("",
-                        "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                        "https://docs.catappult.io/docs/native-android-billing-sdk"),
                 BorderLayout.SOUTH);
 
         JBScrollPane scrollPane = new JBScrollPane(querySkuPanel);
@@ -387,7 +387,7 @@ public class SDKDialogs {
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(16);
         String title = dialogElements.get(0);
-        String body =   dialogElements.get(2) + "<br /><br />" +
+        String body = dialogElements.get(2) + "<br /><br />" +
                 "<font color=#FFFFFF>"+ dialogElements.get(4) +"</font></html>";
 
         JLabel text = new JLabel("<html><br />" + CardLayoutDialog.titleAndBodyHTMLFormated(title, body) + "</html>");
@@ -401,21 +401,25 @@ public class SDKDialogs {
         makingPurchasePanel2.add(label, BorderLayout.NORTH);
         **/
 
-        CodeWindow startPurchase = new CodeWindow(CardLayoutDialog.projLanguage, snippets.startPurchase(),
-                DialogColors.darkBlue, ActionsSDK.implementedMakingPurchase);
 
-        //if (CardLayoutDialog.files.containsKey(5) && CardLayoutDialog.files.containsKey(7)){;
-            startPurchase.addButtonAction(new ImplementMakingAPurchaseChanges(
+
+
+
+        CodeWindow startPurchase = new CodeWindow(CardLayoutDialog.projLanguage, snippets.startPurchase(),
+                DialogColors.darkBlue, ActionsSDK.implementedMakingPurchase, "5");
+        startPurchase.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
+        //if (CardLayoutDialog.files.containsKey(5) && CardLayoutDialog.files.containsKey(7)){
+        startPurchase.addButtonAction(new ImplementMakingAPurchaseChanges(
                     project,CardLayoutDialog.files,CardLayoutDialog.toolWindow));
-            startPurchase
-                    .setCodeFiles(project, CardLayoutDialog.files);
+        startPurchase
+                .setCodeFiles(project, CardLayoutDialog.files);
         //}
         makingPurchasePanel2.add(startPurchase.getPanel());
 
 
 
         makingPurchasePanel2.add(CardLayoutDialog.moreInformationLabel("",
-                        "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                        "https://docs.catappult.io/docs/native-android-billing-sdk"),
                 BorderLayout.SOUTH);
 
         JBScrollPane scrollPane = new JBScrollPane(makingPurchasePanel2);
@@ -438,8 +442,6 @@ public class SDKDialogs {
         makingPurchasePanel2.setLayout(new BorderLayout(0,20));
 
 
-
-
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(16);
         String title = dialogElements.get(0);
         String body =   dialogElements.get(5) + "<br /><br />" +
@@ -455,7 +457,7 @@ public class SDKDialogs {
 
 
         CodeWindow noOnActivityResult = new CodeWindow(CardLayoutDialog.projLanguage, snippets.noOnActivityResult(),
-                DialogColors.darkBlue);
+                DialogColors.darkBlue, null, "6.1");
         noOnActivityResult
                 .setCodeFiles(project, CardLayoutDialog.files);
         makingPurchasePanel2.add(noOnActivityResult.getPanel());
@@ -464,7 +466,7 @@ public class SDKDialogs {
 
 
         makingPurchasePanel2.add(CardLayoutDialog.moreInformationLabel("",
-                        "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                        "https://docs.catappult.io/docs/native-android-billing-sdk"),
                 BorderLayout.SOUTH);
 
         JBScrollPane scrollPane = new JBScrollPane(makingPurchasePanel2);
@@ -538,7 +540,7 @@ public class SDKDialogs {
 
 
         CodeWindow consumePurchase1 = new CodeWindow(CardLayoutDialog.projLanguage, snippets.consumePurchase1(),
-                DialogColors.darkBlue, ActionsSDK.implementedConsumePurchase);
+                DialogColors.darkBlue, ActionsSDK.implementedConsumePurchase, "7");
         consumePurchase1.addButtonAction(new ImplementConsumeAPurchaseChanges(project, CardLayoutDialog.files));
         consumePurchase1
                 .setCodeFiles(project, CardLayoutDialog.files);
@@ -548,7 +550,7 @@ public class SDKDialogs {
 
 
         consumePurchasePanel.add(CardLayoutDialog.moreInformationLabel("",
-                        "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                        "https://docs.catappult.io/docs/native-android-billing-sdk"),
                 BorderLayout.SOUTH);
 
         JBScrollPane scrollPane = new JBScrollPane(consumePurchasePanel);
@@ -697,7 +699,7 @@ public class SDKDialogs {
 
 
         serverCheckPanel.add(CardLayoutDialog.moreInformationLabel("",
-                        "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                        "https://docs.catappult.io/docs/native-android-billing-sdk"),
                 BorderLayout.SOUTH);
 
         JBScrollPane scrollPane = new JBScrollPane(serverCheckPanel);

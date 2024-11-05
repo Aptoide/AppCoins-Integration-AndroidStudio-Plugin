@@ -15,7 +15,7 @@ public class ImplementAndroidManifestAppCoinsChanges extends AbstractAction {
     private Map<Integer, VirtualFile> files;
     private String oldContent;
     public ImplementAndroidManifestAppCoinsChanges(Project project, Map<Integer, VirtualFile> files){
-        super("Implement automatically");
+        super("Static");
         this.project=project;
         this.files=files;
     }

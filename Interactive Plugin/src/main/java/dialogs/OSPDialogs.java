@@ -105,7 +105,7 @@ public class OSPDialogs {
         panel.addRigidArea(new Dimension(0, 30));
 
         CodeWindow ospIntent = new CodeWindow(CardLayoutDialog.projLanguage, snippets.ospIntent(),
-                DialogColors.darkBlue, ActionsOSP.implementCreateOSPIntent);
+                DialogColors.darkBlue, ActionsOSP.implementCreateOSPIntent, "");
         ospIntent.addButtonAction(new ImplementCreateOSPIntent(
                 CardLayoutDialog.project,CardLayoutDialog.files,CardLayoutDialog.toolWindow));
         panel.add(ospIntent.getPanel());
@@ -119,7 +119,7 @@ public class OSPDialogs {
         panel.addRigidArea(new Dimension(0, 10));
 
         CodeWindow androidManifest = new CodeWindow(CardLayoutDialog.projLanguage, snippets.androidManifestQueries(),
-                DialogColors.darkBlue, ActionsOSP.changesToAndroidManifest2);
+                DialogColors.darkBlue, ActionsOSP.changesToAndroidManifest2, "");
         androidManifest.addButtonAction(new ImplementAndroidManifestQueriesChanges(CardLayoutDialog.project,CardLayoutDialog.files, snippets));
         panel.add(androidManifest.getPanel());
 

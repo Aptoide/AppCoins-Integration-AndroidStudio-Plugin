@@ -17,7 +17,7 @@ public class ImplementQueryPurchasesSkuListenerChanges extends AbstractAction {
     private Project project;
     private Map<Integer, VirtualFile> files;
     public ImplementQueryPurchasesSkuListenerChanges(Project project, Map<Integer, VirtualFile> files){
-        super("Implement automatically");
+        super("Static");
         this.project=project;
         this.files=files;
     }

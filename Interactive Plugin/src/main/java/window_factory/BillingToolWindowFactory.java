@@ -5,9 +5,12 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
@@ -26,6 +29,8 @@ import com.intellij.openapi.ui.Messages;
 
 import javax.swing.*;
 
+import static dialogs.CardLayoutDialog.project;
+
 public class BillingToolWindowFactory implements ToolWindowFactory {
     Map<Integer, VirtualFile> files = new HashMap<>();
     ArrayList<VirtualFile> buildGradleFiles = new ArrayList<>();
@@ -42,8 +47,6 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
      */
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         targetProject = project;
-        projectLanguage = "Java";
-        snippets = new JavaSnippets();
 
        ContentIterator iterator = fileOrDir -> {
             try{
@@ -65,7 +68,7 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
 
         locateNecessaryFilesInProject(iterator);
 
-        String mainActivityName = "Teste";//grabActivityName();
+        String mainActivityName = grabActivityName();
 
         ContentIterator iterator2 = fileOrDir -> {
             try {
@@ -87,7 +90,7 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
         };
         ProjectFileIndex.getInstance(project).iterateContent(iterator2);
 
-        //createSnipetsObject();
+        createSnipetsObject();
 
         ContentFactory contentFactory = ApplicationManager.getApplication().getService(ContentFactory.class);
         Content content = contentFactory.createContent(DialogCreator.cardLayout(project,files,toolWindow), "", false);
@@ -157,8 +160,14 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
     }
 
     private void grabAndroidManifestFile(VirtualFile file) {
+
         if (file.getName().contains("AndroidManifest")) {
-            files.put(3, file);
+
+            if(file.getPath().contains("/app/")){
+                //Messages.showMessageDialog("2) Name file: " + file.getName() +"\nName File: "+file.getPath() , "File Info", Messages.getInformationIcon());
+
+                files.put(3, file);
+            }
         }
     }
 
@@ -190,13 +199,50 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
         ProjectFileIndex.getInstance(targetProject).iterateContent(iterator);
     }
 
+    public VirtualFile findFileByName(Project project, String fileName) {
+        String basePath = project.getBasePath();
+        VirtualFile baseDir = LocalFileSystem.getInstance().findFileByPath(basePath);
+        //VirtualFile baseDir = project.getBaseDir();
+        return findFileRecursively(baseDir, fileName);
+    }
+
+    private VirtualFile findFileRecursively(VirtualFile dir, String fileName) {
+        if (dir == null || !dir.isDirectory()) {
+            return null;
+        }
+
+        for (VirtualFile file : dir.getChildren()) {
+            if (file.isDirectory()) {
+                VirtualFile found = findFileRecursively(file, fileName);
+                if (found != null) {
+                    return found;
+                }
+            } else if (file.getName().startsWith(fileName)) {
+                return file;
+            }
+        }
+        return null;
+    }
+
+
+
     private String grabActivityName(){
         VirtualFile androidManifest = files.get(3);
         String content = getFileContent(androidManifest);
 
         int activityIndex =  content.indexOf("<activity");
         if (activityIndex == -1) {
-            throw new IllegalArgumentException("No <activity> tag found in the content.");
+            VirtualFile mainActivityFile = findFileByName(targetProject, "MainActivity");
+
+            if (mainActivityFile != null) {
+                // Open the MainActivity.java file in the editor
+                return mainActivityFile.getName();
+
+            }else{
+                   Messages.showMessageDialog("Couldn't find the content on Manifest about MainActivity.", "Plugin Notification", Messages.getInformationIcon());
+            }
+
+            //throw new IllegalArgumentException("No <activity> tag found in the content.");
         }
 
         int activityNameIndex = content.indexOf("android:name",activityIndex);
@@ -215,6 +261,8 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
 
         String rawName = content.substring(nameStartIndex,nameEndIndex);
         String fullName = cleanActivityName(rawName);
+
+        //Messages.showMessageDialog("MainActivity is: " + fullName, "Verify Name", Messages.getInformationIcon());
 
         return fullName;
     }

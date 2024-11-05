@@ -1,6 +1,7 @@
 package dialogs;
 
 import actions.ContinueStartingServiceConnectionChanges;
+import actions.ImplementQueryPurchasesSkuListenerChanges;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
@@ -71,16 +72,16 @@ public class CardLayoutDialog extends JPanel {
         cPanel.add(methodChoosingPage(), "sdk1");
         cPanel.add(startImplementation(), "sdk2");
         cPanel.add(SDKDialogs.changesToGradle(myPluginComponent), "sdk3");
-        cPanel.add(SDKDialogs.changesToGradle2(myPluginComponent), "sdk4");
+        cPanel.add(SDKDialogs.changesToGradle2(myPluginComponent), "sdk4"); //1
         cPanel.add(permissions(), "sdk5");
-        cPanel.add(SDKDialogs.changesToAndroidManifest(myPluginComponent),"sdk6");
-        cPanel.add(SDKDialogs.changesToAndroidManifest2(myPluginComponent),"sdk7");
+        cPanel.add(SDKDialogs.changesToAndroidManifest(myPluginComponent),"sdk6"); //2
+        cPanel.add(SDKDialogs.changesToAndroidManifest2(myPluginComponent),"sdk7"); //3
         cPanel.add(startingTheServiceConnection(),"sdk8");
-        cPanel.add(SDKDialogs.querySku(myPluginComponent),"sdk9");
-        cPanel.add(SDKDialogs.makingPurchase(myPluginComponent),"sdk10");
-        cPanel.add(SDKDialogs.makingPurchase2(myPluginComponent),"sdk11");
-        cPanel.add(SDKDialogs.startingTheServiceConnection2(myPluginComponent),"sdk12");
-        cPanel.add(SDKDialogs.consumePurchase(myPluginComponent),"sdk13");
+        cPanel.add(SDKDialogs.querySku(myPluginComponent),"sdk9"); // 4.1  -- 4.2
+        cPanel.add(SDKDialogs.makingPurchase(myPluginComponent),"sdk10"); // 5
+        cPanel.add(SDKDialogs.makingPurchase2(myPluginComponent),"sdk11"); // 6.1
+        cPanel.add(SDKDialogs.startingTheServiceConnection2(myPluginComponent),"sdk12"); // 6.2
+        cPanel.add(SDKDialogs.consumePurchase(myPluginComponent),"sdk13"); //7
         cPanel.add(SDKDialogs.serverCheck(myPluginComponent), "sdk14");
         cPanel.add(SDKDialogs.lastPage(myPluginComponent),"sdk15");
         cPanel.add(publicKey(),"sdk16");
@@ -448,10 +449,19 @@ JLabel label2 = new JLabel("<html><div style='text-align:center;'>"
     }
 
     public JPanel startingTheServiceConnection(){
-        Card changesToAndroidManifest2 = new Card();
-        JPanel changesToAndroidManifestPanel2 = new JPanel();
-        changesToAndroidManifestPanel2.setLayout(new BorderLayout(0,20));
+        Card startingTheServiceConnection = new Card();
+        JPanel startingTheServiceConnectionPanel = new JPanel();
+        startingTheServiceConnectionPanel.setLayout(new BoxLayout(startingTheServiceConnectionPanel, BoxLayout.Y_AXIS));
 
+        JPanel topPanel = new JPanel(new BorderLayout());
+        startingTheServiceConnectionPanel.add(topPanel, BorderLayout.NORTH);
+
+        JPanel startingTheServiceConnectionPanel1 = new JPanel();
+        startingTheServiceConnectionPanel1.setLayout(new BorderLayout(0, 20));
+        JPanel startingTheServiceConnectionPanel2 = new JPanel();
+        startingTheServiceConnectionPanel2.setLayout(new BorderLayout(0, 20));
+        JPanel startingTheServiceConnectionPanel3 = new JPanel();
+        startingTheServiceConnectionPanel3.setLayout(new BorderLayout(0, 20));
 
 
 
@@ -459,29 +469,42 @@ JLabel label2 = new JLabel("<html><div style='text-align:center;'>"
         String title = dialogElements.get(0);
         String body =  dialogElements.get(2) + "<br /><br />" + dialogElements.get(3) + "<br /><br />" + dialogElements.get(4)
                 +  "<font color=#ffffff size=5><br /><br /><b>" + dialogElements.get(5) + "</b></font>" +
-                "<br><br><font color=#ffffff>"+ dialogElements.get(6) +"</font><br /><br />" +
-                "<font color=#ffffff>"+ dialogElements.get(7) +"</font></html>";
+                "<br><br><font color=#ffffff>"+ dialogElements.get(6) +"</font><br /><br />" ;
 
-        String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
-        JLabel label = new JLabel("<html><br />" + topText + "</html>");
 
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.add(label, BorderLayout.CENTER);
-        changesToAndroidManifestPanel2.add(topPanel, BorderLayout.NORTH);
 
+        JLabel text = new JLabel("<html><br />" + CardLayoutDialog.titleAndBodyHTMLFormated(title, body) + "</html>");
+        topPanel.add(text, BorderLayout.CENTER);
+
+
+        JLabel label2 =  new JLabel("<html>" + "<br /><br /><font color=#ffffff>"+ dialogElements.get(7) +"</font></html>");
+        startingTheServiceConnectionPanel2.add(label2, BorderLayout.NORTH);
+
+
+        startingTheServiceConnectionPanel.add(startingTheServiceConnectionPanel1);
 
         String data[][] ={
                 {"Name","Definition"},
                 {"onBiilingSetupFinished(responseCode)","This method is called when the billing setup process is complete."},
                 {"onBiilingServiceDisconnected()","This method is called when the billing connection is lost."}
         };
+
         Table table = new Table(data);
-        changesToAndroidManifestPanel2.add(table.getTable());
+        table.getTable().setAlignmentX(Component.CENTER_ALIGNMENT);
+        startingTheServiceConnectionPanel.add(table.getTable(), BorderLayout.CENTER);
+        startingTheServiceConnectionPanel.add(startingTheServiceConnectionPanel2);
 
 
-       /** CodeWindow appCoinsBillingStateListener = new CodeWindow(CardLayoutDialog.projLanguage, snippets.appCoinsBillingStateListener(),
-                DialogColors.darkBlue, ActionsSDK.implementedStartingServiceConnection);
-        appCoinsBillingStateListener.setImplementAutomaticallyButtonText("Partially implement changes automatically");
+        CodeWindow appCoinsBillingStateListener = new CodeWindow(CardLayoutDialog.projLanguage, snippets.appCoinsBillingStateListener(),
+                DialogColors.darkBlue, ActionsSDK.implementedStartingServiceConnection, "4.1");
+        appCoinsBillingStateListener.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
+        appCoinsBillingStateListener.setImplementAutomaticallyButtonText("Static");
+        appCoinsBillingStateListener.setCodeFiles(project, CardLayoutDialog.files);
+        startingTheServiceConnectionPanel3.add(appCoinsBillingStateListener.getPanel(), BorderLayout.CENTER);
+        startingTheServiceConnectionPanel.add(startingTheServiceConnectionPanel3);
+
+
+/**
 
         if(CardLayoutDialog.files.get(4)!=null){
             appCoinsBillingStateListener.addButtonActionListener(new ActionListener(){
@@ -497,11 +520,12 @@ JLabel label2 = new JLabel("<html><div style='text-align:center;'>"
             });
         }
 
-        panel.addRigidArea(new Dimension(0, 20));
-        //panel.add(appCoinsBillingStateListener.getPanel());
+        //changesToAndroidManifestPanel2.addRigidArea(new Dimension(0, 20));
+        startPurchasePanel4.add(appCoinsBillingStateListener.getPanel(), BorderLayout.CENTER);
+        changesToAndroidManifestPanel2.add(startPurchasePanel4);
 
-
-
+**/
+        /**
 
         JLabel textCard4 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
                 "<font color=#220F67 size=5><b>" + dialogElements.get(6) + "</b></font>");
@@ -563,18 +587,22 @@ JLabel label2 = new JLabel("<html><div style='text-align:center;'>"
 
         **/
 
-        changesToAndroidManifestPanel2.add(CardLayoutDialog.moreInformationLabel("",
-                        "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"),
+        startingTheServiceConnectionPanel.add(CardLayoutDialog.moreInformationLabel("",
+                        "https://docs.catappult.io/docs/native-android-billing-sdk"),
                 BorderLayout.SOUTH);
 
-        JBScrollPane scrollPane = new JBScrollPane(changesToAndroidManifestPanel2);
+        JBScrollPane scrollPane = new JBScrollPane(startingTheServiceConnectionPanel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
-        changesToAndroidManifest2.add(scrollPane, BorderLayout.CENTER);
+        // Ensure the scroll starts from the top
+        SwingUtilities.invokeLater(() -> scrollPane.getViewport().setViewPosition(new Point(0, 0)));
 
-        return changesToAndroidManifest2.getPanel();
+
+        startingTheServiceConnection.add(scrollPane, BorderLayout.CENTER);
+
+        return startingTheServiceConnection.getPanel();
     }
 
     public RoundedScrollablePanelBorder publicKey(){
