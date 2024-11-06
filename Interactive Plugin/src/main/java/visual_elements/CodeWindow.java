@@ -202,6 +202,19 @@ public class CodeWindow {
 
 
 
+    public VirtualFile displayCurrentFilePath(Project project) {
+        VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+        if (currentFile != null) {
+            String filePath = currentFile.getPath();
+            System.out.println("Current file path: " + filePath);
+            Messages.showMessageDialog(project, "Current file path: " + filePath, "File Path", Messages.getInformationIcon());
+            return currentFile;
+        } else {
+            Messages.showMessageDialog(project, "No file is currently open.", "File Path", Messages.getErrorIcon());
+            return null;
+        }
+    }
+
     private void addAIImplementButton(String step, String language){
         aiImplement.setUI(new ImplementAutomaticallyButton());
         aiImplement.setBorder(BorderFactory.createCompoundBorder(
@@ -213,8 +226,11 @@ public class CodeWindow {
             public void actionPerformed(ActionEvent e) {
 
 
+                VirtualFile currentFile = displayCurrentFilePath(projectToSet);
+
                 addAICopilotCode("Loading...");
 
+                implementAutomatically.setEnabled(false);
 
                 aiImplement.setForeground(DialogColors.green);
                 aiImplement.setText("Implemented!");
@@ -222,11 +238,6 @@ public class CodeWindow {
                 aiImplement.repaint();
 
 
-                //Messages.showMessageDialog("Contains?: " + newCodeH, "File Info", Messages.getInformationIcon());
-
-                //Messages.showMessageDialog("Step is: " + step, "Verify Step", Messages.getInformationIcon());
-
-                //Colocar a filtragem por step e especificar o dispositivo
 
                 if(step.equals("0")){
 
@@ -242,7 +253,7 @@ public class CodeWindow {
                     // Create an instance of ApiService
                     ApiService apiService = new ApiService();
                     // Step 1: Retrieve the content of the open file
-                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    //VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
                     String fileContent = "";
                     try {
                         fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
@@ -255,21 +266,22 @@ public class CodeWindow {
                     String snippetContext = fileContent;
                     // Call the makeApiCall method
                     String test = apiService.changesToGradle2(snippetContext);
+                    test = test.replace("```plaintext", "").replace("```", "");
 
                     addAICopilotCode(test);
 
                     writeOnFile(projectToSet, filesToSet, test);
                 }else if(step.equals("2")){
-                    VirtualFile file = CardLayoutDialog.files.get(3);
+                    /**VirtualFile file = CardLayoutDialog.files.get(3);
                     FileEditorManager.getInstance(CardLayoutDialog.project).openTextEditor(
                             new OpenFileDescriptor(CardLayoutDialog.project,file),
                             true // request focus to editor
-                    );
+                    );**/
 
                     // Create an instance of ApiService
                     ApiService apiService = new ApiService();
                     // Step 1: Retrieve the content of the open file
-                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    //VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
                     String fileContent = "";
                     try {
                         fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
@@ -282,6 +294,7 @@ public class CodeWindow {
                     String snippetContext = fileContent;
                     // Call the makeApiCall method
                     String test = apiService.changesToAndroidManifest(snippetContext);
+                    test = test.replace("```plaintext", "").replace("```xml", "").replace("xml\n", "").replace("```", "");
 
                     addAICopilotCode(test);
 
@@ -289,16 +302,16 @@ public class CodeWindow {
 
                     writeOnFileManifest(projectToSet, filesToSet, test);
                 }else if(step.equals("3")){
-                    VirtualFile file = CardLayoutDialog.files.get(3);
+                    /**VirtualFile file = CardLayoutDialog.files.get(3);
                     FileEditorManager.getInstance(CardLayoutDialog.project).openTextEditor(
                             new OpenFileDescriptor(CardLayoutDialog.project,file),
                             true // request focus to editor
-                    );
+                    );**/
 
                     // Create an instance of ApiService
                     ApiService apiService = new ApiService();
                     // Step 1: Retrieve the content of the open file
-                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    //VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
                     String fileContent = "";
                     try {
                         fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
@@ -311,6 +324,7 @@ public class CodeWindow {
                     String snippetContext = fileContent;
                     // Call the makeApiCall method
                     String test = apiService.changesToAndroidManifest2(snippetContext);
+                    test = test.replace("```plaintext", "").replace("```xml", "").replace("xml\n", "").replace("```", "");
 
                     addAICopilotCode(test);
 
@@ -318,7 +332,7 @@ public class CodeWindow {
                     //Messages.showMessageDialog("Aqui: " + newCodeH, "PASSOU AQUI", Messages.getInformationIcon());
                     writeOnFileManifest2(projectToSet, filesToSet, test);
                 }else if(step.equals("4.1")){
-                    VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
+                    /**VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
 
                     if (mainActivityFile != null) {
                         // Open the MainActivity.java file in the editor
@@ -328,13 +342,13 @@ public class CodeWindow {
                     } else {
 
                         Messages.showMessageDialog("MainActivity.java not found. Proceeding with currently opened file.", "Error", Messages.getErrorIcon());
-                    }
+                    }**/
 
 
                     // Create an instance of ApiService
                     ApiService apiService = new ApiService();
                     // Step 1: Retrieve the content of the open file
-                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    //VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
                     String fileContent = "";
                     try {
                         fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
@@ -348,6 +362,7 @@ public class CodeWindow {
                     String snippetContext = fileContent;
                     // Call the makeApiCall method
                     String test = apiService.skuDetailsResponseListener(snippetContext, language);
+                    test = test.replace("```java", "").replace("```kotlin", "").replace("```", "");
 
                     if(!test.equals("timeout")){
                         addAICopilotCode(test);
@@ -359,7 +374,7 @@ public class CodeWindow {
 
 
                 }else if(step.equals("4.2")){
-                    VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
+                    /**VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
 
                     if (mainActivityFile != null) {
                         // Open the MainActivity.java file in the editor
@@ -369,13 +384,13 @@ public class CodeWindow {
                     } else {
 
                         Messages.showMessageDialog("MainActivity.java not found. Proceeding with currently opened file.", "Error", Messages.getErrorIcon());
-                    }
+                    }**/
 
 
                     // Create an instance of ApiService
                     ApiService apiService = new ApiService();
                     // Step 1: Retrieve the content of the open file
-                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    //VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
                     String fileContent = "";
                     try {
                         fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
@@ -388,6 +403,7 @@ public class CodeWindow {
                     String snippetContext = fileContent;
                     // Call the makeApiCall method
                     String test = apiService.queryInapps(snippetContext, language);
+                    test = test.replace("```java", "").replace("```kotlin", "").replace("```", "");
 
                     if(!test.equals("timeout")){
                         addAICopilotCode(test);
@@ -397,7 +413,7 @@ public class CodeWindow {
 
 
                 }else if(step.equals("5")){
-                    VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
+                    /**VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
 
                     if (mainActivityFile != null) {
                         // Open the MainActivity.java file in the editor
@@ -407,13 +423,13 @@ public class CodeWindow {
                     } else {
 
                         Messages.showMessageDialog("MainActivity.java not found. Proceeding with currently opened file.", "Error", Messages.getErrorIcon());
-                    }
+                    }**/
 
 
                     // Create an instance of ApiService
                     ApiService apiService = new ApiService();
                     // Step 1: Retrieve the content of the open file
-                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    //VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
                     String fileContent = "";
                     try {
                         fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
@@ -426,13 +442,14 @@ public class CodeWindow {
                     String snippetContext = fileContent;
                     // Call the makeApiCall method
                     String test = apiService.startPurchase(snippetContext, language);
+                    test = test.replace("```java", "").replace("```kotlin", "").replace("```", "");
 
                     if(!test.equals("timeout")){
                         addAICopilotCode(test);
                         writeOnFileQuery(projectToSet, filesToSet, test);
                     }
                 }else if(step.equals("6.1")){
-                    VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
+                    /**VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
 
                     if (mainActivityFile != null) {
                         // Open the MainActivity.java file in the editor
@@ -442,13 +459,13 @@ public class CodeWindow {
                     } else {
 
                         Messages.showMessageDialog("MainActivity.java not found. Proceeding with currently opened file.", "Error", Messages.getErrorIcon());
-                    }
+                    }**/
 
 
                     // Create an instance of ApiService
                     ApiService apiService = new ApiService();
                     // Step 1: Retrieve the content of the open file
-                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    //VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
                     String fileContent = "";
                     try {
                         fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
@@ -461,13 +478,14 @@ public class CodeWindow {
                     String snippetContext = fileContent;
                     // Call the makeApiCall method
                     String test = apiService.onActivityResult(snippetContext, language);
+                    test = test.replace("```java", "").replace("```kotlin", "").replace("```", "");
 
                     if(!test.equals("timeout")){
                         addAICopilotCode(test);
                         writeOnFileQuery(projectToSet, filesToSet, test);
                     }
                 }else if(step.equals("6.2")){
-                    VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
+                    /**VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
 
                     if (mainActivityFile != null) {
                         // Open the MainActivity.java file in the editor
@@ -477,13 +495,13 @@ public class CodeWindow {
                     } else {
 
                         Messages.showMessageDialog("MainActivity.java not found. Proceeding with currently opened file.", "Error", Messages.getErrorIcon());
-                    }
+                    }**/
 
 
                     // Create an instance of ApiService
                     ApiService apiService = new ApiService();
                     // Step 1: Retrieve the content of the open file
-                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    //VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
                     String fileContent = "";
                     try {
                         fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
@@ -496,6 +514,7 @@ public class CodeWindow {
                     String snippetContext = fileContent;
                     // Call the makeApiCall method
                     String test = apiService.purchasesUpdatedListener(snippetContext, language);
+                    test = test.replace("```java", "").replace("```kotlin", "").replace("```", "");
 
                     if(!test.equals("timeout")){
                         addAICopilotCode(test);
@@ -506,7 +525,7 @@ public class CodeWindow {
 
                 }else if(step.equals("7")){
 
-                    VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
+                    /**VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
 
                     if (mainActivityFile != null) {
                         // Open the MainActivity.java file in the editor
@@ -516,13 +535,13 @@ public class CodeWindow {
                     } else {
 
                         Messages.showMessageDialog("MainActivity.java not found. Proceeding with currently opened file.", "Error", Messages.getErrorIcon());
-                    }
+                    }**/
 
 
                     // Create an instance of ApiService
                     ApiService apiService = new ApiService();
                     // Step 1: Retrieve the content of the open file
-                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    //VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
                     String fileContent = "";
                     try {
                         fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
@@ -535,6 +554,7 @@ public class CodeWindow {
                     String snippetContext = fileContent;
                     // Call the makeApiCall method
                     String test = apiService.consumeResponseListener(snippetContext, language);
+                    test = test.replace("```java", "").replace("```kotlin", "").replace("```", "");
 
                     if(!test.equals("timeout")){
                         addAICopilotCode(test);
@@ -729,6 +749,8 @@ public class CodeWindow {
                 implementAutomatically.setText("Implemented!");
                 implementAutomatically.revalidate();
                 implementAutomatically.repaint();
+
+                aiImplement.setEnabled(false);
             }
         });
     }
