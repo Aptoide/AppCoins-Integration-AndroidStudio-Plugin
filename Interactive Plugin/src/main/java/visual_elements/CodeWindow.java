@@ -10,6 +10,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.components.JBScrollPane;
 import dialogs.CardLayoutDialog;
 import snipets.Snippets;
 import utils.Actions;
@@ -48,13 +49,13 @@ public class CodeWindow {
 
 
     public CodeWindow(String language, String snippet, Color color) {
-        createCodePanel(language, snippet, color);
+        createCodePanel(language, snippet, color , "");
     }
 
     public CodeWindow(String language, String snippet, Color color, Actions action, String step) {
-        createCodePanel(language, snippet, color);
+        createCodePanel(language, snippet, color, step);
         addImplementAutomaticallyButton(action);
-        if(!step.equals("0")){
+        if(!step.equals("0") && !step.equals("4.0")){
             addAIImplementButton(step, language.toLowerCase());
         }
 
@@ -69,11 +70,39 @@ public class CodeWindow {
         projectToSet=project;
         filesToSet=files;
         newCodeH="";
+
     }
 
     private void writeOnFile(Project project, Map<Integer, VirtualFile> files, String test) {
+
+
+        VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+        Document currentDocument = FileDocumentManager.getInstance().getDocument(currentFile);
+
+        String oldContent = currentDocument.getText();
+        String newContent = oldContent;
+        if (!oldContent.contains("google()") || !oldContent.contains("mavenCentral()")) {
+            newContent = test;
+        }
+
+// Clear the content of the document
+        Runnable clearContent = () -> {
+            currentDocument.setReadOnly(false);
+            currentDocument.setText("");
+        };
+        WriteCommandAction.runWriteCommandAction(project, clearContent);
+
+// Writing new content to the file
+        String finalContent = newContent;
+        Runnable writeContent = () -> {
+            currentDocument.setReadOnly(false);
+            currentDocument.setText(finalContent);
+        };
+        WriteCommandAction.runWriteCommandAction(project, writeContent);
+
+
         // Write the code to the file
-        Document buildGradleDocument = FileDocumentManager.getInstance().getDocument(files.get(2));
+        /**Document buildGradleDocument = FileDocumentManager.getInstance().getDocument(files.get(2));
 
         String oldBuildGradleContent = buildGradleDocument.getText();
         String newBuildGradleContent = oldBuildGradleContent;
@@ -94,7 +123,7 @@ public class CodeWindow {
             buildGradleDocument.setReadOnly(false);
             buildGradleDocument.setText(finalBuildGradleContent);
         };
-        WriteCommandAction.runWriteCommandAction(project, r2);
+        WriteCommandAction.runWriteCommandAction(project, r2);**/
     }
 
 
@@ -204,15 +233,7 @@ public class CodeWindow {
 
     public VirtualFile displayCurrentFilePath(Project project) {
         VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
-        if (currentFile != null) {
-            String filePath = currentFile.getPath();
-            System.out.println("Current file path: " + filePath);
-            Messages.showMessageDialog(project, "Current file path: " + filePath, "File Path", Messages.getInformationIcon());
-            return currentFile;
-        } else {
-            Messages.showMessageDialog(project, "No file is currently open.", "File Path", Messages.getErrorIcon());
-            return null;
-        }
+        return currentFile;
     }
 
     private void addAIImplementButton(String step, String language){
@@ -224,11 +245,11 @@ public class CodeWindow {
         aiImplement.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e) {
-
-
-                VirtualFile currentFile = displayCurrentFilePath(projectToSet);
+                //VirtualFile currentFile = displayCurrentFilePath(projectToSet);
 
                 addAICopilotCode("Loading...");
+
+                Messages.showMessageDialog("Loading Copilot response - Make sure you're in the correct file.", "Plugin Info", Messages.getInformationIcon());
 
                 implementAutomatically.setEnabled(false);
 
@@ -239,14 +260,12 @@ public class CodeWindow {
 
 
 
-                if(step.equals("0")){
+                if(step.equals("0")){ } // Build Gradle [OK]
+                else if(step.equals("1")){
 
-
-
-                }else if(step.equals("1")){
-                    VirtualFile file = CardLayoutDialog.files.get(2);
+                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
                     FileEditorManager.getInstance(CardLayoutDialog.project).openTextEditor(
-                            new OpenFileDescriptor(CardLayoutDialog.project,file),
+                            new OpenFileDescriptor(CardLayoutDialog.project,currentFile),
                             true // request focus to editor
                     );
 
@@ -270,13 +289,17 @@ public class CodeWindow {
 
                     addAICopilotCode(test);
 
-                    writeOnFile(projectToSet, filesToSet, test);
-                }else if(step.equals("2")){
-                    /**VirtualFile file = CardLayoutDialog.files.get(3);
+                    if(!test.equals("timeout")){
+                        writeOnFile(projectToSet, filesToSet, test);
+                    }
+
+                } // Build Gradle  [OK]
+                else if(step.equals("2")){
+                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
                     FileEditorManager.getInstance(CardLayoutDialog.project).openTextEditor(
-                            new OpenFileDescriptor(CardLayoutDialog.project,file),
+                            new OpenFileDescriptor(CardLayoutDialog.project,currentFile),
                             true // request focus to editor
-                    );**/
+                    );
 
                     // Create an instance of ApiService
                     ApiService apiService = new ApiService();
@@ -299,14 +322,16 @@ public class CodeWindow {
                     addAICopilotCode(test);
 
 
-
-                    writeOnFileManifest(projectToSet, filesToSet, test);
-                }else if(step.equals("3")){
-                    /**VirtualFile file = CardLayoutDialog.files.get(3);
+                    if(!test.equals("timeout")) {
+                        writeOnFileManifest(projectToSet, filesToSet, test);
+                    }
+                } // AndroidManifest.xml  [OK]
+                else if(step.equals("3")){
+                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
                     FileEditorManager.getInstance(CardLayoutDialog.project).openTextEditor(
-                            new OpenFileDescriptor(CardLayoutDialog.project,file),
+                            new OpenFileDescriptor(CardLayoutDialog.project,currentFile),
                             true // request focus to editor
-                    );**/
+                    );
 
                     // Create an instance of ApiService
                     ApiService apiService = new ApiService();
@@ -328,10 +353,12 @@ public class CodeWindow {
 
                     addAICopilotCode(test);
 
-
-                    //Messages.showMessageDialog("Aqui: " + newCodeH, "PASSOU AQUI", Messages.getInformationIcon());
-                    writeOnFileManifest2(projectToSet, filesToSet, test);
-                }else if(step.equals("4.1")){
+                    if(!test.equals("timeout")){
+                        writeOnFileManifest2(projectToSet, filesToSet, test);
+                    }
+                } // AndroidManifest.xml  [OK]
+                else if(step.equals("4")){} // MainActivity.java [TO DO - for now partial implementation ]
+                else if(step.equals("4.1")){
                     /**VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
 
                     if (mainActivityFile != null) {
@@ -343,6 +370,10 @@ public class CodeWindow {
 
                         Messages.showMessageDialog("MainActivity.java not found. Proceeding with currently opened file.", "Error", Messages.getErrorIcon());
                     }**/
+
+                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    FileEditorManager.getInstance(project).openTextEditor(
+                            new OpenFileDescriptor(project, currentFile), true);
 
 
                     // Create an instance of ApiService
@@ -364,16 +395,16 @@ public class CodeWindow {
                     String test = apiService.skuDetailsResponseListener(snippetContext, language);
                     test = test.replace("```java", "").replace("```kotlin", "").replace("```", "");
 
+                    addAICopilotCode(test);
+
                     if(!test.equals("timeout")){
-                        addAICopilotCode(test);
                         writeOnFileSkuDetails(projectToSet, filesToSet, test);
-                    }else{
-                        addAICopilotCode(snippetContext);
                     }
 
 
 
-                }else if(step.equals("4.2")){
+                } // querySku - skuDetailsResponseListener
+                else if(step.equals("4.2")){
                     /**VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
 
                     if (mainActivityFile != null) {
@@ -385,6 +416,9 @@ public class CodeWindow {
 
                         Messages.showMessageDialog("MainActivity.java not found. Proceeding with currently opened file.", "Error", Messages.getErrorIcon());
                     }**/
+                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    FileEditorManager.getInstance(project).openTextEditor(
+                            new OpenFileDescriptor(project, currentFile), true);
 
 
                     // Create an instance of ApiService
@@ -405,50 +439,53 @@ public class CodeWindow {
                     String test = apiService.queryInapps(snippetContext, language);
                     test = test.replace("```java", "").replace("```kotlin", "").replace("```", "");
 
+                    addAICopilotCode(test);
+
                     if(!test.equals("timeout")){
-                        addAICopilotCode(test);
                         writeOnFileQuery(projectToSet, filesToSet, test);
                     }
 
 
 
-                }else if(step.equals("5")){
-                    /**VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
+                } // querySku - querySkuDetailsAsync
+                else if(step.equals("5")){
 
-                    if (mainActivityFile != null) {
-                        // Open the MainActivity.java file in the editor
-                        FileEditorManager.getInstance(project).openTextEditor(
-                                new OpenFileDescriptor(project, mainActivityFile), true);
+                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    FileEditorManager.getInstance(project).openTextEditor(
+                            new OpenFileDescriptor(project, currentFile), true);
 
-                    } else {
-
-                        Messages.showMessageDialog("MainActivity.java not found. Proceeding with currently opened file.", "Error", Messages.getErrorIcon());
-                    }**/
 
 
                     // Create an instance of ApiService
                     ApiService apiService = new ApiService();
+
                     // Step 1: Retrieve the content of the open file
                     //VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
                     String fileContent = "";
                     try {
+
                         fileContent = new String(currentFile.contentsToByteArray(), StandardCharsets.UTF_8);
                         //Messages.showMessageDialog("Data from file1: " + fileContent, "File Info", Messages.getInformationIcon());
                     } catch (IOException ex) {
+
                         throw new RuntimeException(ex);
                     }
                     //Messages.showMessageDialog("Data from file2: " + fileContent, "File Info", Messages.getInformationIcon());
                     //obtain context of snippet
                     String snippetContext = fileContent;
+
                     // Call the makeApiCall method
                     String test = apiService.startPurchase(snippetContext, language);
-                    test = test.replace("```java", "").replace("```kotlin", "").replace("```", "");
+
+                    test = test.replace("```java\n", "").replace("```kotlin\n", "").replace("```", "");
+
+                    addAICopilotCode(test);
 
                     if(!test.equals("timeout")){
-                        addAICopilotCode(test);
                         writeOnFileQuery(projectToSet, filesToSet, test);
                     }
-                }else if(step.equals("6.1")){
+                } // makingPurchase
+                else if(step.equals("6.1")){
                     /**VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
 
                     if (mainActivityFile != null) {
@@ -460,6 +497,10 @@ public class CodeWindow {
 
                         Messages.showMessageDialog("MainActivity.java not found. Proceeding with currently opened file.", "Error", Messages.getErrorIcon());
                     }**/
+
+                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    FileEditorManager.getInstance(project).openTextEditor(
+                            new OpenFileDescriptor(project, currentFile), true);
 
 
                     // Create an instance of ApiService
@@ -480,11 +521,14 @@ public class CodeWindow {
                     String test = apiService.onActivityResult(snippetContext, language);
                     test = test.replace("```java", "").replace("```kotlin", "").replace("```", "");
 
+                    addAICopilotCode(test);
+
                     if(!test.equals("timeout")){
-                        addAICopilotCode(test);
                         writeOnFileQuery(projectToSet, filesToSet, test);
                     }
-                }else if(step.equals("6.2")){
+                } // makingPurchase2
+                else if(step.equals("6.2")){
+
                     /**VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
 
                     if (mainActivityFile != null) {
@@ -496,6 +540,10 @@ public class CodeWindow {
 
                         Messages.showMessageDialog("MainActivity.java not found. Proceeding with currently opened file.", "Error", Messages.getErrorIcon());
                     }**/
+
+                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    FileEditorManager.getInstance(project).openTextEditor(
+                            new OpenFileDescriptor(project, currentFile), true);
 
 
                     // Create an instance of ApiService
@@ -516,14 +564,14 @@ public class CodeWindow {
                     String test = apiService.purchasesUpdatedListener(snippetContext, language);
                     test = test.replace("```java", "").replace("```kotlin", "").replace("```", "");
 
+                    addAICopilotCode(test);
+
                     if(!test.equals("timeout")){
-                        addAICopilotCode(test);
                         writeOnFileQuery(projectToSet, filesToSet, test);
-                    }else{
-                        addAICopilotCode("Please retry again.");
                     }
 
-                }else if(step.equals("7")){
+                } // startingTheServiceConnection2
+                else if(step.equals("7")){
 
                     /**VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
 
@@ -536,6 +584,9 @@ public class CodeWindow {
 
                         Messages.showMessageDialog("MainActivity.java not found. Proceeding with currently opened file.", "Error", Messages.getErrorIcon());
                     }**/
+                    VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+                    FileEditorManager.getInstance(project).openTextEditor(
+                            new OpenFileDescriptor(project, currentFile), true);
 
 
                     // Create an instance of ApiService
@@ -556,11 +607,12 @@ public class CodeWindow {
                     String test = apiService.consumeResponseListener(snippetContext, language);
                     test = test.replace("```java", "").replace("```kotlin", "").replace("```", "");
 
+                    addAICopilotCode(test);
+
                     if(!test.equals("timeout")){
-                        addAICopilotCode(test);
                         writeOnFileQuery(projectToSet, filesToSet, test);
                     }
-                }
+                } // consumePurchase
 
 
                 //write filter for other parts like consume purchase listener makepurchase startconnection
@@ -599,7 +651,7 @@ public class CodeWindow {
         return null;
     }
 
-    private void createCodePanel(String language, String snippet, Color color) {
+    private void createCodePanel(String language, String snippet, Color color, String step) {
         c.fill = GridBagConstraints.HORIZONTAL;
         JTextPane code = createCodeArea();
         addLanguageButton(language);
@@ -611,7 +663,14 @@ public class CodeWindow {
         c.gridwidth = 6;
         codePanel.add(code, c);
 
-        JLabel codeLabel = new JLabel("Implement Via", SwingConstants.CENTER);
+        JLabel codeLabel;
+        if(!step.isEmpty()) {
+            codeLabel = new JLabel("Implement Via", SwingConstants.CENTER);
+        }else {
+            codeLabel = new JLabel("", SwingConstants.CENTER);
+        }
+
+
         codeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         // Step 3: Add the JLabel to the codePanel below the JTextPane
         c.gridx = 0;
@@ -639,10 +698,10 @@ public class CodeWindow {
         tPane.setBorder(eb);
         tPane.setMargin(new Insets(5, 5, 5, 5));
         tPane.setBackground(DialogColors.lightGray);
-        //JBScrollPane scrollWindow = new JBScrollPane(tPane);
-        //scrollWindow.setBorder(new EmptyBorder(0,0,0,0));
-        //scrollWindow.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        //scrollWindow.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JBScrollPane scrollWindow = new JBScrollPane(tPane);
+        scrollWindow.setBorder(new EmptyBorder(0,0,0,0));
+        scrollWindow.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollWindow.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         return tPane;
     }
 

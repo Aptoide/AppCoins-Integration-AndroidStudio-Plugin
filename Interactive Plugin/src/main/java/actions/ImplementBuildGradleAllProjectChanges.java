@@ -3,6 +3,7 @@ package actions;
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
 import snipets.Snippets;
@@ -25,24 +26,41 @@ public class ImplementBuildGradleAllProjectChanges extends AbstractAction {
     }
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        Document buildGradleDocument = FileDocumentManager.getInstance().getDocument(files.get(2));
-        String oldBuildGradleContent = buildGradleDocument.getText();
-        this.oldContent=oldBuildGradleContent;
-        String newBuildGradleContent = oldBuildGradleContent;
-        if (!oldBuildGradleContent.contains("google()")||!oldBuildGradleContent.contains("mavenCentral()")){
-            newBuildGradleContent = newBuildGradleContent.concat(
-                    snippets.buildGradleCodeAllprojects()
-            );
+
+        VirtualFile selectedFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+        Document document = FileDocumentManager.getInstance().getDocument(selectedFile);
+
+        if (document != null) {
+            String oldContent = document.getText();
+            String newContent = oldContent + snippets.buildGradleCodeAllprojects();
+
+            Runnable writeRunnable = () -> {
+                document.setReadOnly(false);
+                document.setText(newContent);
+            };
+            WriteCommandAction.runWriteCommandAction(project, writeRunnable);
         }
 
 
-        // Writing build.gradle file changes
+            /**Document buildGradleDocument = FileDocumentManager.getInstance().getDocument(files.get(2));
+            String oldBuildGradleContent = buildGradleDocument.getText();
+            this.oldContent=oldBuildGradleContent;
+            String newBuildGradleContent = oldBuildGradleContent;
+            if (!oldBuildGradleContent.contains("google()")||!oldBuildGradleContent.contains("mavenCentral()")){
+                newBuildGradleContent = newBuildGradleContent.concat(
+                        snippets.buildGradleCodeAllprojects()
+                );
+            }
 
-        String finalBuildGradleContent = newBuildGradleContent;
-        Runnable r2 = () -> {
-            buildGradleDocument.setReadOnly(false);
-            buildGradleDocument.setText(finalBuildGradleContent);
-        };
-        WriteCommandAction.runWriteCommandAction(project, r2);
+
+            // Writing build.gradle file changes
+
+            String finalBuildGradleContent = newBuildGradleContent;
+            Runnable r2 = () -> {
+                buildGradleDocument.setReadOnly(false);
+                buildGradleDocument.setText(finalBuildGradleContent);
+            };
+            WriteCommandAction.runWriteCommandAction(project, r2);
+             **/
     }
 }

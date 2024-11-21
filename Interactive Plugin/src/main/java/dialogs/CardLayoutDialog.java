@@ -5,6 +5,7 @@ import actions.ImplementQueryPurchasesSkuListenerChanges;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.components.JBScrollPane;
@@ -76,7 +77,7 @@ public class CardLayoutDialog extends JPanel {
         cPanel.add(permissions(), "sdk5");
         cPanel.add(SDKDialogs.changesToAndroidManifest(myPluginComponent),"sdk6"); //2
         cPanel.add(SDKDialogs.changesToAndroidManifest2(myPluginComponent),"sdk7"); //3
-        cPanel.add(startingTheServiceConnection(),"sdk8");
+        cPanel.add(startingTheServiceConnection(),"sdk8"); // ADICIONAR NOVO
         cPanel.add(SDKDialogs.querySku(myPluginComponent),"sdk9"); // 4.1  -- 4.2
         cPanel.add(SDKDialogs.makingPurchase(myPluginComponent),"sdk10"); // 5
         cPanel.add(SDKDialogs.makingPurchase2(myPluginComponent),"sdk11"); // 6.1
@@ -380,6 +381,9 @@ JLabel label2 = new JLabel("<html><div style='text-align:center;'>"
         {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                Messages.showMessageDialog("The file selected may be not the best suited to implement the following steps, always make sure the file open is the correct on to implement the required changes." , "Plugin Info", Messages.getWarningIcon());
+
                 VirtualFile file = CardLayoutDialog.files.get(2);
                 FileEditorManager.getInstance(CardLayoutDialog.project).openTextEditor(
                         new OpenFileDescriptor(CardLayoutDialog.project,file),
@@ -430,6 +434,9 @@ JLabel label2 = new JLabel("<html><div style='text-align:center;'>"
         {
             @Override
             public void actionPerformed(ActionEvent e) {
+                Messages.showMessageDialog("The file selected may be not the best suited to implement the following steps, always make sure the file open is the correct on to implement the required changes." , "Plugin Info", Messages.getWarningIcon());
+
+
                 VirtualFile file = CardLayoutDialog.files.get(3);
                 FileEditorManager.getInstance(CardLayoutDialog.project).openTextEditor(
                         new OpenFileDescriptor(CardLayoutDialog.project,file),
@@ -462,6 +469,12 @@ JLabel label2 = new JLabel("<html><div style='text-align:center;'>"
         startingTheServiceConnectionPanel2.setLayout(new BorderLayout(0, 20));
         JPanel startingTheServiceConnectionPanel3 = new JPanel();
         startingTheServiceConnectionPanel3.setLayout(new BorderLayout(0, 20));
+        JPanel startingTheServiceConnectionPanel4 = new JPanel();
+        startingTheServiceConnectionPanel4.setLayout(new BorderLayout(0, 20));
+        JPanel startingTheServiceConnectionPanel5 = new JPanel();
+        startingTheServiceConnectionPanel5.setLayout(new BorderLayout(0, 20));
+        JPanel startingTheServiceConnectionPanel6 = new JPanel();
+        startingTheServiceConnectionPanel6.setLayout(new BorderLayout(0, 20));
 
 
 
@@ -496,9 +509,9 @@ JLabel label2 = new JLabel("<html><div style='text-align:center;'>"
 
 
         CodeWindow appCoinsBillingStateListener = new CodeWindow(CardLayoutDialog.projLanguage, snippets.appCoinsBillingStateListener(),
-                DialogColors.darkBlue, ActionsSDK.implementedStartingServiceConnection, "4.1");
+                DialogColors.darkBlue, ActionsSDK.implementedStartingServiceConnection, "4.0");
         appCoinsBillingStateListener.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
-        appCoinsBillingStateListener.setImplementAutomaticallyButtonText("Static");
+        //appCoinsBillingStateListener.setImplementAutomaticallyButtonText("Static");
         appCoinsBillingStateListener.setCodeFiles(project, CardLayoutDialog.files);
         startingTheServiceConnectionPanel3.add(appCoinsBillingStateListener.getPanel(), BorderLayout.CENTER);
         startingTheServiceConnectionPanel.add(startingTheServiceConnectionPanel3);
@@ -525,22 +538,33 @@ JLabel label2 = new JLabel("<html><div style='text-align:center;'>"
         changesToAndroidManifestPanel2.add(startPurchasePanel4);
 
 **/
-        /**
+/**
 
         JLabel textCard4 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
                 "<font color=#220F67 size=5><b>" + dialogElements.get(6) + "</b></font>");
-        panel.addRigidArea(new Dimension(0, 20));
-        panel.add(textCard4);
+        //panel.addRigidArea(new Dimension(0, 20));
+        //panel.add(textCard4);
+        startingTheServiceConnectionPanel4.add(textCard4, BorderLayout.CENTER);
+        startingTheServiceConnectionPanel.add(startingTheServiceConnectionPanel4);
+
 
         JLabel textCard5 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
                 "<font color=#220F67>"+ dialogElements.get(7) +"</font></html>");
-        panel.addRigidArea(new Dimension(0, 20));
-        panel.add(textCard5);
+        //panel.addRigidArea(new Dimension(0, 20));
+        //panel.add(textCard5);
+        startingTheServiceConnectionPanel5.add(textCard5, BorderLayout.CENTER);
+        startingTheServiceConnectionPanel.add(startingTheServiceConnectionPanel5);
+
 
 
         CodeWindow appCoinsBillingClient = new CodeWindow(CardLayoutDialog.projLanguage, snippets.appCoinsBillingStateListener(),
-                DialogColors.darkBlue, ActionsSDK.implementedStartingServiceConnection);
+                DialogColors.darkBlue, ActionsSDK.implementedStartingServiceConnection, "");
         appCoinsBillingClient.setImplementAutomaticallyButtonText("Partially implement changes automatically");
+        //panel.add(appCoinsBillingClient.getPanel());
+
+        startingTheServiceConnectionPanel6.add(appCoinsBillingClient.getPanel(), BorderLayout.CENTER);
+        startingTheServiceConnectionPanel.add(startingTheServiceConnectionPanel6);
+
 
         if(CardLayoutDialog.files.get(4)!=null){
             appCoinsBillingClient.addButtonActionListener(new ActionListener(){

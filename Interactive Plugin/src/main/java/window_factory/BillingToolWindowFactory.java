@@ -153,9 +153,10 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
     }
 
     private void grabGradleFile(VirtualFile file) {
+
         if (file.getName().contains("build.gradle")) {
-            buildGradleFiles.add(file);
-            buildGradleLocations.add(file.getCanonicalPath());
+                buildGradleFiles.add(file);
+                buildGradleLocations.add(file.getCanonicalPath());
         }
     }
 

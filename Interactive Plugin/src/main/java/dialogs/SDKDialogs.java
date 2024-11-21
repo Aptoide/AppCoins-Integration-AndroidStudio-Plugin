@@ -84,7 +84,48 @@ public class SDKDialogs {
     }
 
     public static JPanel changesToGradle2(MyPluginComponent myPluginComponent){
+
         Card changesToGradle2 = new Card();
+        JPanel changesToGradlePanel2 = new JPanel();
+        changesToGradlePanel2.setLayout(new BorderLayout(0, 20));
+
+        ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(2);
+        String changesToGradleTitle = "<br />" + dialogElements.get(0);
+        String changesToGradleBody = dialogElements.get(2) + "<br />" + dialogElements.get(3) +
+                "<br /><br />" + dialogElements.get(4) +
+                "<br><font color=#FD197C><a href=\"https://mvnrepository.com/artifact/io.catappult/android-appcoins-billing/usages\">" +
+                dialogElements.get(5) + dialogElements.get(6);
+
+        JLabel text = new JLabel("<html>" + CardLayoutDialog.titleAndBodyHTMLFormated(changesToGradleTitle, changesToGradleBody) + "</html>");
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(text, BorderLayout.CENTER);
+
+// Add the top panel to the changesToGradlePanel
+        changesToGradlePanel2.add(topPanel, BorderLayout.NORTH);
+
+        CodeWindow code = new CodeWindow("XML", snippets.appCoinsBillingDependency(),
+                DialogColors.darkBlue, ActionsSDK.implementedChangesToGradle2, "1");
+        code.addButtonAction(new ImplementBuildGradleDependenciesChanges(project,
+                CardLayoutDialog.files, snippets));
+        code.setCodeFiles(project, CardLayoutDialog.files);
+        changesToGradlePanel2.add(code.getPanel(), BorderLayout.CENTER);
+
+        changesToGradlePanel2.add(CardLayoutDialog.moreInformationLabel("",
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                BorderLayout.SOUTH);
+
+        changesToGradle2.add(changesToGradlePanel2);
+
+        JBScrollPane scrollPane = new JBScrollPane(changesToGradlePanel2);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        changesToGradle2.add(scrollPane, BorderLayout.CENTER);
+
+        return changesToGradle2.getPanel();
+
+        /**Card changesToGradle2 = new Card();
         JPanel changesToGradlePanel2 = new JPanel();
         changesToGradlePanel2.setLayout(new BorderLayout(0,20));
 
@@ -125,7 +166,7 @@ public class SDKDialogs {
 
         changesToGradle2.add(scrollPane, BorderLayout.CENTER);
 
-        return changesToGradle2.getPanel();
+        return changesToGradle2.getPanel();**/
     }
 
     public static JPanel changesToAndroidManifest(MyPluginComponent myPluginComponent){
@@ -647,6 +688,7 @@ public class SDKDialogs {
         CodeWindow receipt = new CodeWindow("JSON", snippets.serverCheckReceipt(),
                 DialogColors.darkBlue);
         receipt.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
+
 
         serverCheckPanel.add(receipt.getPanel());
 
