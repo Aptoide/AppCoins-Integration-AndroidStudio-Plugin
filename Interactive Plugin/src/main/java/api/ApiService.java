@@ -83,11 +83,11 @@ public class ApiService {
 
         // Create a BillingRequest object
         BillingRequest request = new BillingRequest("2", "common", snippetContext);
-        Messages.showMessageDialog(
+        /**Messages.showMessageDialog(
                 "Request: " + snippetContext,
                 "File Info",
                 Messages.getInformationIcon()
-        );
+        );**/
 
         // Make the API call
         Call<ResponseBody> call = api.postBillingIntegration(request);
@@ -155,11 +155,11 @@ public class ApiService {
         // Create a BillingRequest object
         BillingRequest request = new BillingRequest("3", "common", snippetContext);
 
-        Messages.showMessageDialog(
+        /**Messages.showMessageDialog(
                 "Request: " + snippetContext,
                 "File Info",
                 Messages.getInformationIcon()
-        );
+        );**/
 
         // Make the API call
         Call<ResponseBody> call = api.postBillingIntegration(request);

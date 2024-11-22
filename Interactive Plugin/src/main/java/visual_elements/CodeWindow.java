@@ -10,6 +10,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBScrollPane;
 import dialogs.CardLayoutDialog;
 import snipets.Snippets;
@@ -247,9 +248,9 @@ public class CodeWindow {
             public void actionPerformed(ActionEvent e) {
                 //VirtualFile currentFile = displayCurrentFilePath(projectToSet);
 
-                addAICopilotCode("Loading...");
+                addAICopilotCode("Loading Copilot Response - Make sure you're in the correct file.");
 
-                Messages.showMessageDialog("Loading Copilot response - Make sure you're in the correct file.", "Plugin Info", Messages.getInformationIcon());
+                //Messages.showMessageDialog("Loading Copilot response - Make sure you're in the correct file.", "Plugin Info", Messages.getInformationIcon());
 
                 implementAutomatically.setEnabled(false);
 
@@ -293,6 +294,13 @@ public class CodeWindow {
                         writeOnFile(projectToSet, filesToSet, test);
                     }
 
+                    if(test.contains("failed with code")){
+                        aiImplement.setForeground(JBColor.RED);
+                        aiImplement.setText("Error - retry again");
+                        aiImplement.revalidate();
+                        aiImplement.repaint();
+                    }
+
                 } // Build Gradle  [OK]
                 else if(step.equals("2")){
                     VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
@@ -325,6 +333,14 @@ public class CodeWindow {
                     if(!test.equals("timeout")) {
                         writeOnFileManifest(projectToSet, filesToSet, test);
                     }
+
+                    if(test.contains("failed with code")){
+                        aiImplement.setForeground(JBColor.RED);
+                        aiImplement.setText("Error - retry again");
+                        aiImplement.revalidate();
+                        aiImplement.repaint();
+                    }
+
                 } // AndroidManifest.xml  [OK]
                 else if(step.equals("3")){
                     VirtualFile currentFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
@@ -356,6 +372,14 @@ public class CodeWindow {
                     if(!test.equals("timeout")){
                         writeOnFileManifest2(projectToSet, filesToSet, test);
                     }
+
+                    if(test.contains("failed with code")){
+                        aiImplement.setForeground(JBColor.RED);
+                        aiImplement.setText("Error - retry again");
+                        aiImplement.revalidate();
+                        aiImplement.repaint();
+                    }
+
                 } // AndroidManifest.xml  [OK]
                 else if(step.equals("4")){} // MainActivity.java [TO DO - for now partial implementation ]
                 else if(step.equals("4.1")){
@@ -399,6 +423,13 @@ public class CodeWindow {
 
                     if(!test.equals("timeout")){
                         writeOnFileSkuDetails(projectToSet, filesToSet, test);
+                    }
+
+                    if(test.contains("failed with code")){
+                        aiImplement.setForeground(JBColor.RED);
+                        aiImplement.setText("Error - retry again");
+                        aiImplement.revalidate();
+                        aiImplement.repaint();
                     }
 
 
@@ -445,6 +476,12 @@ public class CodeWindow {
                         writeOnFileQuery(projectToSet, filesToSet, test);
                     }
 
+                    if(test.contains("failed with code")){
+                        aiImplement.setForeground(JBColor.RED);
+                        aiImplement.setText("Error - retry again");
+                        aiImplement.revalidate();
+                        aiImplement.repaint();
+                    }
 
 
                 } // querySku - querySkuDetailsAsync
@@ -484,6 +521,14 @@ public class CodeWindow {
                     if(!test.equals("timeout")){
                         writeOnFileQuery(projectToSet, filesToSet, test);
                     }
+
+                    if(test.contains("failed with code")){
+                        aiImplement.setForeground(JBColor.RED);
+                        aiImplement.setText("Error - retry again");
+                        aiImplement.revalidate();
+                        aiImplement.repaint();
+                    }
+
                 } // makingPurchase
                 else if(step.equals("6.1")){
                     /**VirtualFile mainActivityFile = findFileByName(project, "MainActivity");
@@ -526,6 +571,14 @@ public class CodeWindow {
                     if(!test.equals("timeout")){
                         writeOnFileQuery(projectToSet, filesToSet, test);
                     }
+
+                    if(test.contains("failed with code")){
+                        aiImplement.setForeground(JBColor.RED);
+                        aiImplement.setText("Error - retry again");
+                        aiImplement.revalidate();
+                        aiImplement.repaint();
+                    }
+
                 } // makingPurchase2
                 else if(step.equals("6.2")){
 
@@ -570,6 +623,14 @@ public class CodeWindow {
                         writeOnFileQuery(projectToSet, filesToSet, test);
                     }
 
+                    if(test.contains("failed with code")){
+                        aiImplement.setForeground(JBColor.RED);
+                        aiImplement.setText("Error - retry again");
+                        aiImplement.revalidate();
+                        aiImplement.repaint();
+                    }
+
+
                 } // startingTheServiceConnection2
                 else if(step.equals("7")){
 
@@ -612,6 +673,14 @@ public class CodeWindow {
                     if(!test.equals("timeout")){
                         writeOnFileQuery(projectToSet, filesToSet, test);
                     }
+
+                    if(test.contains("failed with code")){
+                        aiImplement.setForeground(JBColor.RED);
+                        aiImplement.setText("Error - retry again");
+                        aiImplement.revalidate();
+                        aiImplement.repaint();
+                    }
+
                 } // consumePurchase
 
 
