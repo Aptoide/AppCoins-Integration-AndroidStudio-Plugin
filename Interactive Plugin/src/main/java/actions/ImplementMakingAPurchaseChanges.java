@@ -19,10 +19,11 @@ public class ImplementMakingAPurchaseChanges extends AbstractAction {
     private Map<Integer, VirtualFile> files;
     private ToolWindow toolWindow;
     public ImplementMakingAPurchaseChanges(Project project, Map<Integer, VirtualFile> files, ToolWindow toolWindow){
-        super("Add code to detected purchases");
+        super("Implement Automatically");
         this.project=project;
         this.files=files;
         this.toolWindow=toolWindow;
+
     }
 
     @Override

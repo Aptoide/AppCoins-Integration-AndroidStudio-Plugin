@@ -13,7 +13,7 @@ public class Card {
         jpanel = new JPanel(new BorderLayout());
         jpanel.setLayout(new BorderLayout(0,20));
         jpanel.setBorder(new EmptyBorder(10, 40, 10, 40));
-        jpanel.setBackground(DialogColors.lightBlue);
+        //jpanel.setBackground(DialogColors.lightBlue);
     }
 
     public void setBorder(EmptyBorder border){

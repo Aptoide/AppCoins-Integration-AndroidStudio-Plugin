@@ -1,11 +1,16 @@
 package window_factory;
 
+
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ContentIterator;
 import com.intellij.openapi.roots.ProjectFileIndex;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
@@ -20,6 +25,11 @@ import snipets.Snippets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import com.intellij.openapi.ui.Messages;
+
+import javax.swing.*;
+
+import static dialogs.CardLayoutDialog.project;
 
 public class BillingToolWindowFactory implements ToolWindowFactory {
     Map<Integer, VirtualFile> files = new HashMap<>();
@@ -38,7 +48,7 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
         targetProject = project;
 
-        ContentIterator iterator = fileOrDir -> {
+       ContentIterator iterator = fileOrDir -> {
             try{
                 if (fileOrDir.isValid() && !fileOrDir.isDirectory()) {
                     String content = getFileContent(fileOrDir);
@@ -59,6 +69,7 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
         locateNecessaryFilesInProject(iterator);
 
         String mainActivityName = grabActivityName();
+
         ContentIterator iterator2 = fileOrDir -> {
             try {
                 if (fileOrDir.isValid() && !fileOrDir.isDirectory()) {
@@ -78,7 +89,9 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
             }
         };
         ProjectFileIndex.getInstance(project).iterateContent(iterator2);
+
         createSnipetsObject();
+
         ContentFactory contentFactory = ApplicationManager.getApplication().getService(ContentFactory.class);
         Content content = contentFactory.createContent(DialogCreator.cardLayout(project,files,toolWindow), "", false);
         toolWindow.getContentManager().addContent(content);
@@ -109,6 +122,7 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
 
     private Document convertFileToDocument(VirtualFile file){
         FileDocumentManager fileInstance = FileDocumentManager.getInstance();
+
         Document fileDocument = fileInstance.getDocument(file);
         return fileDocument;
     }
@@ -119,22 +133,42 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
         }
     }
 
+    private static final Logger LOG = Logger.getInstance(BillingToolWindowFactory.class);
+
     private String getFileContent(VirtualFile file){
+        if (file == null) {
+            LOG.warn("Attempted to process a null file.");
+            return "";
+        }
+
+        //Messages.showMessageDialog("Processing file: " + file.getName(), "File Info", Messages.getInformationIcon());
+
         Document fileDocument = convertFileToDocument(file);
-        String content = fileDocument.getText();
-        return content;
+        if (fileDocument == null) {
+            LOG.warn("Document conversion failed for file: " + file.getName());
+            return "";
+        }
+
+        return fileDocument.getText();
     }
 
     private void grabGradleFile(VirtualFile file) {
+
         if (file.getName().contains("build.gradle")) {
-            buildGradleFiles.add(file);
-            buildGradleLocations.add(file.getCanonicalPath());
+                buildGradleFiles.add(file);
+                buildGradleLocations.add(file.getCanonicalPath());
         }
     }
 
     private void grabAndroidManifestFile(VirtualFile file) {
+
         if (file.getName().contains("AndroidManifest")) {
-            files.put(3, file);
+
+            if(file.getPath().contains("/app/")){
+                //Messages.showMessageDialog("2) Name file: " + file.getName() +"\nName File: "+file.getPath() , "File Info", Messages.getInformationIcon());
+
+                files.put(3, file);
+            }
         }
     }
 
@@ -166,20 +200,70 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
         ProjectFileIndex.getInstance(targetProject).iterateContent(iterator);
     }
 
+    public VirtualFile findFileByName(Project project, String fileName) {
+        String basePath = project.getBasePath();
+        VirtualFile baseDir = LocalFileSystem.getInstance().findFileByPath(basePath);
+        //VirtualFile baseDir = project.getBaseDir();
+        return findFileRecursively(baseDir, fileName);
+    }
+
+    private VirtualFile findFileRecursively(VirtualFile dir, String fileName) {
+        if (dir == null || !dir.isDirectory()) {
+            return null;
+        }
+
+        for (VirtualFile file : dir.getChildren()) {
+            if (file.isDirectory()) {
+                VirtualFile found = findFileRecursively(file, fileName);
+                if (found != null) {
+                    return found;
+                }
+            } else if (file.getName().startsWith(fileName)) {
+                return file;
+            }
+        }
+        return null;
+    }
+
+
+
     private String grabActivityName(){
         VirtualFile androidManifest = files.get(3);
         String content = getFileContent(androidManifest);
 
         int activityIndex =  content.indexOf("<activity");
+        if (activityIndex == -1) {
+            VirtualFile mainActivityFile = findFileByName(targetProject, "MainActivity");
+
+            if (mainActivityFile != null) {
+                // Open the MainActivity.java file in the editor
+                return mainActivityFile.getName();
+
+            }else{
+                   Messages.showMessageDialog("Couldn't find the content on Manifest about MainActivity.", "Plugin Notification", Messages.getInformationIcon());
+            }
+
+            //throw new IllegalArgumentException("No <activity> tag found in the content.");
+        }
+
         int activityNameIndex = content.indexOf("android:name",activityIndex);
+        if (activityNameIndex == -1) {
+            throw new IllegalArgumentException("No android:name attribute found in the <activity> tag.");
+        }
 
         char separator = getNameSeparatorChar(content, activityNameIndex);
 
         int nameStartIndex = content.indexOf(separator,activityNameIndex);
         int nameEndIndex = content.indexOf(separator,nameStartIndex+1);
 
+        if (nameStartIndex == -1 || nameEndIndex == -1) {
+            throw new IllegalArgumentException("Invalid name separator positions.");
+        }
+
         String rawName = content.substring(nameStartIndex,nameEndIndex);
         String fullName = cleanActivityName(rawName);
+
+        //Messages.showMessageDialog("MainActivity is: " + fullName, "Verify Name", Messages.getInformationIcon());
 
         return fullName;
     }
@@ -191,13 +275,18 @@ public class BillingToolWindowFactory implements ToolWindowFactory {
 
     private char getNameSeparatorChar(String content, int activityNameIndex){
         int apostropheIndex = content.indexOf("'", activityNameIndex);
-        int quoteIdex = content.indexOf('"', activityNameIndex);
-        if (apostropheAndQuoteExist(apostropheIndex, quoteIdex)){
-            int firstToOccur = Math.min(apostropheIndex,quoteIdex);
+        int quoteIndex = content.indexOf('"', activityNameIndex);
+
+        if (apostropheIndex == -1 && quoteIndex == -1) {
+            throw new IllegalArgumentException("No valid separator found in the content.");
+        }
+
+        if (apostropheAndQuoteExist(apostropheIndex, quoteIndex)){
+            int firstToOccur = Math.min(apostropheIndex,quoteIndex);
             return content.charAt(firstToOccur);
         }
         else {
-            int separatorIndex = Math.max(apostropheIndex,quoteIdex);
+            int separatorIndex = Math.max(apostropheIndex,quoteIndex);
             return content.charAt(separatorIndex);
         }
     }

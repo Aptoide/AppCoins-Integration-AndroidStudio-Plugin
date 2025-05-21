@@ -7,6 +7,8 @@ public interface Snippets {
    public String androidManifestAppCoinsPermissions();
    public String androidManifestQueries();
    public String appCoinsBillingStateListener();
+   public String appCoinsBillingClient();
+   public String checkPurchases();
    public String onPurchasesUpdated();
    public String cabDeclaration();
    public String onCreate();

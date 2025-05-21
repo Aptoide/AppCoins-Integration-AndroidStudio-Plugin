@@ -17,7 +17,7 @@ public class ImplementConsumeAPurchaseChanges extends AbstractAction {
     private Project project;
     private Map<Integer, VirtualFile> files;
     public ImplementConsumeAPurchaseChanges(Project project, Map<Integer, VirtualFile> files){
-        super("Implement automatically");
+        super("Static");
         this.project=project;
         this.files=files;
     }

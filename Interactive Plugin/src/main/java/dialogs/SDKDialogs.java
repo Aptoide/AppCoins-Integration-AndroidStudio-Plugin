@@ -1,360 +1,622 @@
 package dialogs;
 
 import actions.*;
+import api.ApiService;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.fileEditor.FileEditor;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.Colors;
+import com.intellij.ui.components.JBScrollPane;
 import utils.ActionsSDK;
 import utils.DialogColors;
+import utils.MyPluginComponent;
 import visual_elements.*;
 import visual_elements.Panel;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
+import java.awt.Component;
+import java.util.Arrays;
+
+import static dialogs.CardLayoutDialog.project;
+import static java.awt.Font.getFont;
 import static window_factory.BillingToolWindowFactory.snippets;
 
 public class SDKDialogs {
 
-    public static JPanel changesToGradle(){
+
+    public  static JPanel changesToGradle(MyPluginComponent myPluginComponent){
         Card changesToGradle = new Card();
-        changesToGradle.setLayout(new BorderLayout(0,20));
+        JPanel changesToGradlePanel = new JPanel();
+        changesToGradlePanel.setLayout(new BorderLayout(0, 20));
 
+
+// Create and configure the text label
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(2);
-        String title = dialogElements.get(0);
-        String body =  dialogElements.get(2);
+        String changesToGradleTitle = "<br /><br />" + dialogElements.get(0);
+        String changesToGradleBody = dialogElements.get(2) + "<br /><br />" + dialogElements.get(3);
 
-        String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
-        changesToGradle.add(CardLayoutDialog.moreInformationLabel(topText, "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"), BorderLayout.NORTH);
+        JLabel text = new JLabel("<html>" + CardLayoutDialog.titleAndBodyHTMLFormated(changesToGradleTitle, changesToGradleBody) + "</html>");
+        // Create a panel to hold the toggle button and the text
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(text, BorderLayout.CENTER);
 
-        Panel panel = new Panel(DialogColors.white);
+// Add the top panel to the changesToGradlePanel
+        changesToGradlePanel.add(topPanel, BorderLayout.NORTH);
 
-        JLabel textCard = new JLabel("<html>" +
-                "<font color=#220F67>" + dialogElements.get(3) + "</font></html>");
-        textCard.setHorizontalAlignment(JLabel.LEFT);
 
         CodeWindow code = new CodeWindow("XML", snippets.buildGradleCodeAllprojects(),
-                DialogColors.darkBlue, ActionsSDK.implementedChangesToGradle);
-        code.addButtonAction(new ImplementBuildGradleAllProjectChanges(CardLayoutDialog.project,CardLayoutDialog.files, snippets));
+                DialogColors.darkBlue, ActionsSDK.implementedChangesToGradle, "0");
+        code.addButtonAction(new ImplementBuildGradleAllProjectChanges(project,
+                CardLayoutDialog.files, snippets));
+        code.setCodeFiles(project, CardLayoutDialog.files);
+        changesToGradlePanel.add(code.getPanel(), BorderLayout.CENTER);
 
-        panel.add(textCard);
-        panel.addRigidArea(new Dimension(0, 10));
-        panel.add(code.getPanel());
 
-        changesToGradle.add(panel.getPanel(), BorderLayout.CENTER);
+
+        changesToGradlePanel.add(CardLayoutDialog.moreInformationLabel("",
+                "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                BorderLayout.SOUTH);
+
+        changesToGradle.add(changesToGradlePanel);
+
+        JBScrollPane scrollPane = new JBScrollPane(changesToGradlePanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        changesToGradle.add(scrollPane, BorderLayout.CENTER);
 
         return changesToGradle.getPanel();
     }
 
-    public static JPanel changesToGradle2(){
-        Card changesToGradle = new Card();
-        changesToGradle.setLayout(new BorderLayout(0,20));
+    public static JPanel changesToGradle2(MyPluginComponent myPluginComponent){
+
+        Card changesToGradle2 = new Card();
+        JPanel changesToGradlePanel2 = new JPanel();
+        changesToGradlePanel2.setLayout(new BorderLayout(0, 20));
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(2);
-        String title = dialogElements.get(0);
-        String body =  dialogElements.get(2);
+        String changesToGradleTitle = "<br />" + dialogElements.get(0);
+        String changesToGradleBody = dialogElements.get(2) + "<br />" + dialogElements.get(3) +
+                "<br /><br />" + dialogElements.get(4) +
+                "<br><font color=#FD197C><a href=\"https://mvnrepository.com/artifact/io.catappult/android-appcoins-billing/usages\">" +
+                dialogElements.get(5) + dialogElements.get(6);
 
-        String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
-        changesToGradle.add(CardLayoutDialog.moreInformationLabel(topText, "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"), BorderLayout.NORTH);
+        JLabel text = new JLabel("<html>" + CardLayoutDialog.titleAndBodyHTMLFormated(changesToGradleTitle, changesToGradleBody) + "</html>");
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(text, BorderLayout.CENTER);
 
-        Panel panel = new Panel(DialogColors.white);
-
-        JLabel textCard = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67>" + dialogElements.get(4) + "</font>" +
-                "<br><font color=#FD197C><a href=\"https://mvnrepository.com/artifact/io.catappult/android-appcoins-billing/usages\">"
-                + dialogElements.get(5) + "</a></font>" +
-                "<font color=#220F67>"+ dialogElements.get(6) +"</font></html>");
-        CardLayoutDialog.makeClickable(textCard, "https://mvnrepository.com/artifact/io.catappult/android-appcoins-billing/usages");
+// Add the top panel to the changesToGradlePanel
+        changesToGradlePanel2.add(topPanel, BorderLayout.NORTH);
 
         CodeWindow code = new CodeWindow("XML", snippets.appCoinsBillingDependency(),
-                DialogColors.darkBlue, ActionsSDK.implementedChangesToGradle2);
-        code.addButtonAction(new ImplementBuildGradleDependenciesChanges(CardLayoutDialog.project,CardLayoutDialog.files, snippets));
+                DialogColors.darkBlue, ActionsSDK.implementedChangesToGradle2, "1");
+        code.addButtonAction(new ImplementBuildGradleDependenciesChanges(project,
+                CardLayoutDialog.files, snippets));
+        code.setCodeFiles(project, CardLayoutDialog.files);
+        changesToGradlePanel2.add(code.getPanel(), BorderLayout.CENTER);
 
-        panel.add(textCard);
-        panel.addRigidArea(new Dimension(0, 10));
-        panel.add(code.getPanel());
+        changesToGradlePanel2.add(CardLayoutDialog.moreInformationLabel("",
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                BorderLayout.SOUTH);
 
-        changesToGradle.add(panel.getPanel(), BorderLayout.CENTER);
+        changesToGradle2.add(changesToGradlePanel2);
 
-        return changesToGradle.getPanel();
+        JBScrollPane scrollPane = new JBScrollPane(changesToGradlePanel2);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        changesToGradle2.add(scrollPane, BorderLayout.CENTER);
+
+        return changesToGradle2.getPanel();
+
+        /**Card changesToGradle2 = new Card();
+        JPanel changesToGradlePanel2 = new JPanel();
+        changesToGradlePanel2.setLayout(new BorderLayout(0,20));
+
+
+
+        ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(2);
+        String changesToGradleTitle = "<br />" + dialogElements.get(0);
+        String changesToGradleBody =  dialogElements.get(2) + "<br />" + dialogElements.get(3) +
+                "<br /><br />" + dialogElements.get(4) +
+                "<br><font color=#FD197C><a href=\"https://mvnrepository.com/artifact/io.catappult/android-appcoins-billing/usages\">" +
+                 dialogElements.get(5) + dialogElements.get(6);
+
+        JLabel text = new JLabel("<html>" + CardLayoutDialog.titleAndBodyHTMLFormated(changesToGradleTitle, changesToGradleBody) + "</html>");
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(text, BorderLayout.CENTER);
+
+        // Add the top panel to the changesToGradlePanel
+        changesToGradlePanel2.add(topPanel, BorderLayout.NORTH);
+
+        CodeWindow code = new CodeWindow("XML", snippets.appCoinsBillingDependency(),
+                DialogColors.darkBlue, ActionsSDK.implementedChangesToGradle2, "1");
+        code.addButtonAction(new ImplementBuildGradleDependenciesChanges(project,
+                CardLayoutDialog.files, snippets));
+        code.setCodeFiles(project, CardLayoutDialog.files);
+        changesToGradlePanel2.add(code.getPanel(), BorderLayout.CENTER);
+
+
+        changesToGradlePanel2.add(CardLayoutDialog.moreInformationLabel("",
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                BorderLayout.SOUTH);
+
+        changesToGradle2.add(changesToGradlePanel2);
+
+        JBScrollPane scrollPane = new JBScrollPane(changesToGradlePanel2);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        changesToGradle2.add(scrollPane, BorderLayout.CENTER);
+
+        return changesToGradle2.getPanel();**/
     }
 
-    public static JPanel changesToAndroidManifest(){
+    public static JPanel changesToAndroidManifest(MyPluginComponent myPluginComponent){
         Card changesToAndroidManifest = new Card();
+        JPanel changesToAndroidManifestPanel = new JPanel();
+        changesToAndroidManifestPanel.setLayout(new BorderLayout(0,20));
+
+
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(6);
-        String title = dialogElements.get(0);
-        String body =  dialogElements.get(2);
+        String title = "<br />" + dialogElements.get(0);
+        String body =  dialogElements.get(2) + "<br /><br />" + "<font color=#fff size=5><b>" + dialogElements.get(3) + "</b></font>" +
+                "<br /><br /><font color=#fff>"+ dialogElements.get(4) +"</font>";
 
-        String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
-        changesToAndroidManifest.add(CardLayoutDialog.moreInformationLabel(topText, "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"), BorderLayout.NORTH);
+        JLabel text = new JLabel("<html>" + CardLayoutDialog.titleAndBodyHTMLFormated(title, body) + "</html>");
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(text, BorderLayout.CENTER);
+        changesToAndroidManifestPanel.add(topPanel, BorderLayout.NORTH);
 
-        Panel panel = new Panel(DialogColors.white);
-
-        JLabel textCard = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67 size=5><b>" + dialogElements.get(3) + "</b></font>" +
-                "<br><br><font color=#220F67>"+ dialogElements.get(4) +"</font></html>");
-        JLabel textCard1 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67 size=5><b>" + dialogElements.get(6) + "</b></font></html>");
-
-        panel.add(textCard);
-        panel.addRigidArea(new Dimension(0, 30));
-        panel.add(textCard1);
 
         CodeWindow appCoinsSnippet = new CodeWindow("XML", snippets.androidManifestAppCoinsPermissions(),
-                DialogColors.darkBlue, ActionsSDK.implementedChangesToAndroidManifest);
-        appCoinsSnippet.addButtonAction(new ImplementAndroidManifestAppCoinsChanges(CardLayoutDialog.project,CardLayoutDialog.files));
+                DialogColors.darkBlue, ActionsSDK.implementedChangesToAndroidManifest, "2");
+        appCoinsSnippet.addButtonAction(new ImplementAndroidManifestAppCoinsChanges(project,CardLayoutDialog.files));
+        appCoinsSnippet.setCodeFiles(project, CardLayoutDialog.files);
+        changesToAndroidManifestPanel.add(appCoinsSnippet.getPanel());
 
-        panel.addRigidArea(new Dimension(0, 10));
-        panel.addRigidArea(new Dimension(20, 0));
-        panel.add(appCoinsSnippet.getPanel());
 
-        changesToAndroidManifest.add(panel.getScrollablePanel(), BorderLayout.CENTER);
+
+        changesToAndroidManifestPanel.add(CardLayoutDialog.moreInformationLabel("",
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                BorderLayout.SOUTH);
+
+
+        JBScrollPane scrollPane = new JBScrollPane(changesToAndroidManifestPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        changesToAndroidManifest.add(scrollPane, BorderLayout.CENTER);
 
         return changesToAndroidManifest.getPanel();
     }
 
-    public static JPanel changesToAndroidManifest2(){
-        Card startingTheServiceConnection = new Card();
-        startingTheServiceConnection.setLayout(new BorderLayout(0,20));
+    public static JPanel changesToAndroidManifest2(MyPluginComponent myPluginComponent){
+        Card changesToAndroidManifest2 = new Card();
+        JPanel changesToAndroidManifestPanel2 = new JPanel();
+        changesToAndroidManifestPanel2.setLayout(new BorderLayout(0,20));
+
+
+
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(6);
-        String title = dialogElements.get(0);
-        String body =  dialogElements.get(2);
+        String title = "<br />" + dialogElements.get(0);
+        String body =   dialogElements.get(7) + "<br /><br />" + "<font color=#fff>" + dialogElements.get(8) + "</font>";
 
-        String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
-        startingTheServiceConnection.add(CardLayoutDialog.moreInformationLabel(topText, "https://docs.catappult.io/docs/native-android-sdk#1-setup-connection-with-catappult-billing-sdk"), BorderLayout.NORTH);
 
-        Panel panel = new Panel(DialogColors.white);
+        JLabel text = new JLabel("<html>" + CardLayoutDialog.titleAndBodyHTMLFormated(title, body) + "</html>");
+        JPanel topPanel = new JPanel(new BorderLayout());
 
-        JLabel textCard = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67 size=5><b>" + dialogElements.get(7) + "</b></font>" +
-                "<br><br><font color=#220F67>"+ dialogElements.get(8) +"</font></html>");
+        topPanel.add(text, BorderLayout.CENTER);
+        changesToAndroidManifestPanel2.add(topPanel, BorderLayout.NORTH);
 
-        panel.add(textCard);
-        panel.addRigidArea(new Dimension(0, 30));
+
 
         CodeWindow androidManifestQueries = new CodeWindow("XML", snippets.androidManifestQueries(),
-                DialogColors.darkBlue, ActionsSDK.implementedChangesToAndroidManifest2);
-        androidManifestQueries.addButtonAction(new ImplementAndroidManifestQueriesChanges(CardLayoutDialog.project,CardLayoutDialog.files, snippets));
+                DialogColors.darkBlue, ActionsSDK.implementedChangesToAndroidManifest2, "3");
+        androidManifestQueries.addButtonAction(new ImplementAndroidManifestQueriesChanges(project,CardLayoutDialog.files, snippets));
+        androidManifestQueries.setCodeFiles(project, CardLayoutDialog.files);
+        changesToAndroidManifestPanel2.add(androidManifestQueries.getPanel());
 
-        panel.add(androidManifestQueries.getPanel());
 
-        startingTheServiceConnection.add(panel.getScrollablePanel(), BorderLayout.CENTER);
+        changesToAndroidManifestPanel2.add(CardLayoutDialog.moreInformationLabel("",
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                BorderLayout.SOUTH);
 
-        return startingTheServiceConnection.getPanel();
+        JBScrollPane scrollPane = new JBScrollPane(changesToAndroidManifestPanel2);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        changesToAndroidManifest2.add(scrollPane, BorderLayout.CENTER);
+
+        return changesToAndroidManifest2.getPanel();
     }
 
-    public static JPanel startingTheServiceConnection2(){
+    public static JPanel startingTheServiceConnection2(MyPluginComponent myPluginComponent){
         Card startingTheServiceConnection2 = new Card();
         startingTheServiceConnection2.setLayout(new BorderLayout(0,20));
 
+        JPanel startingTheServiceConnection2Panel = new JPanel();
+        startingTheServiceConnection2Panel.setLayout(new BoxLayout(startingTheServiceConnection2Panel, BoxLayout.Y_AXIS));
+
+        JPanel startingTheServiceConnection2Panel1 = new JPanel();
+        startingTheServiceConnection2Panel1.setLayout(new BorderLayout(0, 20));
+        JPanel startingTheServiceConnection2Panel2 = new JPanel();
+        startingTheServiceConnection2Panel2.setLayout(new BorderLayout(0, 20));
+        JPanel startingTheServiceConnection2Panel3 = new JPanel();
+        startingTheServiceConnection2Panel3.setLayout(new BorderLayout(0, 20));
+
+
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(10);
         String title = dialogElements.get(0);
-        String body =  dialogElements.get(2);
+        String body = dialogElements.get(2) + "<br /><br />" +
+                "<font color=#ffffff size=5><b>" + dialogElements.get(3) + "</b></font>" +
+                "<br><br><font color=#ffffff>"+ dialogElements.get(4) +"</font>";
 
         String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
-        startingTheServiceConnection2.add(CardLayoutDialog.moreInformationLabel(topText, "https://docs.catappult.io/docs/native-android-sdk#starting-the-service-connection"), BorderLayout.NORTH);
+        JLabel label1 = new JLabel("<html><br />" + topText + "</html>");
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(label1, BorderLayout.CENTER);
+        startingTheServiceConnection2Panel1.add(topPanel, BorderLayout.NORTH);
+        startingTheServiceConnection2Panel.add(startingTheServiceConnection2Panel1);
 
-        Panel panel = new Panel(DialogColors.white);
 
-        JLabel textCard2 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67 size=5><b>" + dialogElements.get(3) + "</b></font>" +
-                "<br><br><font color=#220F67>"+ dialogElements.get(4) +"</font></html>");
-        textCard2.setHorizontalAlignment(JLabel.LEFT);
-
-        JLabel textCard3 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67>"+ dialogElements.get(5) +"</font></html>");
-        textCard3.setHorizontalAlignment(JLabel.LEFT);
 
         String data[][] ={
                 {"Name","Definition"},
                 {"onPurchasesUpdated(responseCode,listPurchases)","This method receives the notifications for purchases updateds."}
         };
         Table table = new Table(data);
+        table.getTable().setAlignmentX(Component.CENTER_ALIGNMENT);
+        startingTheServiceConnection2Panel.add(table.getTable());
 
-        panel.add(textCard2);
-        panel.addRigidArea(new Dimension(0, 20));
-        panel.add(table.getTable());
-        panel.addRigidArea(new Dimension(0, 20));
-        panel.add(textCard3);
-        panel.addRigidArea(new Dimension(0, 20));
+
+        JLabel label2 = new JLabel("<html>" + "<br /><br /><font color=#ffffff>"+ dialogElements.get(5) +"</font></html>" + "<br /><br />" + "<br /><br /></html>");
+        startingTheServiceConnection2Panel2.add(label2, BorderLayout.NORTH);
+
+
+
+        JPanel startingTheServiceConnection2Panel4 = new JPanel();
+        startingTheServiceConnection2Panel4.setLayout(new BorderLayout(0, 20));
+
 
         CodeWindow onPurchasesUpdated = new CodeWindow(CardLayoutDialog.projLanguage, snippets.onPurchasesUpdated(),
-                DialogColors.darkBlue, ActionsSDK.implementedStartingServiceConnection2);
+                DialogColors.darkBlue, ActionsSDK.implementedStartingServiceConnection2, "6.2");
+        onPurchasesUpdated.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
         onPurchasesUpdated.addButtonAction(new ImplementPurchaseFinishedListenerChanges(
-                CardLayoutDialog.project,CardLayoutDialog.files,CardLayoutDialog.toolWindow));
-        panel.add(onPurchasesUpdated.getPanel());
+                project,CardLayoutDialog.files,CardLayoutDialog.toolWindow));
+        onPurchasesUpdated.setCodeFiles(project, CardLayoutDialog.files);
+        startingTheServiceConnection2Panel4.add(onPurchasesUpdated.getPanel(), BorderLayout.CENTER);
+        startingTheServiceConnection2Panel.add(startingTheServiceConnection2Panel4);
 
-        startingTheServiceConnection2.add(panel.getScrollablePanel(), BorderLayout.CENTER);
+
+        startingTheServiceConnection2Panel.add(CardLayoutDialog.moreInformationLabel("",
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                BorderLayout.SOUTH);
+
+        JBScrollPane scrollPane = new JBScrollPane(startingTheServiceConnection2Panel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        // Ensure the scroll starts from the top
+        SwingUtilities.invokeLater(() -> scrollPane.getViewport().setViewPosition(new Point(0, 0)));
+
+        startingTheServiceConnection2.add(scrollPane, BorderLayout.CENTER);
 
         return startingTheServiceConnection2.getPanel();
     }
 
-    public static JPanel querySku(){
+
+    public static JPanel querySku(MyPluginComponent myPluginComponent) {
         Card querySku = new Card();
-        querySku.setLayout(new BorderLayout(20,20));
+        JPanel querySkuPanel = new JPanel();
+        querySkuPanel.setLayout(new BoxLayout(querySkuPanel, BoxLayout.Y_AXIS));
+
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        querySkuPanel.add(topPanel, BorderLayout.NORTH);
+
+
+        JPanel querySkuPanel1 = new JPanel();
+        querySkuPanel1.setLayout(new BorderLayout(0, 20));
+        JPanel querySkuPanel2 = new JPanel();
+        querySkuPanel2.setLayout(new BorderLayout(0, 20));
+        JPanel querySkuPanel3 = new JPanel();
+        querySkuPanel3.setLayout(new BorderLayout(0, 20));
+        JPanel querySkuPanel4 = new JPanel();
+        querySkuPanel4.setLayout(new BorderLayout(0, 20));
+        JPanel querySkuPanel5 = new JPanel();
+        querySkuPanel5.setLayout(new BorderLayout(0, 20));
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(26);
         String title = dialogElements.get(0);
-        String body =  dialogElements.get(2);
+        String body = dialogElements.get(2) + "<br /><br />" +
+                "<font color=#ffffff size=5><b>" + dialogElements.get(0) + "</b></font>" + "<br />";
 
         String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
-        querySku.add(CardLayoutDialog.moreInformationLabel(topText, "https://docs.catappult.io/docs/native-android-sdk#2-query-in-app-products"), BorderLayout.NORTH);
+        JLabel label1 = new JLabel("<html>" + topText + "</html>");
+        querySkuPanel1.add(label1, BorderLayout.NORTH);
+        JLabel label2 =  new JLabel("<html>" + "<br /><br /><font color=#ffffff>"+ dialogElements.get(4) +"</font></html>" + "<br /><br />" + "<br /><br /></html>");
+        querySkuPanel2.add(label2, BorderLayout.NORTH);
+        JLabel label3 = new JLabel("<html>" + "<br /><br /><font color=#ffffff>"+ dialogElements.get(5) +"</font></html>" + "<br /><br />" + "<br /><br /></html>");
+        querySkuPanel3.add(label3, BorderLayout.NORTH);
 
-        Panel panel = new Panel(DialogColors.white);
 
-        JLabel textCard2 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67 size=5><b>" + dialogElements.get(0) + "</b></font</html>");
-
-        JLabel textCard3 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67>"+ dialogElements.get(4) +"</font></html>");
-
-        JLabel textCard4 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67>"+ dialogElements.get(5) +"</font></html>");
+        querySkuPanel.add(querySkuPanel1);
 
         String data[][] ={
                 {"Name","Definition"},
                 {"onSkuDetailsResponse(responseCode, skuDetailsList)","This method receives the result of a query of SKU" +
                         " details and the list of SKU details that were queried"}
         };
-        Table table = new Table(data);
 
-        panel.add(textCard2);
-        panel.addRigidArea(new Dimension(0, 20));
-        panel.add(table.getTable());
-        panel.addRigidArea(new Dimension(0, 20));
-        panel.add(textCard3);
+        Table table = new Table(data);
+        table.getTable().setAlignmentX(Component.CENTER_ALIGNMENT);
+        querySkuPanel.add(table.getTable(), BorderLayout.CENTER);
+
+
+        querySkuPanel.add(querySkuPanel2);
 
         CodeWindow skuDetailsResponseListener = new CodeWindow(CardLayoutDialog.projLanguage, snippets.skuDetailsResponseListener(),
-                DialogColors.darkBlue, ActionsSDK.implementedQuerySku);
-        skuDetailsResponseListener.addButtonAction(new ImplementQueryPurchasesSkuListenerChanges(CardLayoutDialog.project,CardLayoutDialog.files));
-        panel.add(skuDetailsResponseListener.getPanel());
+                DialogColors.darkBlue, ActionsSDK.implementedQuerySku, "4.2");
+        skuDetailsResponseListener.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
+        skuDetailsResponseListener.addButtonAction(new ImplementQueryPurchasesSkuListenerChanges(project,CardLayoutDialog.files));
+        skuDetailsResponseListener.setCodeFiles(project, CardLayoutDialog.files);
+        querySkuPanel4.add(skuDetailsResponseListener.getPanel(), BorderLayout.CENTER);
+        querySkuPanel.add(querySkuPanel4);
 
-        panel.addRigidArea(new Dimension(0, 30));
-        panel.add(textCard4);
-        panel.addRigidArea(new Dimension(0, 10));
+        querySkuPanel.add(querySkuPanel3);
 
         CodeWindow callSkuDetails = new CodeWindow(CardLayoutDialog.projLanguage, snippets.callSkuDetails(),
-                DialogColors.darkBlue);
-        callSkuDetails.addButtonAction(new ImplementQueryPurchasesExampleChanges(CardLayoutDialog.project,CardLayoutDialog.files));
-        panel.add(callSkuDetails.getPanel());
+                DialogColors.darkBlue, null, "4.2");
+        callSkuDetails.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
+        //not displaying
+        callSkuDetails.addButtonAction(new ImplementQueryPurchasesExampleChanges(project,CardLayoutDialog.files));
+        callSkuDetails.setCodeFiles(project, CardLayoutDialog.files);
+        querySkuPanel5.add(callSkuDetails.getPanel(), BorderLayout.CENTER);
 
-        querySku.add(panel.getScrollablePanel(), BorderLayout.CENTER);
+        querySkuPanel.add(querySkuPanel5);
+
+
+        querySkuPanel.add(CardLayoutDialog.moreInformationLabel("",
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                BorderLayout.SOUTH);
+
+        JBScrollPane scrollPane = new JBScrollPane(querySkuPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        // Ensure the scroll starts from the top
+        SwingUtilities.invokeLater(() -> scrollPane.getViewport().setViewPosition(new Point(0, 0)));
+
+        querySku.add(scrollPane, BorderLayout.CENTER);
 
         return querySku.getPanel();
     }
 
-    public static JPanel makingPurchase(){
+
+
+    public static JPanel makingPurchase(MyPluginComponent myPluginComponent){
         Card makingPurchase = new Card();
-        makingPurchase.setLayout(new BorderLayout(0,20));
+        JPanel makingPurchasePanel2 = new JPanel();
+        makingPurchasePanel2.setLayout(new BorderLayout(0,20));
+
+
+        JPanel topPanel = new JPanel(new BorderLayout());
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(16);
         String title = dialogElements.get(0);
-        String body =  dialogElements.get(2);
+        String body = dialogElements.get(2) + "<br /><br />" +
+                "<font color=#FFFFFF>"+ dialogElements.get(4) +"</font></html>";
 
-        String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
-        makingPurchase.add(CardLayoutDialog.moreInformationLabel(topText, "https://docs.catappult.io/docs/native-android-sdk#3-launch-the-appcoins-wallet"), BorderLayout.NORTH);
+        JLabel text = new JLabel("<html><br />" + CardLayoutDialog.titleAndBodyHTMLFormated(title, body) + "</html>");
+        topPanel.add(text, BorderLayout.CENTER);
 
-        Panel panel = new Panel(DialogColors.white);
+        // Add the top panel to the changesToGradlePanel
+        makingPurchasePanel2.add(topPanel, BorderLayout.NORTH);
 
-        JLabel textCard2 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67>"+ dialogElements.get(4) +"</font></html>");
+        /**String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
+        JLabel label = new JLabel("<html>" + topText + "</html>");
+        makingPurchasePanel2.add(label, BorderLayout.NORTH);
+        **/
+
+
+
+
 
         CodeWindow startPurchase = new CodeWindow(CardLayoutDialog.projLanguage, snippets.startPurchase(),
-                DialogColors.darkBlue, ActionsSDK.implementedMakingPurchase);
+                DialogColors.darkBlue, ActionsSDK.implementedMakingPurchase, "5");
+        startPurchase.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
+        //if (CardLayoutDialog.files.containsKey(5) && CardLayoutDialog.files.containsKey(7)){
+        startPurchase.addButtonAction(new ImplementMakingAPurchaseChanges(
+                    project,CardLayoutDialog.files,CardLayoutDialog.toolWindow));
+        startPurchase
+                .setCodeFiles(project, CardLayoutDialog.files);
+        //}
+        makingPurchasePanel2.add(startPurchase.getPanel());
 
-        if (CardLayoutDialog.files.containsKey(5) && CardLayoutDialog.files.containsKey(7)){;
-            startPurchase.addButtonAction(new ImplementMakingAPurchaseChanges(
-                    CardLayoutDialog.project,CardLayoutDialog.files,CardLayoutDialog.toolWindow));
-        }
 
-        panel.add(textCard2);
-        panel.addRigidArea(new Dimension(0, 10));
-        panel.add(startPurchase.getPanel());
 
-        makingPurchase.add(panel.getScrollablePanel(), BorderLayout.CENTER);
+        makingPurchasePanel2.add(CardLayoutDialog.moreInformationLabel("",
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                BorderLayout.SOUTH);
+
+        JBScrollPane scrollPane = new JBScrollPane(makingPurchasePanel2);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        // Ensure the scroll starts from the top
+        SwingUtilities.invokeLater(() -> scrollPane.getViewport().setViewPosition(new Point(0, 0)));
+
+
+        makingPurchase.add(scrollPane, BorderLayout.CENTER);
 
         return makingPurchase.getPanel();
     }
 
-    public static JPanel makingPurchase2(){
-        Card makingPurchase = new Card();
-        makingPurchase.setLayout(new BorderLayout(0,20));
+    public static JPanel makingPurchase2(MyPluginComponent myPluginComponent){
+        Card makingPurchase2 = new Card();
+        JPanel makingPurchasePanel2 = new JPanel();
+        makingPurchasePanel2.setLayout(new BorderLayout(0,20));
+
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(16);
         String title = dialogElements.get(0);
-        String body =  dialogElements.get(5);
+        String body =   dialogElements.get(5) + "<br /><br />" +
+                "<font color=#FFFFFF>"+ dialogElements.get(6) +"</font></html>";
 
         String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
-        makingPurchase.add(CardLayoutDialog.moreInformationLabel(topText, "https://docs.catappult.io/docs/native-android-sdk#3-launch-the-appcoins-wallet"), BorderLayout.NORTH);
+        JLabel label = new JLabel("<html><br />" + topText + "</html>");
+        JPanel topPanel = new JPanel(new BorderLayout());
 
-        Panel panel = new Panel(DialogColors.white);
+        topPanel.add(label, BorderLayout.CENTER);
+        // Add the top panel to the changesToGradlePanel
+        makingPurchasePanel2.add(topPanel, BorderLayout.NORTH);
 
-        JLabel textCard = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67>"+ dialogElements.get(6) +"</font></html>");
 
         CodeWindow noOnActivityResult = new CodeWindow(CardLayoutDialog.projLanguage, snippets.noOnActivityResult(),
-                DialogColors.darkBlue);
+                DialogColors.darkBlue, null, "6.1");
+        noOnActivityResult
+                .setCodeFiles(project, CardLayoutDialog.files);
+        makingPurchasePanel2.add(noOnActivityResult.getPanel());
 
-        panel.add(textCard);
-        panel.addRigidArea(new Dimension(0, 10));
-        panel.add(noOnActivityResult.getPanel());
 
-        makingPurchase.add(panel.getPanel(), BorderLayout.CENTER);
 
-        return makingPurchase.getPanel();
+
+        makingPurchasePanel2.add(CardLayoutDialog.moreInformationLabel("",
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                BorderLayout.SOUTH);
+
+        JBScrollPane scrollPane = new JBScrollPane(makingPurchasePanel2);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        // Ensure the scroll starts from the top
+        SwingUtilities.invokeLater(() -> scrollPane.getViewport().setViewPosition(new Point(0, 0)));
+
+
+        makingPurchase2.add(scrollPane, BorderLayout.CENTER);
+
+        return makingPurchase2.getPanel();
     }
 
-    public static JPanel consumePurchase(){
+
+    public static JPanel consumePurchase(MyPluginComponent myPluginComponent){
         Card consumePurchase = new Card();
-        consumePurchase.setLayout(new BorderLayout(20,20));
+
+        JPanel consumePurchasePanel = new JPanel();
+        consumePurchasePanel.setLayout(new BoxLayout(consumePurchasePanel, BoxLayout.Y_AXIS));
+
+        JPanel querySkuPanel1 = new JPanel();
+        querySkuPanel1.setLayout(new BorderLayout(0, 20));
+        JPanel querySkuPanel2 = new JPanel();
+        querySkuPanel2.setLayout(new BorderLayout(0, 20));
+        JPanel querySkuPanel3 = new JPanel();
+        querySkuPanel3.setLayout(new BorderLayout(0, 20));
+        JPanel querySkuPanel4 = new JPanel();
+        querySkuPanel4.setLayout(new BorderLayout(0, 20));
+        JPanel querySkuPanel5 = new JPanel();
+        querySkuPanel5.setLayout(new BorderLayout(0, 20));
+
+
+
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(22);
         String title = dialogElements.get(0);
         String body =  dialogElements.get(2);
-
         String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
-        consumePurchase.add(CardLayoutDialog.moreInformationLabel(topText, "https://docs.catappult.io/docs/native-android-sdk#4-process-the-purchase-and-give-item-to-user"), BorderLayout.NORTH);
+        JLabel label1 = new JLabel("<html>" + topText + "</html>");
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(label1, BorderLayout.CENTER);
+        // Add the top panel to the changesToGradlePanel
+        querySkuPanel1.add(topPanel, BorderLayout.NORTH);
 
-        Panel panel = new Panel(DialogColors.white);
 
-        JLabel textCard2 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67 size=5><b>" + dialogElements.get(0) + "</b></font>" +
-                "<br><br><font color=#220F67>"+ dialogElements.get(3) +"</font></html>");
+        consumePurchasePanel.add(querySkuPanel1);
 
-        JLabel textCard3 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67>"+ dialogElements.get(4) +"</font></html>");
+        JLabel label2 =  new JLabel("<html>" +
+                "<br/><br/><font color=#ffffff size=5><b>" + dialogElements.get(0) + "</b></font>" +
+                "<br/><br/><font color=#ffffff>"+ dialogElements.get(3) +"</font><br/></html>");
+        querySkuPanel2.add(label2, BorderLayout.NORTH);
+        consumePurchasePanel.add(querySkuPanel2);
 
         String data[][] ={
                 {"Name","Definition"},
                 {"onConsumeResponse(responseCode,purchaseToken)","Callback that notifies if a consume operation has ended."}
         };
         Table table = new Table(data);
+        table.getTable().setAlignmentX(Component.CENTER_ALIGNMENT);
+        consumePurchasePanel.add(table.getTable(), BorderLayout.CENTER);
 
-        panel.add(textCard2);
-        panel.add((JComponent) Box.createRigidArea(new Dimension(0, 10)));
-        panel.add(table.getTable());
-        panel.add((JComponent) Box.createRigidArea(new Dimension(0, 30)));
-        panel.add(textCard3);
+
+
+        JLabel label3 =  new JLabel("<html>" +
+                "<br /><br /><font color=#ffffff >" + dialogElements.get(4) + "</font><br/></html>");
+        querySkuPanel3.add(label3, BorderLayout.NORTH);
+        consumePurchasePanel.add(querySkuPanel3);
+
 
         CodeWindow consumePurchase1 = new CodeWindow(CardLayoutDialog.projLanguage, snippets.consumePurchase1(),
-                DialogColors.darkBlue, ActionsSDK.implementedConsumePurchase);
-        consumePurchase1.addButtonAction(new ImplementConsumeAPurchaseChanges(CardLayoutDialog.project, CardLayoutDialog.files));
-        panel.add(consumePurchase1.getPanel());
+                DialogColors.darkBlue, ActionsSDK.implementedConsumePurchase, "7");
+        consumePurchase1.addButtonAction(new ImplementConsumeAPurchaseChanges(project, CardLayoutDialog.files));
+        consumePurchase1
+                .setCodeFiles(project, CardLayoutDialog.files);
+        consumePurchasePanel.add(consumePurchase1.getPanel());
+        querySkuPanel5.add(consumePurchase1.getPanel(), BorderLayout.CENTER);
+        consumePurchasePanel.add(querySkuPanel5);
 
-        consumePurchase.add(panel.getScrollablePanel(), BorderLayout.CENTER);
+
+        consumePurchasePanel.add(CardLayoutDialog.moreInformationLabel("",
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                BorderLayout.SOUTH);
+
+        JBScrollPane scrollPane = new JBScrollPane(consumePurchasePanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        // Ensure the scroll starts from the top
+        SwingUtilities.invokeLater(() -> scrollPane.getViewport().setViewPosition(new Point(0, 0)));
+
+        consumePurchase.add(scrollPane, BorderLayout.CENTER);
 
         return consumePurchase.getPanel();
+
+
     }
 
-    static JPanel lastPage(){
+    static JPanel lastPage(MyPluginComponent myPluginComponent){
         Card lastPage = new Card();
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(29);
 
-        Panel successPanel = new Panel(DialogColors.lightBlue);
+        JPanel successPanel = new JPanel();
         successPanel.setLayout(new BorderLayout(0,20));
-        successPanel.setLayout(new BoxLayout(successPanel.getPanel(), BoxLayout.Y_AXIS));
+        successPanel.setLayout(new BoxLayout(successPanel, BoxLayout.Y_AXIS));
         JLabel greenIcon = CardLayoutDialog.imageFromFileName("successImage.png");
         greenIcon.setAlignmentX(Component.CENTER_ALIGNMENT);
         JLabel textCard1 = new JLabel("<html><br>" +
@@ -367,9 +629,9 @@ public class SDKDialogs {
         successPanel.add(textCard1);
         successPanel.add(textCard2);
 
-        lastPage.add(successPanel.getPanel(), BorderLayout.CENTER);
+        lastPage.add(successPanel, BorderLayout.CENTER);
 
-        Panel panel = new Panel(DialogColors.darkBlue);
+        JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout(0,20));
 
         JLabel textCard3 = new JLabel("<html>" +
@@ -383,84 +645,115 @@ public class SDKDialogs {
         panel.add(CardLayoutDialog.imageFromFileName("informationSymbol.png"), BorderLayout.WEST);
         panel.add(textCard3, BorderLayout.CENTER);
 
-        lastPage.add(panel.getPanel(), BorderLayout.SOUTH);
+        lastPage.add(panel, BorderLayout.SOUTH);
 
         return lastPage.getPanel();
     }
 
-    public static RoundedScrollablePanelBorder serverCheck(){
+    public static JPanel serverCheck(MyPluginComponent myPluginComponent){
         Card serverCheck = new Card();
+        JPanel serverCheckPanel = new JPanel();
+        serverCheckPanel.setLayout(new BoxLayout(serverCheckPanel, BoxLayout.Y_AXIS));
 
-        serverCheck.setLayout(new BorderLayout(20,20));
+
+        JPanel querySkuPanel1 = new JPanel();
+        querySkuPanel1.setLayout(new BorderLayout(0, 20));
+        JPanel querySkuPanel2 = new JPanel();
+        querySkuPanel2.setLayout(new BorderLayout(0, 20));
+        JPanel querySkuPanel3 = new JPanel();
+        querySkuPanel3.setLayout(new BorderLayout(0, 20));
+        JPanel querySkuPanel4 = new JPanel();
+        querySkuPanel4.setLayout(new BorderLayout(0, 20));
+        JPanel querySkuPanel5 = new JPanel();
+        querySkuPanel5.setLayout(new BorderLayout(0, 20));
+
+
 
         ArrayList<String> dialogElements = XmlDialogParser.getPageDialogElementsByIndex(33);
         String title = dialogElements.get(0);
-        String body =  dialogElements.get(2);
-
+        String body = dialogElements.get(2) + "<br /><br />" +
+                "<font color=#ffffff size=5><b>" + dialogElements.get(3) + "</b></font>" +
+                "<br /><br /><font color=#ffffff>"+ dialogElements.get(4) +"</font>";
         String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
-        serverCheck.add(CardLayoutDialog.moreInformationLabel(topText, "https://docs.catappult.io/docs/native-android-sdk#2-query-in-app-products"), BorderLayout.NORTH);
+        JLabel label1 = new JLabel("<html>" + topText + "<br/></html>");
+        JPanel topPanel = new JPanel(new BorderLayout());
+        topPanel.add(label1, BorderLayout.CENTER);
+        // Add the top panel to the changesToGradlePanel
+        querySkuPanel1.add(topPanel, BorderLayout.NORTH);
 
-        Panel panel = new Panel(DialogColors.white);
 
-        JLabel textCard2 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67 size=5><b>" + dialogElements.get(3) + "</b></font</html>");
-        JLabel textCard3 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67>"+ dialogElements.get(4) +"</font></html>");
-        JLabel textCard4 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67>"+ dialogElements.get(5) +"</font></html>");
-        JLabel textCard5 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67>"+ dialogElements.get(6) +"</font></html>");
-        JLabel textCard6 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67>"+ dialogElements.get(7) +"</font></html>");
-        JLabel textCard7 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67 size=5><b>" + dialogElements.get(8) + "</b></font</html>");
-        JLabel textCard8 = CardLayoutDialog.turnTextIntoLeftAlignedJLabel("<html>" +
-                "<font color=#220F67>"+ dialogElements.get(9) +"</font></html>");
 
-        panel.add(textCard2);
-        panel.addRigidArea(new Dimension(0, 20));
-        panel.add(textCard3);
-        panel.addRigidArea(new Dimension(0, 10));
+        serverCheckPanel.add(querySkuPanel1);
 
         CodeWindow receipt = new CodeWindow("JSON", snippets.serverCheckReceipt(),
                 DialogColors.darkBlue);
-        panel.add(receipt.getPanel());
+        receipt.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        panel.addRigidArea(new Dimension(0, 20));
-        panel.add(textCard4);
-        panel.addRigidArea(new Dimension(0, 10));
+
+        serverCheckPanel.add(receipt.getPanel());
+
+
+        JLabel label2 =  new JLabel("<html>" +
+                "<br/><font color=#ffffff>"+ dialogElements.get(5) +"</font><br/></html>");
+        querySkuPanel2.add(label2, BorderLayout.NORTH);
+        serverCheckPanel.add(querySkuPanel2);
 
         CodeWindow apiRequestPurchase = new CodeWindow("HTTP", snippets.serverCheckAPIRequest(),
                 DialogColors.darkBlue);
-        panel.add(apiRequestPurchase.getPanel());
-        panel.addRigidArea(new Dimension(0, 20));
-        panel.add(textCard5);
-        panel.addRigidArea(new Dimension(0, 10));
+        apiRequestPurchase.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
+        serverCheckPanel.add(apiRequestPurchase.getPanel());
+
+
+        JLabel label3 = new JLabel("<html>" +
+                "<br/><font color=#ffffff>"+ dialogElements.get(6) +"</font><br/></html>");
+        querySkuPanel3.add(label3, BorderLayout.NORTH);
+        serverCheckPanel.add(querySkuPanel3);
+
+
         CodeWindow apiRequestPurchaseSubscriptions = new CodeWindow("HTTP", snippets.serverCheckAPIRequestSubscriptions(),
                 DialogColors.darkBlue);
-        panel.add(apiRequestPurchaseSubscriptions.getPanel());
-        panel.addRigidArea(new Dimension(0, 20));
-        panel.add(textCard6);
-        panel.addRigidArea(new Dimension(0, 10));
+        apiRequestPurchaseSubscriptions.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
+        serverCheckPanel.add(apiRequestPurchaseSubscriptions.getPanel());
+
+        JLabel label4 = new JLabel("<html>" +
+                "<br/><font color=#ffffff>"+ dialogElements.get(7) +"</font><br/></html>");
+        querySkuPanel4.add(label4, BorderLayout.NORTH);
+        serverCheckPanel.add(querySkuPanel4);
 
         CodeWindow performRequest = new CodeWindow("PHP", snippets.serverCheckRequestPHP(), DialogColors.darkBlue);
         performRequest.addSnippetContent("Java", snippets.serverCheckRequestJava(), DialogColors.darkBlue);
         performRequest.addSnippetContent("Python", snippets.serverCheckRequestPython(), DialogColors.darkBlue);
+        performRequest.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
+        serverCheckPanel.add(performRequest.getPanel());
 
-        panel.add(performRequest.getPanel());
 
-        panel.addRigidArea(new Dimension(0, 20));
-        panel.add(textCard7);
-        panel.addRigidArea(new Dimension(0, 10));
-        panel.add(textCard8);
-        panel.addRigidArea(new Dimension(0, 20));
+        JLabel label5 = new JLabel("<html>" +
+                "<br/><font color=#ffffff size=5><b>" + dialogElements.get(8) + "</b><br/></font>" +
+                "<font color=#ffffff>"+ dialogElements.get(9) +"</font><br/>" +
+                "</html>");
+        querySkuPanel5.add(label5, BorderLayout.NORTH);
+        serverCheckPanel.add(querySkuPanel5);
 
         CodeWindow apiRequestResponse = new CodeWindow("JSON", snippets.serverCheckResponse(),
                 DialogColors.darkBlue);
-        panel.add(apiRequestResponse.getPanel());
+        apiRequestResponse.getPanel().setAlignmentX(Component.LEFT_ALIGNMENT);
+        serverCheckPanel.add(apiRequestResponse.getPanel());
 
-        serverCheck.add(panel.getScrollablePanel(), BorderLayout.CENTER);
 
-        return serverCheck.getScrollablePanel();
+        serverCheckPanel.add(CardLayoutDialog.moreInformationLabel("",
+                        "https://docs.catappult.io/docs/native-android-billing-sdk#1-setup-connection-with-catappult-billing-sdk"),
+                BorderLayout.SOUTH);
+
+        JBScrollPane scrollPane = new JBScrollPane(serverCheckPanel);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        // Ensure the scroll starts from the top
+        SwingUtilities.invokeLater(() -> scrollPane.getViewport().setViewPosition(new Point(0, 0)));
+
+        serverCheck.add(scrollPane, BorderLayout.CENTER);
+
+        return serverCheck.getPanel();
     }
 }

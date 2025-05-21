@@ -20,14 +20,28 @@ public class ImplementBuildGradleDependenciesChanges extends AbstractAction {
     private Snippets snippets;
     private String oldContent;
     public ImplementBuildGradleDependenciesChanges(Project project, Map<Integer, VirtualFile> files, Snippets snippets){
-        super("Implement automatically");
+        super("Static");
         this.project=project;
         this.files=files;
         this.snippets=snippets;
     }
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        Document buildGradleDocument = FileDocumentManager.getInstance().getDocument(files.get(2));
+
+        VirtualFile selectedFile = FileEditorManager.getInstance(project).getSelectedFiles()[0];
+        Document document = FileDocumentManager.getInstance().getDocument(selectedFile);
+
+        if (document != null) {
+            String oldContent = document.getText();
+            String newContent = oldContent + snippets.appCoinsBillingDependency();
+
+            Runnable writeRunnable = () -> {
+                document.setReadOnly(false);
+                document.setText(newContent);
+            };
+            WriteCommandAction.runWriteCommandAction(project, writeRunnable);
+        }
+        /**Document buildGradleDocument = FileDocumentManager.getInstance().getDocument(files.get(2));
         String oldBuildGradleContent = buildGradleDocument.getText();
         this.oldContent=oldBuildGradleContent;
         String newBuildGradleContent = oldBuildGradleContent;
@@ -53,5 +67,6 @@ public class ImplementBuildGradleDependenciesChanges extends AbstractAction {
             buildGradleDocument.setText(finalBuildGradleContent);
         };
         WriteCommandAction.runWriteCommandAction(project, r2);
+         **/
     }
 }

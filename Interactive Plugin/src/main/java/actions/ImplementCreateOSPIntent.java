@@ -21,7 +21,7 @@ public class ImplementCreateOSPIntent extends AbstractAction {
     private ToolWindow toolWindow;
 
     public ImplementCreateOSPIntent(Project project, Map<Integer, VirtualFile> files, ToolWindow toolWindow){
-        super("Implement automatically");
+        super("Static");
         this.project=project;
         this.files=files;
         this.toolWindow=toolWindow;

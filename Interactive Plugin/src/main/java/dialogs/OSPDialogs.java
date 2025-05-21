@@ -25,7 +25,7 @@ public class OSPDialogs {
         String body =  dialogElements.get(2);
 
         String topText = CardLayoutDialog.titleAndBodyHTMLFormated(title, body);
-        consumePurchase.add(CardLayoutDialog.moreInformationLabel(topText, "https://docs.catappult.io/docs/native-android-sdk#4-process-the-purchase-and-give-item-to-user"), BorderLayout.NORTH);
+        consumePurchase.add(CardLayoutDialog.moreInformationLabel(topText, "https://docs.catappult.io/docs/native-android-billing-sdk#4-process-the-purchase-and-give-item-to-user"), BorderLayout.NORTH);
 
         Panel panel = new Panel(DialogColors.white);
 
@@ -105,7 +105,7 @@ public class OSPDialogs {
         panel.addRigidArea(new Dimension(0, 30));
 
         CodeWindow ospIntent = new CodeWindow(CardLayoutDialog.projLanguage, snippets.ospIntent(),
-                DialogColors.darkBlue, ActionsOSP.implementCreateOSPIntent);
+                DialogColors.darkBlue, ActionsOSP.implementCreateOSPIntent, "");
         ospIntent.addButtonAction(new ImplementCreateOSPIntent(
                 CardLayoutDialog.project,CardLayoutDialog.files,CardLayoutDialog.toolWindow));
         panel.add(ospIntent.getPanel());
@@ -119,7 +119,7 @@ public class OSPDialogs {
         panel.addRigidArea(new Dimension(0, 10));
 
         CodeWindow androidManifest = new CodeWindow(CardLayoutDialog.projLanguage, snippets.androidManifestQueries(),
-                DialogColors.darkBlue, ActionsOSP.changesToAndroidManifest2);
+                DialogColors.darkBlue, ActionsOSP.changesToAndroidManifest2, "");
         androidManifest.addButtonAction(new ImplementAndroidManifestQueriesChanges(CardLayoutDialog.project,CardLayoutDialog.files, snippets));
         panel.add(androidManifest.getPanel());
 

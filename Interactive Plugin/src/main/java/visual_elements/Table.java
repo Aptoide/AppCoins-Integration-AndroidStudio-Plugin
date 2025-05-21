@@ -17,7 +17,7 @@ public class Table {
             {
                 Component c = super.prepareRenderer(renderer, row, column);
                 //  Alternate row color
-                c.setBackground(row % 2 != 0 ? getBackground() : Color.decode("#EFF1F3"));
+                c.setBackground(row % 2 != 0 ? Color.decode("#D3D3D3") : Color.decode("#EFF1F3"));
                 c.setFont(row != 0 ? getFont() : c.getFont().deriveFont(Font.BOLD, 11f));
                 return c;
 

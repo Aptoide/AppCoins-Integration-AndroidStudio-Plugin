@@ -13,7 +13,7 @@ public class KotlinSnippets implements Snippets {
 
     @Override
     public String appCoinsBillingDependency() {
-        return "\n\timplementation 'io.catappult:android-appcoins-billing:0.6.7.0'";
+        return "\n\timplementation(\"io.catappult:android-appcoins-billing:0.9.0.0\")";
     }
 
     @Override
@@ -32,6 +32,37 @@ public class KotlinSnippets implements Snippets {
         return "<queries>\n" +
                 "    <package android:name=\"com.appcoins.wallet\" />\n" +
                 "</queries>";
+    }
+
+    @Override
+    public String appCoinsBillingClient() {
+        return "private lateinit var cab: AppcoinsBillingClient\n" +
+                "    private val purchasesUpdatedListener =\n" +
+                "    PurchasesUpdatedListener { responseCode: Int, purchases: List<Purchase> -> {\n" +
+                "    //Defined in step 4\n" +
+                "    }}\n\n" +
+                "    override fun onCreate(savedInstanceState: Bundle ?) {\n" +
+                "        \n\n" +
+                "        val base64EncodedPublicKey = MY_KEY // Key obtained in Catappult's console\n" +
+                "        cab = CatapultBillingAppCoinsFactory.BuildAppcoinsBilling(\n" +
+                "            this,\n" +
+                "            base64EncodedPublicKey,\n" +
+                "            purchasesUpdatedListener\n" +
+                "        )\n" +
+                "        cab.startConnection(appCoinsBillingStateListener)\n" +
+                "        \n\n" +
+                "    }";
+    }
+
+    @Override
+    public String checkPurchases(){
+        return "void fun checkPurchases() {\n" +
+                "  val purchasesResult = cab.queryPurchases(SkuType.inapp.toString())\n" +
+                "  val purchases = purchasesResult.purchases\n" +
+                "  // queryPurchases of subscriptions will always return active and to consume subscription\n" +
+                "  val subsResult = cab.queryPurchases(SkuType.subs.toString())\n" +
+                "  val subs = subsResult.purchases\n" +
+                "}";
     }
 
     @Override
